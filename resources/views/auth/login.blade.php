@@ -1,48 +1,77 @@
 <x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
-
-        <x-validation-errors class="mb-4" />
-
-        @session('status')
-            <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                {{ $value }}
+    <x-navbar />
+    <section class="bg-white w-full z-0 lg:fixed">
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+            <!-- Sección del formulario -->
+            <div class="flex items-center justify-center px-4 py-4 bg-white sm:px-6 lg:px-8 sm:py-6 lg:py-6">
+                <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
+                    <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Iniciar sesión</h2>
+                    <p class="mt-2 text-base text-gray-600">
+                        ¿No tenés una cuenta?
+                        <a href="{{ route('register') }}" class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 hover:underline focus:text-blue-700">
+                            Crea una cuenta gratis
+                        </a>
+                    </p>
+    
+                    <x-validation-errors class="mb-4" />
+    
+                    @if (session('status'))
+                        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+    
+                    <form method="POST" action="{{ route('login') }}" class="mt-8">
+                        @csrf
+    
+                        <div class="space-y-5">
+                            <div>
+                                <x-label for="email" value="Correo Electrónico" class="text-base font-medium text-gray-900" />
+                                <div class="mt-2.5">
+                                    <x-input id="email" class="block w-full p-4 text-black border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                        type="email" name="email" :value="old('email')" required autofocus placeholder="Ingresa tu correo" />
+                                </div>
+                            </div>
+    
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <x-label for="password" value="Contraseña" class="text-base font-medium text-gray-900" />
+                                    @if (Route::has('password.request'))
+                                        <a href="{{ route('password.request') }}" class="text-sm font-medium text-blue-600 hover:underline hover:text-blue-700 focus:text-blue-700">
+                                            ¿Recordar contraseña?
+                                        </a>
+                                    @endif
+                                </div>
+                                <div class="mt-2.5">
+                                    <x-input id="password" class="block w-full p-4 text-black border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                        type="password" name="password" required placeholder="Ingresa tu contraseña" />
+                                </div>
+                            </div>
+    
+                            <div>
+                                <x-button class="w-full">
+                                    Iniciar
+                                </x-button>
+                            </div>
+                        </div>
+                    </form>
+    
+                    
+                </div>
             </div>
-        @endsession
-
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-
-            <div>
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+    
+            <!-- Sección de la imagen y texto -->
+            <div class="flex items-center justify-center px-4 py-10 sm:py-6 lg:py-12 bg-gray-50 sm:px-6 lg:px-8">
+                <div>
+                    <img class="w-full mx-auto" src="{{ asset('Logo/LOGO.jpg') }}" alt="Signup Banner" />
+    
+                    <div class="w-full max-w-md mx-auto xl:max-w-xl">
+                        <h3 class="text-2xl font-bold text-center text-black">Plataforma Académica ANAPO</h3>
+                    </div>
+                </div>
             </div>
-
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
-
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
-
-                <x-button class="ms-4">
-                    {{ __('Log in') }}
-                </x-button>
-            </div>
-        </form>
-    </x-authentication-card>
+        </div>
+    </section>
+    
+    
 </x-guest-layout>
