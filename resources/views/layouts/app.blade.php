@@ -25,23 +25,17 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
-        <x-banner />
-
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @livewire('navigation-menu')
-
+            <x-sidebar />
             <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
-
+            
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main class="dark:bg-gray-900">
+                <div class="p-4 sm:ml-64 mt-10">
+                    <div class=" mx-auto sm:px-6 lg:px-8 ">
+                        {{ $slot }}
+                    </div>
+                </div>
                 <script>
                     var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
                     var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');

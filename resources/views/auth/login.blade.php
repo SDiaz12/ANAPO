@@ -1,6 +1,6 @@
 <x-guest-layout>
     <x-navbar />
-    <section class="bg-white w-full z-0 lg:fixed">
+    <section class="bg-white w-full z-0">
         <div class="grid grid-cols-1 lg:grid-cols-2">
             <!-- Sección del formulario -->
             <div class="flex items-center justify-center px-4 py-4 bg-white sm:px-6 lg:px-8 sm:py-6 lg:py-6">

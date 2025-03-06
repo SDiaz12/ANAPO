@@ -18,7 +18,7 @@
                 class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
                 <li>
                     <a href="{{ url('/') }}"
-                        class="block py-2 px-3 md:p-0 text-white rounded-sm md:hover:text-red-700 md:bg-transparent md:text-gray-900 md:dark:text-red-500 dark:bg-red-600 md:dark:bg-transparent"
+                        class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm md:hover:text-red-700 md:bg-transparent md:text-gray-900 md:dark:text-red-500 dark:bg-red-600 md:dark:bg-transparent"
                         aria-current="page">Home</a>
                 </li>
                 <li>
