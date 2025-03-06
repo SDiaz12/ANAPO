@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('matriculas', function (Blueprint $table) {
             $table->id();
             $table->date('fecha_matricula');
-            $table->char('estado', 1);
+            $table->enum('estado', [1, 0])->default(1);
             $table->string('motivo_estado');
             $table->string('observacion_estado');
             $table->unsignedBigInteger('id_estudiante');

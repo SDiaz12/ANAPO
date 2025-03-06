@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_asignatura')->constrained('asignaturas');
             $table->foreignId('id_docente')->constrained('docentes');
-            $table->enum('estado', ['A', 'I'])->default('A');
+            $table->enum('estado', [1, 0])->default(1);
             $table->unique(['id_asignatura', 'id_docente']);
             $table->softDeletes();
             $table->timestamps();

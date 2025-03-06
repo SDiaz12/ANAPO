@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nombre', 100);
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
-            $table->enum('estado', ['A', 'I'])->default('A');
+            $table->enum('estado', [1, 0])->default(1);
             $table->softDeletes();
             $table->timestamps();
         });

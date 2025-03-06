@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Promocion extends Model
+class Promocion extends BaseModel
 {
+    use HasFactory;
+    use SoftDeletes;
     protected $table = 'promociones';
     protected $primaryKey = 'id_promocion';
     protected $fillable = ['nombre', 'fecha_inicio', 'fecha_fin', 'estado', 'id_programa_formacion'];

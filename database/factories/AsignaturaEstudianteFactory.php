@@ -26,7 +26,7 @@ class AsignaturaEstudianteFactory extends Factory
             'id_estudiante' => $id_estudiante,
             'nota' => $this->faker->randomFloat(2, 0, 10),
             'observaciones' => $this->faker->text(),
-            'estado' => $this->faker->randomElement(['A', 'I']),
+            'estado' => $this->faker->randomElement([1, 0]),
         ];
     }
 }

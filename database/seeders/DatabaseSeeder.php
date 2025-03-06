@@ -21,8 +21,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            AsignaturaEstudianteTableSeeder::class,
-            AsignatutaDocenteTableSeeder::class,
             AsignaturaTableSeeder::class,
             DocenteTableSeeder::class,
             EstudianteTableSeeder::class,
@@ -30,6 +28,8 @@ class DatabaseSeeder extends Seeder
             SeccionTableSeeder::class,
             MatriculaTableSeeder::class,
             AsignaturaEstudianteTableSeeder::class,
+            AsignaturaEstudianteTableSeeder::class,
+            AsignatutaDocenteTableSeeder::class,
         ]);
     }
 }

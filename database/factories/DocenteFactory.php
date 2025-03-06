@@ -27,7 +27,7 @@ class DocenteFactory extends Factory
             'residencia' => $this->faker->address,
             'fecha_nacimiento' => $this->faker->date(),
             'sexo' => $this->faker->randomElement(['M', 'F']),
-            'estado' => $this->faker->randomElement(['A', 'I']),
+            'estado' => $this->faker->randomElement([1, 0]),
         ];
     }
 }

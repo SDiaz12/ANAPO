@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('nota');
             $table->string('observaciones')->nullable();
-            $table->enum('estado', ['A', 'I'])->default('A');
+            $table->enum('estado', [1, 0])->default(1);
             $table->unsignedBigInteger('id_asignatura');
             $table->unsignedBigInteger('id_estudiante');
             $table->unique(['id_asignatura', 'id_estudiante']);

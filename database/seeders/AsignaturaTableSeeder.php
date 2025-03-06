@@ -13,6 +13,6 @@ class AsignaturaTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Asignatura::factory()->count(50)->create();
+        Asignatura::factory()->count(5)->create();
     }
 }

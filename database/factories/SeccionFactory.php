@@ -18,7 +18,7 @@ class SeccionFactory extends Factory
     {
         return [
             'nombre' => $this->faker->name,
-            'estado' => $this->faker->randomElement(['A', 'I']),
+            'estado' => $this->faker->randomElement([1, 0]),
         ];
     }
 }

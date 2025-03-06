@@ -23,7 +23,7 @@ class AsignaturaDocenteFactory extends Factory
         return [
             'id_asignatura' => $id_asignatura,
             'id_docente' => $id_docente,
-            'estado' => $this->faker->randomElement(['A', 'I']),
+            'estado' => $this->faker->randomElement([1, 0]),
         ];
     }
 }

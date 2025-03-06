@@ -20,7 +20,7 @@ class PromocionFactory extends Factory
             'nombre' => $this->faker->name,
             'fecha_inicio' => $this->faker->date(),
             'fecha_fin' => $this->faker->date(),
-            'estado' => $this->faker->randomElement(['A', 'I']),
+            'estado' => $this->faker->randomElement([1, 0]),
         ];
     }
 }

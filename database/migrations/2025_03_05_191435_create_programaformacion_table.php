@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nombre', 100);
             $table->string('descripcion', 255);
             $table->string('nivel_formacion', 100);
-            $table->enum('estado', ['A', 'I'])->default('A');
+            $table->enum('estado', [1, 0])->default(1);
             $table->softDeletes();
             $table->timestamps();
         });
