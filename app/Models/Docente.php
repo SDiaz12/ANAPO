@@ -15,4 +15,9 @@ class Docente extends BaseModel
     protected $casts = [
         'estado' => 'boolean',
     ];
+
+    public function asignaturadocente()
+    {
+        return $this->hasMany(AsignaturaDocente::class, 'id_docente');
+    }
 }

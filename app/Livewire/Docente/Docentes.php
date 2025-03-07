@@ -7,12 +7,15 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Component;
 
-
 class Docentes extends Component
 {
     use WithFileUploads;
+    use WithPagination;
 
     public $search, $docente_id, $codigo, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado;
+
+    public $confirmingDelete = false;
+    public $IdAEliminar, $nombreAEliminar;
 
     public $viewMode = 'table';
 
@@ -134,6 +137,41 @@ class Docentes extends Component
         $this->estado = $docente->estado;
 
         $this->openModal();
+    }
+
+    public function delete()
+    {
+        if ($this->confirmingDelete) {
+            $docente = Docente::find($this->IdAEliminar);
+
+            if (!$docente) {
+                session()->flash('error', 'Docente no encontrado.');
+                $this->confirmingDelete = false;
+                return;
+            }
+
+            $docente->forceDelete();
+            session()->flash('message', 'Docente eliminado correctamente!');
+            $this->confirmingDelete = false;
+        }
+    }
+
+    public function confirmDelete($id)
+    {
+        $docente = Docente::find($id);
+
+        if (!$docente) {
+            session()->flash('error', 'Docente no encontrado.');
+            return;
+        }
+        if ($docente->asignaturadocente()->exists()) {
+            session()->flash('error', 'No se puede eliminar al docente:  ' .$docente->nombre .' ' .$docente->apellido .', porque está enlazado a una o más clases actualmente.');
+            return;
+        }
+
+        $this->IdAEliminar = $id;
+        $this->nombreAEliminar = $docente->nombre;
+        $this->confirmingDelete = true;
     }
 
     public $perPage = 9;
