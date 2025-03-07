@@ -8,6 +8,6 @@ class Matriculas extends Component
 {
     public function render()
     {
-        return view('livewire.matricula.matriculas');
+        return view('livewire.matricula.matriculas')->layout('layouts.app');
     }
 }

@@ -8,6 +8,6 @@ class ProgramaFormaciones extends Component
 {
     public function render()
     {
-        return view('livewire.programa-formacion.programa-formaciones');
+        return view('livewire.programa-formacion.programa-formaciones')->layout('layouts.app');
     }
 }

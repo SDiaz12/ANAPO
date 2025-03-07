@@ -8,6 +8,6 @@ class Promociones extends Component
 {
     public function render()
     {
-        return view('livewire.promocion.promociones');
+        return view('livewire.promocion.promociones')->layout('layouts.app');
     }
 }

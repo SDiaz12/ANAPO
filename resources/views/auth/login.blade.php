@@ -3,7 +3,7 @@
     <section class="bg-white w-full z-0">
         <div class="grid grid-cols-1 lg:grid-cols-2">
             <!-- Sección del formulario -->
-            <div class="flex items-center justify-center px-4 py-4 bg-white sm:px-6 lg:px-8 sm:py-6 lg:py-6">
+            <div class="flex items-center justify-center px-4 pt-8 pb-36 bg-white sm:px-6 lg:px-8 sm:py-6 lg:py-6">
                 <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
                     <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Iniciar sesión</h2>
                     <p class="mt-2 text-base text-gray-600">

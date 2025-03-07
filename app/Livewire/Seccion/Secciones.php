@@ -8,6 +8,6 @@ class Secciones extends Component
 {
     public function render()
     {
-        return view('livewire.seccion.secciones');
+        return view('livewire.seccion.secciones')->layout('layouts.app');
     }
 }

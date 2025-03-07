@@ -8,6 +8,6 @@ class AsignaturaEstudiantes extends Component
 {
     public function render()
     {
-        return view('livewire.asignatura-estudiante.asignatura-estudiantes');
+        return view('livewire.asignatura-estudiante.asignatura-estudiantes')->layout('layouts.app');
     }
 }
