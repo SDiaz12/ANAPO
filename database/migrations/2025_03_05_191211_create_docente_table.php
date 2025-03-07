@@ -23,7 +23,10 @@ return new class extends Migration
             $table->string('residencia');
             $table->string('telefono');
             $table->string('correo');
-            $table->integer('estado');
+            $table->boolean('estado');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
