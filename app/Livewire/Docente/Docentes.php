@@ -169,7 +169,7 @@ class Docentes extends Component
             session()->flash('error', 'Docente no encontrado.');
             return;
         }
-        if ($docente->asignaturaDocentes()->exists()) {
+        if ($docente->asignaturas()->exists()) {
             session()->flash('error', 'No se puede eliminar al docente:  ' .$docente->nombre .' ' .$docente->apellido .', porque está enlazado a una o más clases actualmente.');
             return;
         }
