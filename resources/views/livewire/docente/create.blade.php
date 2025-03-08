@@ -69,17 +69,17 @@
                 </div>
                 <div class="mb-5">
                     <label for="nombre" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
-                        Nombre:
+                        Nombres:
                     </label>
-                    <input type="text" name="nombre" id="nombre" placeholder="Nombre del docente" wire:model="nombre"
+                    <input type="text" name="nombre" id="nombre" placeholder="Nombres del docente" wire:model="nombre"
                         class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
                     @error('nombre') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
                 <div class="mb-5">
                     <label for="email" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
-                        Apellido:
+                        Apellidos:
                     </label>
-                    <input type="apellido" name="apellido" id="apellido" placeholder="Apellido del docente"
+                    <input type="apellido" name="apellido" id="apellido" placeholder="Apellidos del docente"
                         wire:model="apellido"
                         class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
                     @error('apellido') <span class="text-red-500">{{ $message }}</span> @enderror
@@ -124,7 +124,7 @@
                             <label for="date" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
                                 Correo electrónico:
                             </label>
-                            <input type="text" name="city" id="city" placeholder="Ingrese correo" wire:model="correo"
+                            <input type="email" name="correo" id="correo" placeholder="Ingrese correo" wire:model="correo"
                                 class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
                             @error('correo') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>
@@ -142,8 +142,8 @@
                 </div>
 
                 <div>
-                    <x-button wire:click.prevent="store()" type="button" class="w-full">
-                        Crear docente
+                    <x-button wire:click.prevent="store()" wire:loading.attr="disabled" wire:target="foto" type="button" class="w-full">
+                        {{ $docente_id ? 'Editar docente' : 'Crear docente' }}
                     </x-button>
                 </div>
             </form>

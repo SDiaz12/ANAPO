@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('asignaturas', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_programa');
             $table->string('nombre');
             $table->string('codigo');
             $table->string('descripcion');

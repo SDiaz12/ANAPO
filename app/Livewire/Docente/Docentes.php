@@ -7,14 +7,23 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Component;
 
-
 class Docentes extends Component
 {
     use WithFileUploads;
+    use WithPagination;
 
     public $search, $docente_id, $codigo, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado;
 
-   public $isOpen = 1;
+    public $confirmingDelete = false;
+    public $IdAEliminar, $nombreAEliminar;
+
+    public $viewMode = 'table';
+
+    public function toggleViewMode()
+    {
+        $this->viewMode = $this->viewMode === 'table' ? 'cards' : 'table';
+    }
+   public $isOpen = 0;
 
     public function create()
     {
@@ -48,6 +57,13 @@ class Docentes extends Component
         $this->estado = '';
     }
 
+    public function toggleEstado($id)
+    {
+        $docente = Docente::findOrFail($id);
+        $docente->estado = !$docente->estado;
+        $docente->save();
+    }
+
     public function store()
     {
         $this->validate([
@@ -71,13 +87,12 @@ class Docentes extends Component
             'sexo' => 'required',
             'telefono' => 'required',
             'correo' => 'required',
-            'estado' => 'required'
 
         ]);
         // Manejo de archivo foto
         if ($this->foto) {
             // Guardamos el archivo en la carpeta dentro de storage/app/public
-            $this->foto = $this->logo->store('docentesFotos', 'public');
+            $this->foto = $this->foto->store('docentesFotos', 'public');
         } elseif ($this->docente_id) {
             $docente = Docente::findOrFail($this->docente_id);
             $this->foto = $docente->foto;
@@ -93,7 +108,7 @@ class Docentes extends Component
             'sexo' => $this->sexo,
             'telefono' => $this->telefono,
             'correo' => $this->correo,
-            'estado' => $this->estado
+            'estado' => 1,
         ]);
 
         session()->flash(
@@ -124,7 +139,42 @@ class Docentes extends Component
         $this->openModal();
     }
 
-    public $perPage = 0;
+    public function delete()
+    {
+        if ($this->confirmingDelete) {
+            $docente = Docente::find($this->IdAEliminar);
+
+            if (!$docente) {
+                session()->flash('error', 'Docente no encontrado.');
+                $this->confirmingDelete = false;
+                return;
+            }
+
+            $docente->forceDelete();
+            session()->flash('message', 'Docente eliminado correctamente!');
+            $this->confirmingDelete = false;
+        }
+    }
+
+    public function confirmDelete($id)
+    {
+        $docente = Docente::find($id);
+
+        if (!$docente) {
+            session()->flash('error', 'Docente no encontrado.');
+            return;
+        }
+        if ($docente->asignaturadocente()->exists()) {
+            session()->flash('error', 'No se puede eliminar al docente:  ' .$docente->nombre .' ' .$docente->apellido .', porque está enlazado a una o más clases actualmente.');
+            return;
+        }
+
+        $this->IdAEliminar = $id;
+        $this->nombreAEliminar = $docente->nombre;
+        $this->confirmingDelete = true;
+    }
+
+    public $perPage = 9;
     public function loadMore($suma)
     {
         $this->perPage = $suma;
@@ -135,7 +185,7 @@ class Docentes extends Component
         ->orWhere('apellido', 'like', '%' . $this->search . '%')
         ->orWhere('dni', 'like', '%' . $this->search . '%')
         ->orWhere('codigo', 'like', '%' . $this->search . '%')
-        ->orderBy('id', 'ASC')
+        ->orderBy('id', 'DESC')
         ->paginate($this->perPage);
         
         return view('livewire.docente.docentes', ['docentes' => $docentes])->layout('layouts.app');

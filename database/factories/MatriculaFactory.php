@@ -19,9 +19,10 @@ class MatriculaFactory extends Factory
      */
     public function definition(): array
     {
-        $id_asignatura = Asignatura::inRandomOrder()->first()-> id;
-        $id_estudiante = Estudiante::inRandomOrder()->first()-> id;
+        $id_asignatura = Asignatura::inRandomOrder()->first()->id;
+        $id_estudiante = Estudiante::inRandomOrder()->first()->id;
         $id_seccion = Seccion::inRandomOrder()->first()->id;
+
         return [
             'fecha_matricula' => $this->faker->date(),
             'id_estudiante' => $id_estudiante,
