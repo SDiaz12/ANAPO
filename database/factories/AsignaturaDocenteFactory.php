@@ -21,8 +21,10 @@ class AsignaturaDocenteFactory extends Factory
         $id_asignatura = Asignatura::inRandomOrder()->first()-> id;
         $id_docente = Docente::inRandomOrder()->first()-> id;
         return [
-            'id_asignatura' => $id_asignatura,
-            'id_docente' => $id_docente,
+            'asignatura_id' => $id_asignatura,
+            'docente_id' => $id_docente,
+            'periodo_id' => $this->faker->numberBetween(1, 10),
+            'seccion_id' => $this->faker->numberBetween(1, 10),
             'estado' => $this->faker->randomElement([1, 0]),
         ];
     }

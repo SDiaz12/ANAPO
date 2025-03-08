@@ -19,6 +19,7 @@ class SeccionFactory extends Factory
         return [
             'nombre' => $this->faker->name,
             'estado' => $this->faker->randomElement([1, 0]),
+            'programaformacion_id' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

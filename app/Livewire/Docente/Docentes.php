@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Docente;
 
-use App\Models\Docente;
+
+use App\Models\AsignaturaDocente;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use App\Models\Docente;
 use Livewire\Component;
 
 class Docentes extends Component
@@ -12,10 +14,11 @@ class Docentes extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $search, $docente_id, $codigo, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado;
+    public $search, $docente_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado;
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
+    public $isOpen = false;
 
     public $viewMode = 'table';
 
@@ -23,7 +26,6 @@ class Docentes extends Component
     {
         $this->viewMode = $this->viewMode === 'table' ? 'cards' : 'table';
     }
-   public $isOpen = 0;
 
     public function create()
     {
@@ -51,6 +53,7 @@ class Docentes extends Component
         $this->apellido = '';
         $this->fecha_nacimiento = '';
         $this->residencia = '';
+        $this->fecha_ingreso = '';
         $this->sexo = '';
         $this->telefono = '';
         $this->correo = '';
@@ -105,6 +108,7 @@ class Docentes extends Component
             'apellido' => $this->apellido,
             'fecha_nacimiento' => $this->fecha_nacimiento,
             'residencia' => $this->residencia,
+            'fecha_ingreso' => now(),
             'sexo' => $this->sexo,
             'telefono' => $this->telefono,
             'correo' => $this->correo,
@@ -131,6 +135,7 @@ class Docentes extends Component
         $this->apellido = $docente->apellido;
         $this->fecha_nacimiento = $docente->fecha_nacimiento;
         $this->residencia = $docente->residencia;
+        $this->fecha_ingreso = $docente->fecha_ingreso;
         $this->sexo = $docente->sexo;
         $this->telefono = $docente->telefono;
         $this->correo = $docente->correo;
@@ -164,7 +169,7 @@ class Docentes extends Component
             session()->flash('error', 'Docente no encontrado.');
             return;
         }
-        if ($docente->asignaturadocente()->exists()) {
+        if ($docente->asignaturaDocentes()->exists()) {
             session()->flash('error', 'No se puede eliminar al docente:  ' .$docente->nombre .' ' .$docente->apellido .', porque está enlazado a una o más clases actualmente.');
             return;
         }
@@ -173,7 +178,7 @@ class Docentes extends Component
         $this->nombreAEliminar = $docente->nombre;
         $this->confirmingDelete = true;
     }
-
+    
     public $perPage = 9;
     public function loadMore($suma)
     {
@@ -187,7 +192,7 @@ class Docentes extends Component
         ->orWhere('codigo', 'like', '%' . $this->search . '%')
         ->orderBy('id', 'DESC')
         ->paginate($this->perPage);
-        
+
         return view('livewire.docente.docentes', ['docentes' => $docentes])->layout('layouts.app');
     }
 }

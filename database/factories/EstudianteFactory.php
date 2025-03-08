@@ -25,6 +25,7 @@ class EstudianteFactory extends Factory
             'correo' => $this->faker->unique()->safeEmail,
             'telefono' => $this->faker->phoneNumber,
             'residencia' => $this->faker->address,
+            'fecha_ingreso' => $this->faker->date(),
             'fecha_nacimiento' => $this->faker->date(),
             'sexo' => $this->faker->randomElement(['M', 'F']),
             'estado' => $this->faker->randomElement([1, 0]),

@@ -19,12 +19,12 @@ class AsignaturaEstudianteFactory extends Factory
      */
     public function definition(): array
     {
-        $id_asignatura = Asignatura::inRandomOrder()->first()-> id;
+        $asignatura_id = Asignatura::inRandomOrder()->first()-> id;
         $id_estudiante = Estudiante::inRandomOrder()->first()-> id;
         return [
-            'id_asignatura' => $id_asignatura,
-            'id_estudiante' => $id_estudiante,
-            'nota' => $this->faker->randomFloat(2, 0, 10),
+            'asignatura_id' => $asignatura_id,
+            'estudiante_id' => $id_estudiante,
+            'nota' =>$this->faker->randomFloat(2, 0, 10),
             'observaciones' => $this->faker->text(),
             'estado' => $this->faker->randomElement([1, 0]),
         ];

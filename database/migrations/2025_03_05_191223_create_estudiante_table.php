@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('sexo');
             $table->date('fecha_nacimiento');
             $table->string('residencia');
+            $table->date('fecha_ingreso');
             $table->string('telefono');
             $table->string('correo');
             $table->integer('estado');

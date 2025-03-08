@@ -10,6 +10,27 @@ class Seccion extends BaseModel
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['nombre', 'created_by', 'deleted_by', 'updated_by'];
+    protected $fillable = [
+        'nombre', 
+        'programaformacion_id', 
+        'created_by', 
+        'deleted_by', 
+        'updated_by'];
     protected $table = 'secciones';
+
+    public function programaformacion()
+    {
+        return $this->belongsTo(ProgramaFormacion::class);
+    }
+
+    public function asignaturadocentes()
+    {
+        return $this->hasMany(AsignaturaDocente::class);
+    }
+
+    public function asignaturaestudiantes()
+    {
+        return $this->hasMany(AsignaturaEstudiante::class);
+    }
+
 }

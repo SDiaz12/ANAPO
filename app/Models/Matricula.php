@@ -15,24 +15,37 @@ class Matricula extends BaseModel
 
     protected $fillable = [
         'fecha_matricula',
+        'programaformacion_id',
         'estado',
         'motivo_estado',
         'observacion_estado',
-        'alumno_id',
-        'asignatura_id',
-        'seccion_id',
-        'periodo',
+        'estudiante_id',
         'instituto'
     ];
 
-    public function alumno()
+    public function estudiante()
     {
-        return $this->belongsTo(Estudiante::class, 'alumno_id');
+        return $this->belongsTo(Estudiante::class, 'estudiante_id');
     }
 
-    public function asignatura()
+    public function programaFormacion()
     {
-        return $this->belongsTo(Asignatura::class, 'asignatura_id');
+        return $this->belongsTo(ProgramaFormacion::class, 'programaformacion_id');
+    }
+
+    public function asignacionDocentesEstudiantes()
+    {
+        return $this->hasMany(AsignacionDocentesEstudiantes::class, 'matricula_id');
+    }
+
+    public function promociones()
+    {
+        return $this->hasMany(Promocion::class, 'matricula_id');
+    }
+
+    public function asignaturasEstudiantes()
+    {
+        return $this->hasMany(AsignaturaEstudiante::class, 'matricula_id');
     }
 
 }

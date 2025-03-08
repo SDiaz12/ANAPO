@@ -17,9 +17,14 @@ return new class extends Migration
             $table->string('codigo');
             $table->string('descripcion');
             $table->integer('creditos');
+            $table->unsignedBigInteger('programaformacion_id');
             $table->integer( 'estado');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('programaformacion_id')
+            ->references('id')
+            ->on('programaformaciones');
         });
     }
 
