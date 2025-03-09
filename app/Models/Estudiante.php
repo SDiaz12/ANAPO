@@ -28,4 +28,12 @@ class Estudiante extends BaseModel
         'updated_by'
     ];
     protected $table = 'estudiantes';
+
+    //asignaturas a las que esta enlazado
+    public function asignaturas()
+    {
+        return $this->belongsToMany(Asignatura::class, 'asignaturaestudiantes', 'estudiante_id', 'asignatura_id')
+            ->withPivot('nota', 'observaciones', 'estado')
+            ->withTimestamps();
+    }
 }

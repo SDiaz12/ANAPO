@@ -193,6 +193,10 @@ class Docentes extends Component
         ->orderBy('id', 'DESC')
         ->paginate($this->perPage);
 
-        return view('livewire.docente.docentes', ['docentes' => $docentes])->layout('layouts.app');
+        $docentesCount = Docente::count();
+        return view('livewire.docente.docentes', [
+            'docentes' => $docentes,
+            'docentesCount' => $docentesCount,
+        ])->layout('layouts.app');
     }
 }

@@ -25,6 +25,9 @@ return new class extends Migration
             $table->string('telefono');
             $table->string('correo');
             $table->integer('estado');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
