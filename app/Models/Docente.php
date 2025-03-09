@@ -22,6 +22,8 @@ class Docente extends BaseModel
         'telefono', 
         'correo', 
         'fecha_ingreso',
+        'permanente',
+        'lugar_asignado',
         'estado', 
         'created_by', 
         'deleted_by', 
