@@ -27,7 +27,7 @@ class EstudianteFactory extends Factory
             'residencia' => $this->faker->address,
             'fecha_ingreso' => $this->faker->date(),
             'fecha_nacimiento' => $this->faker->date(),
-            'sexo' => $this->faker->randomElement(['M', 'F']),
+            'sexo' => $this->faker->randomElement(['Masculino', 'Femenino']),
             'estado' => $this->faker->randomElement([1, 0]),
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Livewire\Docente;
 
 
 use App\Models\AsignaturaDocente;
+use App\Models\Periodo;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Docente;
@@ -14,12 +15,15 @@ class Docentes extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $search, $docente_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado;
+    public $search, $docente_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado, $created_at;
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
     public $isOpen = false;
+    public $isOpenDatos = true;
 
+    public $clasesDocente = [];
+    public $clasesHistorial = [];
     public $viewMode = 'table';
 
     public function toggleViewMode()
@@ -41,6 +45,55 @@ class Docentes extends Component
     public function closeModal()
     {
         $this->isOpen = false;
+    }
+
+    public function openDatos()
+    {
+        $this->isOpenDatos = true;
+    }
+
+    public function closeDatos()
+    {
+        $this->isOpenDatos = false;
+    }
+
+    public function mostrarDatos($idDocente)
+    {
+        $periodoActual = Periodo::where('estado', true)->first();
+        $periodosHistoricos = Periodo::where('estado', false)->pluck('id'); // Obtiene IDs de todos los períodos históricos
+
+        // Verificamos si hay un periodo activo antes de hacer la consulta
+        $this->clasesDocente = $periodoActual
+            ? AsignaturaDocente::where('docente_id', $idDocente)
+                ->where('periodo_id', $periodoActual->id)
+                ->get()
+            : collect(); // Si no hay período activo, devolvemos una colección vacía
+
+        // Si hay periodos históricos, obtenemos todas sus clases
+        $this->clasesHistorial = $periodosHistoricos->isNotEmpty()
+            ? AsignaturaDocente::where('docente_id', $idDocente)
+                ->whereIn('periodo_id', $periodosHistoricos)
+                ->get()
+            : collect(); // Si no hay periodos históricos, devolvemos una colección vacía
+
+
+        // Obtenemos los datos del docente
+        $docente = Docente::findOrFail($idDocente);
+        $this->docente_id = $idDocente;
+        $this->codigo = $docente->codigo;
+        $this->dni = $docente->dni;
+        $this->foto = $docente->foto;
+        $this->nombre = $docente->nombre;
+        $this->apellido = $docente->apellido;
+        $this->fecha_nacimiento = $docente->fecha_nacimiento;
+        $this->residencia = $docente->residencia;
+        $this->fecha_ingreso = $docente->fecha_ingreso;
+        $this->sexo = $docente->sexo;
+        $this->telefono = $docente->telefono;
+        $this->correo = $docente->correo;
+        $this->estado = $docente->estado;
+        $this->created_at = $docente->created_at;
+        $this->openDatos();
     }
 
     public function resetInputFields()
