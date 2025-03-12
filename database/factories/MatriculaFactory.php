@@ -20,8 +20,8 @@ class MatriculaFactory extends Factory
      */
     public function definition(): array
     {
-        $id_asignatura = Asignatura::inRandomOrder()->first()-> id;
-        $id_estudiante = Estudiante::inRandomOrder()->first()-> id;
+        $id_asignatura = Asignatura::inRandomOrder()->first()->id;
+        $id_estudiante = Estudiante::inRandomOrder()->first()->id;
         $id_seccion = Seccion::inRandomOrder()->first()->id;
         $id_programaformacion = ProgramaFormacion::inRandomOrder()->first()->id;
         return [

@@ -14,20 +14,32 @@ class Asignatura extends BaseModel
         'codigo', 
         'nombre', 
         'creditos',
-        'programaformacion_id', 
-        'duracion_hora',
+        'programa_formacion_id', 
         'estado', 
         'created_by', 
         'deleted_by', 
         'updated_by'
     ];
     protected $table = 'asignaturas';
+    public function notas()
+    {
+        return $this->belongsTo(Nota::class, 'asignatura_id');
+    }
+    public function requisitos()
+    {
+        return $this->belongsToMany(Asignatura::class, 'asignatura_requisitos', 'asignatura_id', 'requisito_id');
+    }
+
+    // Relación: Asignatura es requisito de otras asignaturas
+    public function esRequisitoDe()
+    {
+        return $this->belongsToMany(Asignatura::class, 'asignatura_requisitos', 'requisito_id', 'asignatura_id');
+    }
 
     public function programaFormacion()
     {
-        return $this->belongsTo(ProgramaFormacion::class);
+        return $this->belongsTo(ProgramaFormacion::class, 'programa_formacion_id');
     }
-
     public function estudiantes()
     {
         return $this->belongsToMany(Estudiante::class, 'asignaturas_estudiantes', 'asignatura_id', 'estudiante_id');

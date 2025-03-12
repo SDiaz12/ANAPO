@@ -17,23 +17,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
         $this->call([
             ProgramaFormacionTableSeeder::class,
             AsignaturaTableSeeder::class,
+            UserTableSeeder::class,
+            RolSeeder::class,
+            PermisoSeeder::class,
             DocenteTableSeeder::class,
             EstudianteTableSeeder::class,
             AsignaturaTableSeeder::class,
             SeccionTableSeeder::class,
             PeriodoTableSeeder::class,
            // MatriculaTableSeeder::class,
-            AsignaturaEstudianteTableSeeder::class,
             AsignatutaDocenteTableSeeder::class,
             PromocionTableSeeder::class,
             AsignacionDocentesEstudiantesTableSeeder::class,
@@ -41,5 +36,7 @@ class DatabaseSeeder extends Seeder
             CalificacionTableSeeder::class,
             
         ]);
+
+        
     }
 }

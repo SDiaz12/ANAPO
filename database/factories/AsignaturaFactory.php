@@ -21,7 +21,7 @@ class AsignaturaFactory extends Factory
             'nombre' => $this->faker->name,
             'descripcion' => $this->faker->sentence(),
             'creditos' => $this->faker->randomNumber(2),
-            'programaformacion_id' => $this->faker->numberBetween(1, 10),
+            'programa_formacion_id' => $this->faker->numberBetween(1, 10),
             'estado' => $this->faker->randomElement([1, 0]),
         ];
     }
