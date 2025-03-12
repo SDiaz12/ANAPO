@@ -13,10 +13,14 @@ class ProgramaFormacion extends BaseModel
     protected $table = 'programas_formacion';
 
     protected $fillable = [
+        'codigo',
         'nombre',
-        'descripcion',
-        'nivel_formacion',
-        'duracion',
+        'fecha_aprobacion',
+        'fecha_final',
+        'hora_finalizacion',
+        'instituto_id',
+        'tipo_programa',
+        'procentaje_aprobacion',
         'estado',
     ];
 

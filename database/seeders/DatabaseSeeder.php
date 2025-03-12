@@ -20,9 +20,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProgramaFormacionTableSeeder::class,
             AsignaturaTableSeeder::class,
-            UserTableSeeder::class,
-            RolSeeder::class,
             PermisoSeeder::class,
+            RolSeeder::class,
+            UserTableSeeder::class,
             DocenteTableSeeder::class,
             EstudianteTableSeeder::class,
             AsignaturaTableSeeder::class,

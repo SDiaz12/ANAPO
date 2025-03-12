@@ -1,4 +1,21 @@
 <div>
+    @if($isOpen)
+        @include('livewire.docente.create')
+    @endif
+
+    @if ($isOpenDatos)
+        @include('livewire.docente.datosDocentes')
+    @endif
+    
+    @if (session()->has('message'))
+        <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
+            <div class="flex">
+                <div>
+                    <p class="text-sm">{{ session('message') }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="flex flex-column bg-white rounded-t-lg dark:bg-gray-800 p-5 sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         <div class="flex items-center space-x-2">
             <button wire:click="create()"
@@ -36,41 +53,41 @@
                 </button>
             <!-- Dropdown menu -->
             <div id="dropdownRadio"
-                class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600"
+                class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-xl border dark:border-gray-600 dark:bg-gray-700 dark:divide-gray-600"
                 data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top"
                 style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(522.5px, 3847.5px, 0px);">
                 <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
                     aria-labelledby="dropdownRadioButton">
                     <li>
-                        <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                        <div class="flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
                             <input wire:click="loadMore({{9}})" checked="" id="filter-radio-example-2" type="radio" value="" name="filter-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-2"
                                 class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">9 docentes</label>
                         </div>
                     </li>
                     <li>
-                        <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                        <div class="flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
                             <input wire:click="loadMore({{15}})" id="filter-radio-example-3" type="radio" value="" name="filter-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-3"
                                 class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">15 docentes</label>
                         </div>
                     </li>
                     <li>
-                        <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                        <div class="flex rounded-lg items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                             <input wire:click="loadMore({{24}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-4"
                                 class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">24 docentes</label>
                         </div>
                     </li>
                     <li>
-                        <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <input wire:click="loadMore({{36}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <div class="flex rounded-lg items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <input wire:click="loadMore({{$docentesCount}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
+                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-4"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">36 docentes</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">Mostrar todos</label>
                         </div>
                     </li>
                 </ul>
@@ -87,26 +104,11 @@
                 </svg>
             </div>
             <input wire:model.live="search" type="text" id="table-search"
-                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
                 placeholder="Buscar docente">
         </div>
     </div>
     <div class="relative overflow-x-auto shadow-md">
-        @if($isOpen)
-            @include('livewire.docente.create')
-        @endif
-    
-        @if (session()->has('message'))
-            <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
-                <div class="flex">
-                    <div>
-                        <p class="text-sm">{{ session('message') }}</p>
-                    </div>
-                </div>
-            </div>
-        @endif
-        
-    
         @if($viewMode === 'table')
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -150,37 +152,37 @@
                 @foreach($docentes as $docente)
                 <tr
                     class=" overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         {{ $docente->codigo }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         {{ $docente->dni }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         @if($docente->foto)
                             <img src="{{ asset('storage/' . $docente->foto) }}"
-                            alt="foto docente" class="w-12 h-12 object-cover">
+                            alt="foto docente" class="w-12 h-12 rounded-full object-cover">
                         @else
-                        <img class="w-12 h-12 object-cover"
+                        <img class="w-12 h-12 object-cover rounded-full"
                             src="https://ui-avatars.com/api/?name={{ $docente->nombre }}&amp;color=000&amp;background=facc15">
                         @endif
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         {{ $docente->nombre }} {{ $docente->apellido }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         {{ $docente->fecha_nacimiento }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         {{ $docente->sexo }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         {{ $docente->residencia }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         {{ $docente->telefono }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
                         {{ $docente->correo }}
                     </td>
                     <td class="px-6 py-4">
@@ -189,11 +191,11 @@
                                 wire:click="toggleEstado({{ $docente->id }})"
                                 {{ $docente->estado ? 'checked' : '' }}>
                             <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 
-                                peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 
+                                peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-700 
                                 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full 
                                 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 
                                 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full 
-                                after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-500">
+                                after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600">
                             </div>
                             <span class="ml-3 text-gray-700 dark:text-gray-400">
                                 {{ $docente->estado ? 'Activo' : 'Inactivo' }}
@@ -250,11 +252,11 @@
                                 wire:click="toggleEstado({{ $docente->id }})"
                                 {{ $docente->estado ? 'checked' : '' }}>
                             <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 
-                                peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 
+                                peer-focus:ring-4 peer-focus:ring-red-500 dark:peer-focus:ring-red-700 
                                 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full 
                                 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 
                                 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full 
-                                after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-500">
+                                after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600">
                             </div>
                         </label>
                     </div>
@@ -315,7 +317,7 @@
                       </svg>
                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400"><p>{{ session('error') }}</p></h3>
                     
-                    <button wire:click="$set('confirmingDelete', false)" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Aceptar</button>
+                    <button wire:click="$set('confirmingDelete', false)" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Aceptar</button>
                 </div>
             </div>
         </div>

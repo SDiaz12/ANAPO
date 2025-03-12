@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Asignatura;
 use App\Models\Docente;
+use App\Models\AsignaturaDocente;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,8 +19,16 @@ class AsignaturaDocenteFactory extends Factory
      */
     public function definition(): array
     {
-        $id_asignatura = Asignatura::inRandomOrder()->first()-> id;
-        $id_docente = Docente::inRandomOrder()->first()-> id;
+        do {
+            $id_asignatura = Asignatura::inRandomOrder()->first()->id;
+            $id_docente = Docente::inRandomOrder()->first()->id;
+    
+            // Verificar si ya existe una entrada con la misma combinación de asignatura_id y docente_id
+            $exists = AsignaturaDocente::where('asignatura_id', $id_asignatura)
+                        ->where('docente_id', $id_docente)
+                        ->exists();
+        } while ($exists);
+    
         return [
             'asignatura_id' => $id_asignatura,
             'docente_id' => $id_docente,
@@ -28,4 +37,5 @@ class AsignaturaDocenteFactory extends Factory
             'estado' => $this->faker->randomElement([1, 0]),
         ];
     }
+    
 }
