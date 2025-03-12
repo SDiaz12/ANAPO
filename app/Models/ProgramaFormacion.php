@@ -10,7 +10,7 @@ class ProgramaFormacion extends BaseModel
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'programas_formacion';
+    protected $table = 'programaformaciones';
 
     protected $fillable = [
         'codigo',

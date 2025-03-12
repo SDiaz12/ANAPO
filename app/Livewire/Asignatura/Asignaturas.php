@@ -120,7 +120,7 @@ class Asignaturas extends Component
             'codigo' => 'required|string|max:50|unique:asignaturas,codigo,' . $this->asignatura_id,
             'descripcion' => 'nullable|string',
             'creditos' => 'required|integer|min:1',
-            'programa_formacion_id' => 'required|integer|exists:programas_formacion,id',
+            'programa_formacion_id' => 'required|integer|exists:programaformaciones,id',
         ]);
 
         $asignatura = Asignatura::updateOrCreate(

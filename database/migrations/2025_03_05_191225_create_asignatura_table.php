@@ -27,7 +27,7 @@ return new class extends Migration
 
             $table->foreign('programa_formacion_id')
             ->references('id')
-            ->on('programas_formacion');
+            ->on('programaformaciones');
         });
     }
 
