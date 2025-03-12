@@ -9,7 +9,7 @@
     <!-- Título y botón de cierre -->
     <div class="flex justify-between items-center mb-4">
         <h5 id="drawer-right-label" class="text-lg font-semibold text-gray-800 dark:text-gray-300">
-            Datos del Docente
+            Datos del Estudiante
         </h5>
         <button type="button" wire:click="closeDatos()"
             class="text-gray-500 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex items-center justify-center dark:hover:bg-gray-700 dark:hover:text-white">
@@ -20,7 +20,7 @@
         </button>
     </div>
 
-    <!-- Información del docente -->
+    <!-- Información del Estudiante -->
     <div class="flex rounded-lg px-3 py-3 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 items-center gap-4">
         @if($foto)
             <img class="w-24 h-24 object-cover rounded-full" src="{{ asset('storage/' . $foto) }}" alt="{{$nombre}}">
@@ -61,17 +61,17 @@
                     <tr class="bg-gray-100 dark:bg-gray-700">
                         <th class="py-2 px-4 text-left">Periodo</th>
                         <th class="py-2 px-4 text-left">Asignatura</th>
-                        <th class="py-2 px-4 text-left">Sección</th>
-                        <th class="py-2 px-4 text-left">Estudiantes</th>
+                        <th class="py-2 px-4 text-left">Docente</th>
+                        <th class="py-2 px-4 text-left">Nota</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($clasesDocente as $clase)
+                    @forelse ($clasesEstudiante as $clase)
                         <tr class="overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"> 
                             <td class="py-2 px-4 text-gray-400">{{ $clase->periodo->nombre }}</td>
                             <td class="py-2 px-4 text-gray-400">{{ $clase->asignatura->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-400">{{ $clase->seccion->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-400">{{ $clase->seccion->nombre }}</td>
+                            <td class="py-2 px-4 text-gray-400">{{ $clase->docente->nombre }}</td>
+                            <td class="py-2 px-4 text-gray-400">{{ $clase->nota }}</td>
                         </tr>
                     @empty  
                         <tr>
@@ -95,8 +95,8 @@
                     <tr class="bg-gray-100 dark:bg-gray-700">
                         <th class="py-2 px-4 text-left">Periodo</th>
                         <th class="py-2 px-4 text-left">Asignatura</th>
-                        <th class="py-2 px-4 text-left">Sección</th>
-                        <th class="py-2 px-4 text-left">Estudiantes</th>
+                        <th class="py-2 px-4 text-left">Docente</th>
+                        <th class="py-2 px-4 text-left">Nota</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,8 +104,8 @@
                         <tr class="overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="py-2 px-4 text-gray-400">{{ $clasedada->periodo->nombre }}</td>
                             <td class="py-2 px-4 text-gray-400">{{ $clasedada->asignatura->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-400">{{ $clasedada->seccion->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-600">{{ $clase->seccion->nombre }}</td>
+                            <td class="py-2 px-4 text-gray-400">{{ $clasedada->docente->nombre }}</td>
+                            <td class="py-2 px-4 text-gray-400">{{ $clasedada->nota }}</td>
                         </tr>
                     @empty  
                         <tr>

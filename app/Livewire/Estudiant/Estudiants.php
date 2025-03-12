@@ -2,21 +2,30 @@
 
 namespace App\Livewire\Estudiant;
 
+use App\Models\AsignaturaEstudiante;
 use App\Models\Estudiante;
+use App\Models\Nota;
+use App\Models\Periodo;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
+//#[Lazy()]
 class Estudiants extends Component
 {
     use WithFileUploads;
     use WithPagination;
 
-    public $search, $estudiante_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado;
+    public $search, $estudiante_id, $created_at, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado;
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
     public $isOpen = false;
+    public $isOpenDatos = false;
+
+    public $clasesEstudiante = [];
+    public $clasesHistorial = [];
 
     public $viewMode = 'table';
 
@@ -39,6 +48,65 @@ class Estudiants extends Component
     public function closeModal()
     {
         $this->isOpen = false;
+    }
+    public function openDatos()
+    {
+        $this->isOpenDatos = true;
+    }
+
+    public function closeDatos()
+    {
+        $this->isOpenDatos = false;
+    }
+
+
+    public function historialAsignaturasEstudiante($idEstudiante)
+    {
+        $periodoActual = Periodo::where('estado', true)->first();
+        $periodosHistoricos = Periodo::where('estado', false)->pluck('id'); // Obtiene IDs de todos los períodos históricos
+
+        // Verificamos si hay un periodo activo antes de hacer la consulta
+        $this->clasesEstudiante = $periodoActual
+            ? Nota::where('estudiante_id', $idEstudiante)
+                ->where('periodo_id', $periodoActual->id)
+                ->get()
+            : collect(); // Si no hay período activo, devolvemos una colección vacía
+
+        // Si hay periodos históricos, obtenemos todas sus clases
+        $this->clasesHistorial = $periodosHistoricos->isNotEmpty()
+            ? Nota::where('estudiante_id', $idEstudiante)
+                ->whereIn('periodo_id', $periodosHistoricos)
+                ->get()
+            : collect(); // Si no hay periodos históricos, devolvemos una colección vacía
+    }
+
+    public function infoEstudiante($idEstudiante)
+    {
+        $estudiante = Estudiante::findOrFail($idEstudiante);
+        $this->estudiante_id = $idEstudiante;
+        $this->codigo = $estudiante->codigo;
+        $this->dni = $estudiante->dni;
+        $this->foto = $estudiante->foto;
+        $this->nombre = $estudiante->nombre;
+        $this->apellido = $estudiante->apellido;
+        $this->fecha_nacimiento = $estudiante->fecha_nacimiento;
+        $this->residencia = $estudiante->residencia;
+        $this->fecha_ingreso = $estudiante->fecha_ingreso;
+        $this->sexo = $estudiante->sexo;
+        $this->telefono = $estudiante->telefono;
+        $this->correo = $estudiante->correo;
+        $this->estado = $estudiante->estado;
+        $this->created_at = $estudiante->created_at;
+    }
+
+    public function mostrarDatos($idEstudiante)
+    {
+        // Obtenemos las asignaturas del estudiante
+        $this->historialAsignaturasEstudiante($idEstudiante);
+        // Obtenemos los datos del estudiante
+        $this->infoEstudiante($idEstudiante);
+        // Mostramos el modal
+        $this->openDatos();
     }
 
     public function resetInputFields()
@@ -181,6 +249,11 @@ class Estudiants extends Component
     public function loadMore($suma)
     {
         $this->perPage = $suma;
+    }
+
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
     }
     public function render()
     {

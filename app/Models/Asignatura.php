@@ -50,7 +50,7 @@ class Asignatura extends BaseModel
 
     public function asignaturaEstudiantes()
     {
-        return $this->hasMany(AsignaturaEstudiante::class, 'asignatura_id');
+        return $this->hasMany(Nota::class, 'asignatura_id');
     }
     public function docentes()
     {

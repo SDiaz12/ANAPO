@@ -10,7 +10,13 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+        <style>
+            @layer utilities {
+                .scrollbar-hidden::-webkit-scrollbar {
+                display: none;
+            }
+            }
+        </style>
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -25,7 +31,7 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased scrollbar-hidden">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <x-sidebar />
             <!-- Page Heading -->

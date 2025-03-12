@@ -5,11 +5,13 @@ namespace App\Livewire\Docente;
 
 use App\Models\AsignaturaDocente;
 use App\Models\Periodo;
+use App\Models\Seccion;
+use Livewire\Attributes\Lazy;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Docente;
 use Livewire\Component;
-
+//#[Lazy()]
 class Docentes extends Component
 {
     use WithFileUploads;
@@ -20,10 +22,11 @@ class Docentes extends Component
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
     public $isOpen = false;
-    public $isOpenDatos = true;
+    public $isOpenDatos = false;
 
     public $clasesDocente = [];
     public $clasesHistorial = [];
+
     public $viewMode = 'table';
 
     public function toggleViewMode()
@@ -57,7 +60,8 @@ class Docentes extends Component
         $this->isOpenDatos = false;
     }
 
-    public function mostrarDatos($idDocente)
+
+    public function historialAsignaturasDocente($idDocente)
     {
         $periodoActual = Periodo::where('estado', true)->first();
         $periodosHistoricos = Periodo::where('estado', false)->pluck('id'); // Obtiene IDs de todos los períodos históricos
@@ -75,9 +79,10 @@ class Docentes extends Component
                 ->whereIn('periodo_id', $periodosHistoricos)
                 ->get()
             : collect(); // Si no hay periodos históricos, devolvemos una colección vacía
+    }
 
-
-        // Obtenemos los datos del docente
+    public function infoDocente($idDocente)
+    {
         $docente = Docente::findOrFail($idDocente);
         $this->docente_id = $idDocente;
         $this->codigo = $docente->codigo;
@@ -93,6 +98,15 @@ class Docentes extends Component
         $this->correo = $docente->correo;
         $this->estado = $docente->estado;
         $this->created_at = $docente->created_at;
+    }
+
+    public function mostrarDatos($idDocente)
+    {
+        // Obtenemos las asignaturas del docente
+        $this->historialAsignaturasDocente($idDocente);
+        // Obtenemos los datos del docente
+        $this->infoDocente($idDocente);
+        // Mostramos el modal
         $this->openDatos();
     }
 
@@ -223,7 +237,7 @@ class Docentes extends Component
             return;
         }
         if ($docente->asignaturas()->exists()) {
-            session()->flash('error', 'No se puede eliminar al docente:  ' .$docente->nombre .' ' .$docente->apellido .', porque está enlazado a una o más clases actualmente.');
+            session()->flash('error', 'No se puede eliminar al docente:  ' . $docente->nombre . ' ' . $docente->apellido . ', porque está enlazado a una o más clases actualmente.');
             return;
         }
 
@@ -231,7 +245,10 @@ class Docentes extends Component
         $this->nombreAEliminar = $docente->nombre;
         $this->confirmingDelete = true;
     }
-    
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
     public $perPage = 9;
     public function loadMore($suma)
     {
@@ -240,11 +257,11 @@ class Docentes extends Component
     public function render()
     {
         $docentes = Docente::where('nombre', 'like', '%' . $this->search . '%')
-        ->orWhere('apellido', 'like', '%' . $this->search . '%')
-        ->orWhere('dni', 'like', '%' . $this->search . '%')
-        ->orWhere('codigo', 'like', '%' . $this->search . '%')
-        ->orderBy('id', 'DESC')
-        ->paginate($this->perPage);
+            ->orWhere('apellido', 'like', '%' . $this->search . '%')
+            ->orWhere('dni', 'like', '%' . $this->search . '%')
+            ->orWhere('codigo', 'like', '%' . $this->search . '%')
+            ->orderBy('id', 'DESC')
+            ->paginate($this->perPage);
 
         $docentesCount = Docente::count();
         return view('livewire.docente.docentes', [

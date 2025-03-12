@@ -36,4 +36,21 @@ class Estudiante extends BaseModel
             ->withPivot('nota', 'observaciones', 'estado')
             ->withTimestamps();
     }
+
+    //secciones a las que esta enlazado
+    public function secciones()
+    {
+        return $this->belongsToMany(Seccion::class, 'asignaturaestudiantes', 'estudiante_id', 'seccion_id')
+            ->withPivot('nota', 'observaciones', 'estado')
+            ->withTimestamps();
+    }
+
+    //periodos a los que esta enlazado
+    public function periodos()
+    {
+        return $this->belongsToMany(Periodo::class, 'asignaturaestudiantes', 'estudiante_id', 'periodo_id')
+            ->withPivot('nota', 'observaciones', 'estado')
+            ->withTimestamps();
+    }
+
 }

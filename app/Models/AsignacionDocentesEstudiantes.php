@@ -37,7 +37,7 @@ class AsignacionDocentesEstudiantes extends BaseModel
 
     public function asignaturaEstudiante()
     {
-        return $this->hasMany(AsignaturaEstudiante::class, 'asignacion_docente_estudiante_id');
+        return $this->hasMany(Nota::class, 'asignacion_docente_estudiante_id');
     }
 
     public function asignaturaDocente()
