@@ -13,12 +13,19 @@ return new class extends Migration
     {
         Schema::create('asignaturadocentes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_asignatura')->constrained('asignaturas');
-            $table->foreignId('id_docente')->constrained('docentes');
-            $table->enum('estado', [1, 0])->default(1);
-            $table->unique(['id_asignatura', 'id_docente']);
+            $table->unsignedBigInteger('docente_id');
+            $table->unsignedBigInteger('asignatura_id');
+            $table->unsignedBigInteger('periodo_id');
+            $table->unsignedBigInteger('seccion_id');
+            $table->integer('estado');
+            $table->unique(['asignatura_id', 'docente_id']);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('docente_id')->references('id')->on('docentes');
+            $table->foreign('asignatura_id')->references('id')->on('asignaturas');
+            $table->foreign('periodo_id')->references('id')->on('periodos');
+            $table->foreign('seccion_id')->references('id')->on('secciones');
         });
     }
 

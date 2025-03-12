@@ -10,17 +10,23 @@ class AsignaturaEstudiante extends BaseModel
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'asignaturas_estudiantes';
-    protected $primaryKey = 'id_asignatura_estudiante';
-    protected $fillable = ['id_asignatura', 'id_estudiante', 'nota', 'observaciones', 'estado'];
+    protected $table = 'asignaturaestudiantes';
+
+    protected $fillable = [
+        'asignatura_id', 
+        'estudiante_id', 
+        'nota', 
+        'observaciones', 
+        'estado'
+    ];
 
     public function asignatura()
     {
-        return $this->belongsTo(Asignatura::class, 'id_asignatura');
+        return $this->belongsTo(Asignatura::class, 'asignatura_id');
     }
 
     public function estudiante()
     {
-        return $this->belongsTo(Estudiante::class, 'id_estudiante');
+        return $this->belongsTo(Estudiante::class, 'estudiante_id');
     }
 }

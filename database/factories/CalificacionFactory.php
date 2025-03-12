@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Promocion>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Calificacion>
  */
-class PromocionFactory extends Factory
+class CalificacionFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,13 +17,10 @@ class PromocionFactory extends Factory
     public function definition(): array
     {
         return [
-            'nombre' => $this->faker->name,
-            'fecha_promocion' => $this->faker->date(),
+            'promedio' => $this->faker->randomFloat(2, 0, 5),
+            'observacion' => $this->faker->text(),
             'estudiante_id' => $this->faker->numberBetween(1, 10),
-            'programaformacion_id' => $this->faker->numberBetween(1, 10),
             'periodo_id' => $this->faker->numberBetween(1, 10),
-            'nivel_anterior' => $this->faker->numberBetween(1, 10),
-            'nivel_actual' => $this->faker->numberBetween(1, 10),
             'estado' => $this->faker->randomElement([1, 0]),
         ];
     }

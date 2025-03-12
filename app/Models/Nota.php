@@ -6,20 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Promocion extends BaseModel
+class Nota extends BaseModel
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'promociones';
-    protected $primaryKey = 'id_promocion';
+
+    protected $table = 'notas';
+
     protected $fillable = [
-        'estudiante_id', 
-        'programaformacion_id',
+        'estudiante_id',
+        'asignatura_id',
+        'docente_id',
         'periodo_id',
-        'nivel_anterior',
-        'nivel_actual',
-        'fecha_promocion',
-        'estado'
+        'nota',
+        'observacion',
+        'estado',
     ];
 
     public function estudiante()
@@ -27,14 +28,19 @@ class Promocion extends BaseModel
         return $this->belongsTo(Estudiante::class, 'estudiante_id');
     }
 
-    public function programaFormacion()
+    public function asignatura()
     {
-        return $this->belongsTo(ProgramaFormacion::class, 'programaformacion_id');
+        return $this->belongsTo(Asignatura::class, 'asignatura_id');
+    }
+
+    public function docente()
+    {
+        return $this->belongsTo(Docente::class, 'docente_id');
     }
 
     public function periodo()
     {
         return $this->belongsTo(Periodo::class, 'periodo_id');
     }
-
+    
 }

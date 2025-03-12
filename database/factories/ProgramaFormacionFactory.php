@@ -20,6 +20,7 @@ class ProgramaFormacionFactory extends Factory
             'nombre' => $this->faker->name,
             'descripcion' => $this->faker->text,
             'nivel_formacion' => $this->faker->randomElement(['Tecnico', 'Tecnologo', 'Profesional', 'Especializacion', 'Maestria', 'Doctorado']),
+            'duracion' => $this->faker->randomNumber(2),
             'estado' => $this->faker->randomElement([1, 0]),
 
         ];

@@ -11,25 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('docentes', function (Blueprint $table) {
+        Schema::create('asignaturas', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo');
-            $table->string('foto');
-            $table->string('dni');
             $table->string('nombre');
-            $table->string('apellido');
-            $table->string('sexo');
-            $table->date('fecha_nacimiento');
-            $table->string('residencia');
-            $table->date('fecha_ingreso');
-            $table->string('telefono');
-            $table->string('correo');
-            $table->boolean('estado');
+            $table->string('codigo');
+            $table->string('descripcion');
+            $table->integer('creditos');
+            $table->unsignedBigInteger('programa_formacion_id');
+            $table->integer( 'estado');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('programa_formacion_id')
+            ->references('id')
+            ->on('programas_formacion');
         });
     }
 
@@ -38,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('docentes');
+        Schema::dropIfExists('asignaturas');
     }
 };

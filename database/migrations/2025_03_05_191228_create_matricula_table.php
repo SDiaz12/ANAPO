@@ -14,21 +14,17 @@ return new class extends Migration
         Schema::create('matriculas', function (Blueprint $table) {
             $table->id();
             $table->date('fecha_matricula');
-            $table->enum('estado', [1, 0])->default(1);
+            $table->unsignedBigInteger('programaformacion_id');
+            $table->unsignedBigInteger('estudiante_id');
+            $table->string('instituto');
+            $table->tinyInteger('estado')->default(1);
             $table->string('motivo_estado');
             $table->string('observacion_estado');
-            $table->unsignedBigInteger('id_estudiante');
-            $table->unsignedBigInteger('id_asignatura');
-            $table->unsignedBigInteger('id_seccion');
-            $table->string('periodo');
-            $table->string('instituto');
             $table->softDeletes();
-            $table->unique(['id_estudiante', 'id_asignatura', 'id_seccion']);
+            $table->unique(['estudiante_id', 'programaformacion_id']);
             $table->timestamps();
-
-            $table->foreign('id_estudiante')->references('id')->on('estudiantes');
-            $table->foreign('id_asignatura')->references('id')->on('asignaturas');
-            $table->foreign('id_seccion')->references('id')->on('secciones');
+            $table->foreign('estudiante_id')->references('id')->on('estudiantes');
+            $table->foreign('programaformacion_id')->references('id')->on('programas_formacion');
 
         });
     }

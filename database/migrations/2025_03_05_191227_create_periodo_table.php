@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('programaformaciones', function (Blueprint $table) {
+        Schema::create('periodos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100);
-            $table->string('descripcion', 255);
-            $table->string('nivel_formacion', 100);
-            $table->enum('estado', [1, 0])->default(1);
-            $table->softDeletes();
+            $table->string('nombre');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->tinyInteger('estado');
+            $table->unique(['fecha_inicio', 'fecha_fin']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('programaformaciones');
+        Schema::dropIfExists('periodos');
     }
 };

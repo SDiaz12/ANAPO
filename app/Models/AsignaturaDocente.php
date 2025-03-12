@@ -10,7 +10,15 @@ class AsignaturaDocente extends BaseModel
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['asignatura_id', 'docente_id', 'estado', 'created_by', 'deleted_by', 'updated_by'];
+    protected $fillable = [
+        'docente_id', 
+        'asignatura_id',
+        'periodo_id',
+        'seccion_id',
+        'estado', 
+        'created_by', 
+        'deleted_by', 
+        'updated_by'];
     protected $table = 'asignaturadocentes';
 
     public function docente()
@@ -22,4 +30,14 @@ class AsignaturaDocente extends BaseModel
     {
         return $this->belongsTo(Asignatura::class);
     }
+
+    public function periodo()
+    {
+        return $this->belongsTo(Periodo::class);
+    }
+    public function seccion()
+    {
+        return $this->belongsTo(Seccion::class);
+    }
+    
 }
