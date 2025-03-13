@@ -38,7 +38,7 @@
                 {{ $estado ? 'Activo' : 'Inactivo' }}</div>
         </div>
         <div class="sm:ml-16 mt-4 sm:mt-0">
-            <ul class="space-y-1 text-gray-700 dark:text-gray-300">
+            <ul class="space-y-1 text-gray-700 grid lg:grid-cols-1 grid-cols-2 dark:text-gray-300">
                 <li><span class="font-bold">Código:</span> {{$codigo}}</li>
                 <li><span class="font-bold">DNI:</span> {{$dni}}</li>
                 <li><span class="font-bold">Género:</span> {{$sexo}}</li>
@@ -75,7 +75,7 @@
                         </tr>
                     @empty  
                         <tr>
-                            <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 text-gray-700" colspan="5">No hay clases asignadas actualmente</td>
+                            <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 text-gray-700" colspan="5">No hay clases matriculadas actualmente</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -109,7 +109,7 @@
                         </tr>
                     @empty  
                         <tr>
-                            <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 text-gray-700" colspan="5">No hay historial de clases asignadas</td>
+                            <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 text-gray-700" colspan="5">No hay historial de clases matriculadas</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -190,7 +190,7 @@
                         </div>
                     </div>
                     <!-- Donut Chart -->
-                    <div class="py-6" id="donut-chart"></div>
+                    <div class="py-6 text-white dark:text-gray-300" id="donut-chart"></div>
                 </div>
             </div>
             <div
