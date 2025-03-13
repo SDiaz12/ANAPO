@@ -152,10 +152,10 @@
                 @foreach($estudiantes as $estudiante)
                 <tr
                     class=" overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->codigo }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->dni }}
                     </td>
                     <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">

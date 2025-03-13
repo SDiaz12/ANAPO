@@ -3,7 +3,7 @@
 
 <!-- Drawer derecho -->
 <div id="drawer-right-example"
-    class="fixed top-0 right-0 z-50 w-[50%] h-screen p-4 overflow-y-auto bg-white border border-gray-200 shadow-lg dark:bg-gray-800 dark:border-gray-700"
+    class="fixed top-0 right-0 z-50 w-full sm:w-[60%] lg:w-[50%] h-screen p-4 overflow-y-auto bg-white border border-gray-200 shadow-lg dark:bg-gray-800 dark:border-gray-700"
     tabindex="-1" aria-labelledby="drawer-right-label">
 
     <!-- Título y botón de cierre -->
@@ -21,7 +21,7 @@
     </div>
 
     <!-- Información del docente -->
-    <div class="flex rounded-lg px-3 py-3 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 items-center gap-4">
+    <div class="flex flex-col sm:flex-row rounded-lg px-3 py-3 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 items-center gap-4">
         @if($foto)
             <img class="w-24 h-24 object-cover rounded-full" src="{{ asset('storage/' . $foto) }}" alt="{{$nombre}}">
         @else
@@ -37,7 +37,7 @@
                 class="{{ $estado ? 'bg-green-100 text-green-800 text-xs font-medium mt-1.5 me-2 w-14 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-green-400 border border-green-400' : 'bg-red-100 text-red-800 text-xs w-16 font-medium mt-1.5 me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-red-400 border border-red-400' }}">
                 {{ $estado ? 'Activo' : 'Inactivo' }}</div>
         </div>
-        <div class="ml-16">
+        <div class="sm:ml-16 mt-4 sm:mt-0">
             <ul class="space-y-1 text-gray-700 dark:text-gray-300">
                 <li><span class="font-bold">Código:</span> {{$codigo}}</li>
                 <li><span class="font-bold">DNI:</span> {{$dni}}</li>
