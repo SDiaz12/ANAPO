@@ -44,5 +44,9 @@ class Periodo extends BaseModel
     {
         return $this->hasMany(Seccion::class, 'periodo_id');
     }
+    public function asignaturasEstudiantes()
+    {
+        return $this->hasMany(AsignaturaEstudiante::class);
+    }
 
 }

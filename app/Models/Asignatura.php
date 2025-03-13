@@ -13,7 +13,9 @@ class Asignatura extends BaseModel
     protected $fillable = [
         'codigo', 
         'nombre', 
+        'descripcion',
         'creditos',
+        'horas',
         'programa_formacion_id', 
         'estado', 
         'created_by', 

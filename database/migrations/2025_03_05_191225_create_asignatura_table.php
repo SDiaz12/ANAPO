@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('codigo');
             $table->string('descripcion');
             $table->integer('creditos');
+            $table->integer('horas');
             $table->unsignedBigInteger('programa_formacion_id');
             $table->integer( 'estado');
             $table->unsignedBigInteger('created_by')->nullable();

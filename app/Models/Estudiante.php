@@ -23,6 +23,7 @@ class Estudiante extends BaseModel
         'correo', 
         'fecha_ingreso',
         'estado', 
+        'user_id', 
         'created_by', 
         'deleted_by', 
         'updated_by'
@@ -51,6 +52,10 @@ class Estudiante extends BaseModel
         return $this->belongsToMany(Periodo::class, 'asignaturaestudiantes', 'estudiante_id', 'periodo_id')
             ->withPivot('nota', 'observaciones', 'estado')
             ->withTimestamps();
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 }

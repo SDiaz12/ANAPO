@@ -1,7 +1,9 @@
 <?php
 
 namespace Database\Factories;
-
+use App\Models\AsignaturaEstudiante;
+use App\Models\AsignaturaDocente;
+use App\Models\Nota;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,14 +19,15 @@ class NotaFactory extends Factory
     public function definition(): array
     {
         return [
-            'estudiante_id' => $this->faker->numberBetween(1, 10),
-            'asignatura_id' => $this->faker->numberBetween(1, 10),
-            'docente_id' => $this->faker->numberBetween(1, 10),
-            'periodo_id' => $this->faker->numberBetween(1, 10),
-            'nota' => $this->faker->randomFloat(2, 0, 10),
-            'observacion' => $this->faker->text(),
-            'estado' => $this->faker->randomElement([1, 0]),
-
+            'asignatura_estudiante_id' => AsignaturaEstudiante::inRandomOrder()->first()->id,
+            'primerparcial' => $this->faker->numberBetween(0, 10),
+            'segundoparcial' => $this->faker->numberBetween(0, 10),
+            'tercerparcial' => $this->faker->numberBetween(0, 10),
+            'asistencia' => $this->faker->randomElement(['Presente', 'Ausente']),
+            'recuperacion' =>$this->faker->numberBetween(0, 10),
+            'observacion' =>  $this->faker->randomElement(['Aprobado', 'Reprobado']),
+            'estado' => $this->faker->randomElement([0, 1]),
+            
         ];
     }
 }

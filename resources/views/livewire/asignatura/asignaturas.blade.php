@@ -121,6 +121,12 @@
                             Nombre
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Duración por horas
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Creditos
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                            Cantidad Requisitos
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -145,6 +151,12 @@
                         </td>
                         <td class="px-6 py-4">
                             {{ $asignatura->nombre }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $asignatura->horas }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $asignatura->creditos }}
                         </td>
                         <td class="px-6 py-4">
                             @if($asignatura->requisitos->isEmpty())
@@ -230,6 +242,7 @@
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Código: </span>{{ $asignatura->codigo }}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Descripción:</span> {{ $asignatura->descripcion }}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Créditos:</span> {{ $asignatura->creditos }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Duración asignatura (en horas):</span> {{ $asignatura->horas }}</p>
 
                         @if($asignatura->requisitos->isNotEmpty())
                             <p class="text-sm text-gray-600 dark:text-gray-400">

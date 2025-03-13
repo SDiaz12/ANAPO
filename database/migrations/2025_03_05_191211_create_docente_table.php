@@ -25,6 +25,10 @@ return new class extends Migration
             $table->string('telefono');
             $table->string('correo');
             $table->boolean('estado');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')
+            ->references('id')
+            ->on('users');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();
