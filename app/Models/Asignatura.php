@@ -15,6 +15,7 @@ class Asignatura extends BaseModel
         'nombre', 
         'descripcion',
         'creditos',
+        'horas',
         'programa_formacion_id', 
         'estado', 
         'created_by', 
@@ -63,7 +64,7 @@ class Asignatura extends BaseModel
 
     public function asignaturaEstudiantes()
     {
-        return $this->hasMany(AsignaturaEstudiante::class, 'asignatura_id');
+        return $this->hasMany(Nota::class, 'asignatura_id');
     }
     public function docentes()
     {

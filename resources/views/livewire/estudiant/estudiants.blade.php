@@ -2,6 +2,10 @@
     @if($isOpen)
             @include('livewire.estudiant.create')
         @endif
+
+        @if($isOpenDatos)
+            @include('livewire.estudiant.datosEstudiante')
+        @endif 
     
         @if (session()->has('message'))
             <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
@@ -104,7 +108,7 @@
                 placeholder="Buscar estudiante">
         </div>
     </div>
-    <div class="relative overflow-x-auto shadow-md">
+    <div class="relative overflow-x-auto scrollbar-hidden">
         @if($viewMode === 'table')
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -154,7 +158,7 @@
                     <td class="px-6 py-4">
                         {{ $estudiante->dni }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         @if($estudiante->foto)
                             <img src="{{ asset('storage/' . $estudiante->foto) }}"
                             alt="foto estudiante" class="w-12 h-12 rounded-full object-cover">
@@ -163,22 +167,22 @@
                             src="https://ui-avatars.com/api/?name={{ $estudiante->nombre }}&amp;color=000&amp;background=facc15">
                         @endif
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->nombre }} {{ $estudiante->apellido }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->fecha_nacimiento }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->sexo }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->residencia }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->telefono }}
                     </td>
-                    <td class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->correo }}
                     </td>
                     <td class="px-6 py-4">

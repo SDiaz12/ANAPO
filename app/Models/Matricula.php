@@ -45,7 +45,7 @@ class Matricula extends BaseModel
 
     public function asignaturasEstudiantes()
     {
-        return $this->hasMany(AsignaturaEstudiante::class, 'matricula_id');
+        return $this->hasMany(Nota::class, 'matricula_id');
     }
 
 }

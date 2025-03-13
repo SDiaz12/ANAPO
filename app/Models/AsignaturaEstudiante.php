@@ -2,31 +2,32 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class AsignaturaEstudiante extends BaseModel
+use Illuminate\Database\Eloquent\SoftDeletes;
+class AsignaturaEstudiante extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'asignaturaestudiantes';
+
+    protected $table = 'asignatura_estudiantes'; 
 
     protected $fillable = [
-        'asignatura_id', 
-        'estudiante_id', 
-        'nota', 
-        'observaciones', 
-        'estado'
+        'asignatura_id', 'estudiante_id', 'periodo_id'
     ];
-
     public function asignatura()
     {
-        return $this->belongsTo(Asignatura::class, 'asignatura_id');
+        return $this->belongsTo(Asignatura::class);
     }
 
     public function estudiante()
     {
-        return $this->belongsTo(Estudiante::class, 'estudiante_id');
+        return $this->belongsTo(Estudiante::class);
+    }
+
+    public function periodo()
+    {
+        return $this->belongsTo(Periodo::class);
     }
 }

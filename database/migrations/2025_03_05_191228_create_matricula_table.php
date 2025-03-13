@@ -24,7 +24,7 @@ return new class extends Migration
             $table->unique(['estudiante_id', 'programaformacion_id']);
             $table->timestamps();
             $table->foreign('estudiante_id')->references('id')->on('estudiantes');
-            $table->foreign('programaformacion_id')->references('id')->on('programas_formacion');
+            $table->foreign('programaformacion_id')->references('id')->on('programaformaciones');
 
         });
     }

@@ -65,7 +65,17 @@
                     @error('creditos') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
 
-              <!-- Campo de búsqueda para Programa de Formación -->
+                <div class="mb-5">
+                    <label for="horas" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
+                        Horas:
+                    </label>
+                    <input type="number" name="horas" id="horas" placeholder="Número de horas"
+                        wire:model="horas"
+                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                    @error('horas') <span class="text-red-500">{{ $message }}</span> @enderror
+                </div>
+
+        
                 <div class="mb-5">
                     <label for="programa_formacion_id" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
                         Programa de Formación:

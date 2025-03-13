@@ -30,7 +30,7 @@ class Seccion extends BaseModel
 
     public function asignaturaestudiantes()
     {
-        return $this->hasMany(AsignaturaEstudiante::class);
+        return $this->hasMany(Nota::class);
     }
 
 }

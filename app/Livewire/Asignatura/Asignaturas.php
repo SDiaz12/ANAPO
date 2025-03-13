@@ -13,7 +13,7 @@ class Asignaturas extends Component
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
-    public $search, $asignatura_id, $nombre, $codigo, $descripcion, $creditos, $programa_formacion_id, $estado;
+    public $search, $asignatura_id, $nombre, $codigo, $descripcion, $creditos,$horas,$programa_formacion_id, $estado;
     public $isOpen = false;
     public $viewMode = 'table';  
 
@@ -54,6 +54,7 @@ class Asignaturas extends Component
         $this->codigo = '';
         $this->descripcion = '';
         $this->creditos = '';
+        $this->horas = '';
         $this->programa_formacion_id = null;
         $this->estado = 1;
         $this->requisitos = [];
@@ -120,7 +121,8 @@ class Asignaturas extends Component
             'codigo' => 'required|string|max:50|unique:asignaturas,codigo,' . $this->asignatura_id,
             'descripcion' => 'nullable|string',
             'creditos' => 'required|integer|min:1',
-            'programa_formacion_id' => 'required|integer|exists:programas_formacion,id',
+            'horas' => 'required|integer|min:1',
+            'programa_formacion_id' => 'required|integer|exists:programaformaciones,id',
         ]);
 
         $asignatura = Asignatura::updateOrCreate(
@@ -129,6 +131,7 @@ class Asignaturas extends Component
                 'nombre' => $this->nombre,
                 'codigo' => $this->codigo,
                 'descripcion' => $this->descripcion,
+                'horas' => $this->horas,
                 'creditos' => $this->creditos,
                 'programa_formacion_id' => $this->programa_formacion_id,
                 'estado' => $this->estado,
@@ -156,22 +159,21 @@ class Asignaturas extends Component
    
     public function edit($id)
     {
-        $asignatura = Asignatura::with('requisitos', 'programaFormacion')->findOrFail($id); // Asegúrate de cargar el programa de formación
+        $asignatura = Asignatura::with('requisitos', 'programaFormacion')->findOrFail($id); 
         $this->asignatura_id = $id;
         $this->nombre = $asignatura->nombre;
         $this->codigo = $asignatura->codigo;
         $this->descripcion = $asignatura->descripcion;
         $this->creditos = $asignatura->creditos;
+        $this->horas = $asignatura->horas;
         $this->programa_formacion_id = $asignatura->programa_formacion_id;
-        $this->inputSearchProgramaFormacion = $asignatura->programaFormacion->nombre; // Precarga el nombre del programa de formación
+        $this->inputSearchProgramaFormacion = $asignatura->programaFormacion->nombre; 
         $this->estado = $asignatura->estado;
         $this->requisitos = $asignatura->requisitos->pluck('id')->toArray();
     
         $this->openModal();
     }
     
-
-    // Método para eliminar una asignatura
     public function delete()
     {
         if ($this->confirmingDelete) {
@@ -204,7 +206,7 @@ class Asignaturas extends Component
         $this->perPage = $suma;
     }
 
-    // Método para buscar programas de formación dinámicamente
+   
     public function updatedInputSearchProgramaFormacion()
     {
         
@@ -220,7 +222,7 @@ class Asignaturas extends Component
         $this->searchProgramasFormacion = [];
     }
 
-    // Método para buscar requisitos dinámicamente
+    
     public function confirmDelete($id)
     {
         $asignatura = Asignatura::find($id);
@@ -251,7 +253,7 @@ class Asignaturas extends Component
     }
     
 
-    // Método para renderizar la vista
+    
     public function render()
     {
         $asignaturas = Asignatura::where('nombre', 'like', '%' . $this->search . '%')

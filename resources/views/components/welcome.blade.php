@@ -5,7 +5,7 @@
                 <h1 class="text-4xl font-bold sm:text-6xl">
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-600"> Bienveni@ <span>{{Auth::user()->name}}</span> </span>
                 </h1>
-                <p class="mt-5 text-base dark:text-white text-gray-800 sm:text-xl">Estás en la plataforma oficial de la Academia Nacional de Policias, aquí puedrás revisar tus informacion.</p>
+                <p class="mt-5 text-base dark:text-white text-gray-800 sm:text-xl">Estás en la plataforma oficial de la Academia Nacional de Policias, aquí puedrás revisar tu informacion.</p>
 
                 <x-button title="" class="mt-8">
                     Ver calificaciones

@@ -1,4 +1,17 @@
 <div>
+    @if($isOpen)
+    @include('livewire.asignatura.create')
+@endif
+
+@if (session()->has('message'))
+    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
+        <div class="flex">
+            <div>
+                <p class="text-sm">{{ session('message') }}</p>
+            </div>
+        </div>
+    </div>
+@endif
     <div class="flex flex-column bg-white rounded-t-lg dark:bg-gray-800 p-5 sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         <div class="flex items-center space-x-2">
             <button wire:click="create()"
@@ -44,7 +57,7 @@
                     <li>
                         <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                             <input wire:click="loadMore({{9}})" checked="" id="filter-radio-example-2" type="radio" value="" name="filter-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-2"
                                 class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">9 asignaturas</label>
                         </div>
@@ -52,7 +65,7 @@
                     <li>
                         <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                             <input wire:click="loadMore({{15}})" id="filter-radio-example-3" type="radio" value="" name="filter-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-3"
                                 class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">15 asignaturas</label>
                         </div>
@@ -60,7 +73,7 @@
                     <li>
                         <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                             <input wire:click="loadMore({{24}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-4"
                                 class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">24 asignaturas</label>
                         </div>
@@ -68,7 +81,7 @@
                     <li>
                         <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                             <input wire:click="loadMore({{36}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-4"
                                 class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">36 asignaturas</label>
                         </div>
@@ -87,28 +100,14 @@
                 </svg>
             </div>
             <input wire:model.live="search" type="text" id="table-search"
-                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
                 placeholder="Buscar asignatura">
         </div>
     </div>
-    <div class="relative overflow-x-auto shadow-md">
-        @if($isOpen)
-            @include('livewire.asignatura.create')
-        @endif
-    
-        @if (session()->has('message'))
-            <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
-                <div class="flex">
-                    <div>
-                        <p class="text-sm">{{ session('message') }}</p>
-                    </div>
-                </div>
-            </div>
-        @endif
-    
+    <div class="relative overflow-x-auto">   
     @if ($viewMode === 'table')  <!-- If View Mode is Table -->
         <!-- Table View -->
-        <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+        <div class="relative overflow-x-auto scrollbar-hidden">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -120,6 +119,12 @@
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Nombre
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Duración por horas
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Creditos
                         </th>
                         <th scope="col" class="px-6 py-3">
                            Cantidad Requisitos
@@ -146,6 +151,12 @@
                         </td>
                         <td class="px-6 py-4">
                             {{ $asignatura->nombre }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $asignatura->horas }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $asignatura->creditos }}
                         </td>
                         <td class="px-6 py-4">
                             @if($asignatura->requisitos->isEmpty())
@@ -231,6 +242,7 @@
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Código: </span>{{ $asignatura->codigo }}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Descripción:</span> {{ $asignatura->descripcion }}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Créditos:</span> {{ $asignatura->creditos }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Duración asignatura (en horas):</span> {{ $asignatura->horas }}</p>
 
                         @if($asignatura->requisitos->isNotEmpty())
                             <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -247,7 +259,7 @@
                     <!-- Botones de acción -->
                     <div class="px-4 pb-4 flex space-x-2">
                         <button wire:click="edit({{ $asignatura->id }})"
-                            class="flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            class="flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                             <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
@@ -289,7 +301,7 @@
                       </svg>
                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400"><p>{{ session('error') }}</p></h3>
                     
-                    <button wire:click="$set('confirmingDelete', false)" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Aceptar</button>
+                    <button wire:click="$set('confirmingDelete', false)" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Aceptar</button>
                 </div>
             </div>
         </div>
