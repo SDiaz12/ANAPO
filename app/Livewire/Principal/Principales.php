@@ -28,8 +28,9 @@ class Principales extends Component
         $asignaturasCount = Asignatura::count();
         $promocionesCount = Promocion::count();
         $programasCount = ProgramaFormacion::count();
+        $matriculasCount = Matricula::where('estado', 1)->count();
 
-        // Obtener las 5 últimas matrículas (puedes cambiar el número según tus necesidades)
+        // Obtener las 20 últimas matrículas (puedes cambiar el número según tus necesidades)
         $recentMatriculas = Matricula::orderBy('created_at','desc')->take(20)->get();
 
         return view('livewire.principal.principal', [
@@ -38,6 +39,7 @@ class Principales extends Component
             'asignaturasCount'  => $asignaturasCount,
             'promocionesCount'  => $promocionesCount,
             'programasCount'    => $programasCount,
+            'matriculasCount'   => $matriculasCount,
             'recentMatriculas'  => $recentMatriculas,
             'data'              => $this->data,
             ])->layout('layouts.app');

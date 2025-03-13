@@ -245,7 +245,7 @@ class Estudiants extends Component
         $this->confirmingDelete = true;
     }
     
-    public $perPage = 9;
+    public $perPage = 10;
     public function loadMore($suma)
     {
         $this->perPage = $suma;
@@ -257,6 +257,7 @@ class Estudiants extends Component
     }
     public function render()
     {
+        $estudiantesCount = Estudiante::count();
         $estudiantes = Estudiante::where('nombre', 'like', '%' . $this->search . '%')
         ->orWhere('apellido', 'like', '%' . $this->search . '%')
         ->orWhere('dni', 'like', '%' . $this->search . '%')
@@ -264,6 +265,9 @@ class Estudiants extends Component
         ->orderBy('id', 'DESC')
         ->paginate($this->perPage);
 
-        return view('livewire.estudiant.estudiants', ['estudiantes' => $estudiantes])->layout('layouts.app');
+        return view('livewire.estudiant.estudiants', [
+            'estudiantes' => $estudiantes,
+            'estudiantesCount' => $estudiantesCount,
+            ])->layout('layouts.app');
     }
 }
