@@ -63,22 +63,19 @@ class Docentes extends Component
 
     public function historialAsignaturasDocente($idDocente)
     {
-        $periodoActual = Periodo::where('estado', true)->first();
-        $periodosHistoricos = Periodo::where('estado', false)->pluck('id'); // Obtiene IDs de todos los períodos históricos
+        // Clases con período activo usando la relación "periodo"
+        $this->clasesDocente = AsignaturaDocente::where('docente_id', $idDocente)
+            ->whereHas('periodo', function ($query) {
+                $query->where('estado', true);
+            })
+            ->get();
 
-        // Verificamos si hay un periodo activo antes de hacer la consulta
-        $this->clasesDocente = $periodoActual
-            ? AsignaturaDocente::where('docente_id', $idDocente)
-                ->where('periodo_id', $periodoActual->id)
-                ->get()
-            : collect(); // Si no hay período activo, devolvemos una colección vacía
-
-        // Si hay periodos históricos, obtenemos todas sus clases
-        $this->clasesHistorial = $periodosHistoricos->isNotEmpty()
-            ? AsignaturaDocente::where('docente_id', $idDocente)
-                ->whereIn('periodo_id', $periodosHistoricos)
-                ->get()
-            : collect(); // Si no hay periodos históricos, devolvemos una colección vacía
+        // Clases con períodos históricos (inactivos) usando la relación "periodo"
+        $this->clasesHistorial = AsignaturaDocente::where('docente_id', $idDocente)
+            ->whereHas('periodo', function ($query) {
+                $query->where('estado', false);
+            })
+            ->get();
     }
 
     public function infoDocente($idDocente)

@@ -14,7 +14,7 @@ class AsignaturaEstudiante extends Model
     protected $table = 'asignatura_estudiantes'; 
 
     protected $fillable = [
-        'asignatura_id', 'estudiantes_id',  'estado', 
+        'asignatura_id', 'estudiantes_id', 'periodo_id', 'estado', 
     ];
     public function asignaturaDocente()
     {
@@ -23,6 +23,16 @@ class AsignaturaEstudiante extends Model
     public function notas()
     {
         return $this->hasMany(Nota::class, 'asignatura_estudiante_id');
+    }
+
+    public function periodo()
+    {
+        return $this->belongsTo(Periodo::class, 'periodo_id');
+    }
+
+    public function asignatura()
+    {
+        return $this->belongsTo(Asignatura::class, 'asignatura_id');
     }
     
 

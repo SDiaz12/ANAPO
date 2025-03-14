@@ -62,22 +62,19 @@ class Estudiants extends Component
 
     public function historialAsignaturasEstudiante($idEstudiante)
     {
-        $periodoActual = Periodo::where('estado', true)->first();
-        $periodosHistoricos = Periodo::where('estado', false)->pluck('id'); // Obtiene IDs de todos los períodos históricos
+        // Clases con período activo usando la relación "periodo"
+        $this->clasesEstudiante = AsignaturaEstudiante::where('estudiantes_id', $idEstudiante)
+            ->whereHas('periodo', function ($query) {
+                $query->where('estado', true);
+            })
+            ->get();
 
-        // Verificamos si hay un periodo activo antes de hacer la consulta
-        $this->clasesEstudiante = $periodoActual
-            ? Nota::where('estudiante_id', $idEstudiante)
-                ->where('periodo_id', $periodoActual->id)
-                ->get()
-            : collect(); // Si no hay período activo, devolvemos una colección vacía
-
-        // Si hay periodos históricos, obtenemos todas sus clases
-        $this->clasesHistorial = $periodosHistoricos->isNotEmpty()
-            ? Nota::where('estudiante_id', $idEstudiante)
-                ->whereIn('periodo_id', $periodosHistoricos)
-                ->get()
-            : collect(); // Si no hay periodos históricos, devolvemos una colección vacía
+        // Clases con períodos históricos (inactivos)
+        $this->clasesHistorial = AsignaturaEstudiante::where('estudiantes_id', $idEstudiante)
+            ->whereHas('periodo', function ($query) {
+                $query->where('estado', false);
+            })
+            ->get();
     }
 
     public function infoEstudiante($idEstudiante)
