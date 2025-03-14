@@ -15,6 +15,7 @@
                                         <th class="border border-gray-300 px-4 py-3">Nombre</th>
                                         <th class="border border-gray-300 px-4 py-3">Apellido</th>
                                         <th class="border border-gray-300 px-4 py-3">Asignatura Estudiante ID</th>
+                                        <th class="border border-gray-300 px-4 py-3">Asignatura Estudiante ID</th>
                                         <th class="border border-gray-300 px-4 py-3">Primer Parcial</th>
                                         <th class="border border-gray-300 px-4 py-3">Segundo Parcial</th>
                                         <th class="border border-gray-300 px-4 py-3">Tercer Parcial</th>
@@ -40,7 +41,13 @@
                                                     @enderror
                                                 </td>
 
-
+                                                <td class="border border-gray-300 px-4 py-2">
+                                                    <input type="number" wire:model="notas.{{ $estudiante['id'] }}.asignatura_estudiante_id" class="w-[100px] border-gray-300 rounded-md py-2 px-3 text-sm">
+                                                    @error('notas.{{ $estudiante["id"] }}.asignatura_estudiante_id')
+                                            
+                                                        <span class="text-red-500">{{ $message }}</span> 
+                                                    @enderror
+                                                </td>
                                                 <td class="border border-gray-300 px-4 py-2">
                                                     <input type="number" wire:model="notas.{{ $estudiante['id'] }}.primerparcial" class="w-[100px] border-gray-300 rounded-md py-2 px-3 text-sm">
                                                     @error('notas.{{ $estudiante["id"] }}.primerparcial') 

@@ -236,6 +236,10 @@ class Asignaturas extends Component
             session()->flash('error', 'No se puede eliminar la asignatura: ' . $asignatura->nombre . ', porque tiene requisitos asociados.');
             return;
         }
+        if ($asignatura->programaFormacion()->exists()) {
+            session()->flash('error', 'No se puede eliminar la asignatura: ' . $asignatura->nombre . ', porque está asignado a programa formacion.');
+            return;
+        }
     
         if ($asignatura->docentes()->exists()) {
             session()->flash('error', 'No se puede eliminar la asignatura: ' . $asignatura->nombre . ', porque está vinculada a uno o más docentes.');

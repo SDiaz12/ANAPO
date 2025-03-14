@@ -9,6 +9,8 @@ use App\Livewire\Nota\Notas;
 use App\Livewire\Principal\Principales;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Rol\Roles;
+use App\Livewire\AsignaturaDocente\AsignaturaDocentes;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -25,5 +27,6 @@ Route::middleware([
     Route::get('/docente', Docentes::class)->name('docente');
     Route::get('/estudiante', Estudiants::class)->name('estudiante');
     Route::get('/asignatura', Asignaturas::class)->name('asignatura');
+    Route::get('/asignaturaDocente', AsignaturaDocentes::class)->name('asignaturaDocente');
     Route::get('/matricula', Matriculas::class)->name('matricula');
 });

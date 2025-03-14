@@ -95,8 +95,9 @@ class Notas extends Component
     // Guardar las notas en la base de datos
     public function store()
     {
+       
         $this->validate([
-            'notas.*.asignatura_estudiante_id' => 'required',
+            'notas.*.asignatura_estudiante_id' => 'required|integer|exists:asignatura_estudiantes,id',
             'notas.*.primerparcial' => 'required|numeric',
             'notas.*.segundoparcial' => 'nullable|numeric',
             'notas.*.tercerparcial' => 'nullable|numeric',
@@ -114,14 +115,16 @@ class Notas extends Component
 
             // Usar updateOrCreate para guardar o actualizar la nota
             Nota::updateOrCreate(
-                ['asignatura_estudiante_id' => $nota['asignatura_estudiante_id']],
+                ['id' => $this->nota_id],
                 [
+                    'asignatura_estudiante_id' => $nota['asignatura_estudiante_id'],
                     'primerparcial' => $nota['primerparcial'],
                     'segundoparcial' => $nota['segundoparcial'],
                     'tercerparcial' => $nota['tercerparcial'],
                     'asistencia' => $nota['asistencia'],
                     'recuperacion' => $nota['recuperacion'],
                     'observacion' => $nota['observacion'],
+                    'estado' => $this->estado,
                 ]
             );
         }

@@ -11,8 +11,8 @@ use Livewire\Component;
 class Matriculas extends Component
 {
     public $search, $matricula_id, $fecha_matricula, $programaformacion_id, $estado, $motivo_estado, $observacion_estado, $estudiante_id, $instituto;
-    public $dniBusqueda; // Nueva propiedad para almacenar el DNI que ingresa el usuario
-    public $codigoEstudiante;           // Este se llenará con el dni del estudiante encontrado
+    public $dniBusqueda; 
+    public $codigoEstudiante;         
     public $nombreCompleto;
     public $error;
     public $inputSearchProgramaFormacion = '';  
