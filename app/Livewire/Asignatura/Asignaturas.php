@@ -242,10 +242,7 @@ class Asignaturas extends Component
             return;
         }
     
-        if ($asignatura->notas()->exists()) {
-            session()->flash('error', 'No se puede eliminar la asignatura porque está vinculada a una o más notas.');
-            return;
-        }
+        
     
         $this->IdAEliminar = $id;
         $this->nombreAEliminar = $asignatura->nombre;

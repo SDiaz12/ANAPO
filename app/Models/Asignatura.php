@@ -23,10 +23,7 @@ class Asignatura extends BaseModel
         'updated_by'
     ];
     protected $table = 'asignaturas';
-    public function notas()
-    {
-        return $this->belongsTo(Nota::class, 'asignatura_id');
-    }
+    
     public function requisitos()
     {
         return $this->belongsToMany(Asignatura::class, 'asignatura_requisitos', 'asignatura_id', 'requisito_id');

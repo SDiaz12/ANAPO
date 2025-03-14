@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('asignatura_estudiante_id')->constrained('asignatura_estudiantes')->onDelete('cascade'); 
             $table->float('primerparcial');
-            $table->float('segundoparcial');
-            $table->float('tercerparcial');
+            $table->float('segundoparcial')->nullable();
+            $table->float('tercerparcial')->nullable();
             $table->string('asistencia');
-            $table->float('recuperacion');
+            $table->float('recuperacion')->nullable();
             $table->string('observacion');
             $table->integer('estado');
             $table->timestamps();

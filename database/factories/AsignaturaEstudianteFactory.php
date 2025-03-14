@@ -16,7 +16,13 @@ class AsignaturaEstudianteFactory extends Factory
     {
         return [
             'asignatura_id' => AsignaturaDocente::inRandomOrder()->first()->id, 
-            'estudiante_id' => Estudiante::inRandomOrder()->first()->id,  
+            'estudiantes_id' => Estudiante::inRandomOrder()->first()->id,  
+            'estado' => $this->faker->randomElement([1, 0]),
         ];
     }
+    public function estudiante()
+{
+    return $this->belongsTo(Estudiante::class, 'estudiantes_id');
+}
+
 }

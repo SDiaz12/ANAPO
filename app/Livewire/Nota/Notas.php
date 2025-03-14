@@ -4,133 +4,170 @@ namespace App\Livewire\Nota;
 
 use App\Models\Nota;
 use App\Models\AsignaturaEstudiante;
-use App\Models\AsignaturaDocente;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\FormatoNotasExport;
 
 class Notas extends Component
 {
     use WithPagination;
 
-    public $isOpen = false;
-    public $viewMode = 'table'; // Vista por defecto: tabla
-    public $selectedEstudiante;
-    public $primerparcial, $segundoparcial, $tercerparcial, $asistencia, $recuperacion, $observacion, $estado;
-    public $asignatura_estudiante_id;
-    public $search;
+    public $confirmingDelete = false;
+    public $IdAEliminar, $nombreAEliminar, $search, $estudiantes, $nota_id;
+    public $promedio, $asignatura_estudiante_id, $primerparcial, $segundoparcial, $tercerparcial;
+    public $asistencia, $recuperacion, $observacion, $estado, $asignatura_id;
+    public $isOpen = false, $viewMode = 'table', $codigo_estudiante, $nombre_estudiante, $apellido_estudiante;
+    public $perPage = 9, $notas = [];
 
-    // Método que se ejecuta cuando se inicializa el componente
-    public function mount()
-    {
-        $this->asignaturasEstudiantes = $this->getAsignaturasEstudiantes();
-    }
-
-    // Obtener las asignaturas según el rol del usuario
-    public function getAsignaturasEstudiantes()
-    {
-        if (auth()->user()->hasRole('root')) {
-            // Si es root (admin), carga todas las asignaturas y estudiantes
-            return AsignaturaEstudiante::with('asignatura', 'estudiante')
-                ->orderBy('asignatura_id')
-                ->paginate(10);
-        } else {
-            // Si es docente, solo carga las asignaturas que están asignadas a él
-            return AsignaturaEstudiante::with('asignatura', 'estudiante')
-                ->whereHas('asignaturaDocente', function ($query) {
-                    $query->where('docente_id', auth()->user()->id);
-                })
-                ->orderBy('asignatura_id')
-                ->paginate(10);
-        }
-    }
-
-    // Cambiar la vista entre tabla y tarjetas
+   
     public function toggleViewMode()
     {
         $this->viewMode = $this->viewMode === 'table' ? 'cards' : 'table';
     }
 
-    // Cargar los datos de las notas de un estudiante
-    public function loadNota($asignatura_estudiante_id)
+    
+    
+    public function create($codigo_asignatura, $codigo_docente)
     {
-        $nota = Nota::where('asignatura_estudiante_id', $asignatura_estudiante_id)->first();
+        $this->resetInputFields();
 
-        if ($nota) {
-            $this->selectedEstudiante = $nota->asignaturaEstudiante->estudiante->nombre;
-            $this->primerparcial = $nota->primerparcial;
-            $this->segundoparcial = $nota->segundoparcial;
-            $this->tercerparcial = $nota->tercerparcial;
-            $this->asistencia = $nota->asistencia;
-            $this->recuperacion = $nota->recuperacion;
-            $this->observacion = $nota->observacion;
-            $this->estado = $nota->estado;
-            $this->asignatura_estudiante_id = $nota->asignatura_estudiante_id;
-        } else {
-            $this->resetNotaFields();
+        $asignaturaEstudiantes = AsignaturaEstudiante::whereHas('asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente) {
+            $query->whereHas('asignatura', function ($query) use ($codigo_asignatura) {
+                $query->where('codigo', $codigo_asignatura);
+            })
+            ->whereHas('docente', function ($query) use ($codigo_docente) {
+                $query->where('codigo', $codigo_docente);
+            });
+        })
+        ->with(['estudiante', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
+        ->get();
+        
+
+        if ($asignaturaEstudiantes->isEmpty()) {
+            session()->flash('error', 'No hay estudiantes vinculados a esta asignatura y docente.');
+            return;
         }
 
+        // Agrupar estudiantes con su asignatura y docente
+        $this->estudiantes = $asignaturaEstudiantes->map(function ($asignaturaEstudiante) {
+            return [
+                'asignatura_estudiante_id' => $asignaturaEstudiante->id,
+                'id' => $asignaturaEstudiante->estudiante->id,
+                'codigo' => $asignaturaEstudiante->estudiante->codigo,
+                'nombre' => $asignaturaEstudiante->estudiante->nombre,
+                'apellido' => $asignaturaEstudiante->estudiante->apellido,
+                'docente' => $asignaturaEstudiante->asignaturadocente->docente->nombre ?? 'Sin docente',
+            ];
+        });
+
+        $this->openModal();
+        
+
+    }
+
+    
+    public function openModal()
+    {
         $this->isOpen = true;
     }
 
-    // Limpiar los campos de las notas
-    public function resetNotaFields()
-    {
-        $this->primerparcial = null;
-        $this->segundoparcial = null;
-        $this->tercerparcial = null;
-        $this->asistencia = '';
-        $this->recuperacion = null;
-        $this->observacion = '';
-        $this->estado = 1; // Por defecto activo
-        $this->asignatura_estudiante_id = null;
-    }
-
-    // Guardar o actualizar las notas
-    public function saveNota()
-    {
-        $this->validate([
-            'primerparcial' => 'required|numeric',
-            'segundoparcial' => 'required|numeric',
-            'tercerparcial' => 'required|numeric',
-            'asistencia' => 'required|string',
-            'recuperacion' => 'nullable|numeric',
-            'observacion' => 'nullable|string',
-            'estado' => 'required|integer',
-        ]);
-
-        Nota::updateOrCreate(
-            [
-                'asignatura_estudiante_id' => $this->asignatura_estudiante_id,
-            ],
-            [
-                'primerparcial' => $this->primerparcial,
-                'segundoparcial' => $this->segundoparcial,
-                'tercerparcial' => $this->tercerparcial,
-                'asistencia' => $this->asistencia,
-                'recuperacion' => $this->recuperacion,
-                'observacion' => $this->observacion,
-                'estado' => $this->estado,
-                'created_by' => auth()->id(),
-            ]
-        );
-
-        session()->flash('message', 'Nota guardada correctamente.');
-        $this->closeModal();
-    }
-
-    // Cerrar el modal de edición
-    public function closeModal()
+       public function closeModal()
     {
         $this->isOpen = false;
-        $this->resetNotaFields();
     }
 
+    
+    public function resetInputFields()
+    {
+        $this->nota_id = null;
+        $this->asignatura_estudiante_id = null;
+        $this->primerparcial = '';
+        $this->segundoparcial = '';
+        $this->tercerparcial = '';
+        $this->asistencia = '';
+        $this->recuperacion = '';
+        $this->promedio = '';
+        $this->observacion = '';
+        $this->estado = 1;
+    }
+
+    // Guardar las notas en la base de datos
+    public function store()
+    {
+        $this->validate([
+            'notas.*.asignatura_estudiante_id' => 'required',
+            'notas.*.primerparcial' => 'required|numeric',
+            'notas.*.segundoparcial' => 'nullable|numeric',
+            'notas.*.tercerparcial' => 'nullable|numeric',
+            'notas.*.asistencia' => 'nullable|string',
+            'notas.*.recuperacion' => 'nullable|numeric',
+            'notas.*.observacion' => 'nullable|string',
+        ]);
+
+        foreach ($this->notas as $id => $nota) {
+            // Asegurarse de que se reciba un ID de asignatura_estudiante
+            if (empty($nota['asignatura_estudiante_id'])) {
+                session()->flash('error', "Falta el ID de asignatura para el estudiante con ID $id.");
+                return;
+            }
+
+            // Usar updateOrCreate para guardar o actualizar la nota
+            Nota::updateOrCreate(
+                ['asignatura_estudiante_id' => $nota['asignatura_estudiante_id']],
+                [
+                    'primerparcial' => $nota['primerparcial'],
+                    'segundoparcial' => $nota['segundoparcial'],
+                    'tercerparcial' => $nota['tercerparcial'],
+                    'asistencia' => $nota['asistencia'],
+                    'recuperacion' => $nota['recuperacion'],
+                    'observacion' => $nota['observacion'],
+                ]
+            );
+        }
+
+        session()->flash('success', 'Notas guardadas correctamente.');
+        $this->closeModal();
+        $this->resetInputFields();
+    }
+
+    // Eliminar la nota de un estudiante
+    public function delete()
+    {
+        if ($this->confirmingDelete) {
+            Nota::find($this->IdAEliminar)?->delete();
+            session()->flash('message', 'Nota eliminada correctamente!');
+            $this->confirmingDelete = false;
+        }
+    }
+
+    // Cambiar el estado de la nota (activo/inactivo)
+    public function toggleEstado($id)
+    {
+        $nota = Nota::findOrFail($id);
+        $nota->estado = !$nota->estado;
+        $nota->save();
+    }
+
+    // Cargar más notas por página
+    public function loadMore($suma)
+    {
+        $this->perPage += $suma;
+    }
+
+    // Renderizar el componente con las asignaturas y estudiantes
     public function render()
     {
-        $asignaturasEstudiantes = $this->getAsignaturasEstudiantes();
+        $asignaturas = AsignaturaEstudiante::with('asignaturadocente.asignatura', 'estudiante')
+            ->whereHas('asignaturadocente.asignatura', function ($query) {
+                $query->where('estado', 1);
+            })
+            ->selectRaw('asignatura_id, COUNT(id) as estudiantes_count')
+            ->groupBy('asignatura_id')
+            ->paginate($this->perPage);
 
         return view('livewire.nota.notas', [
-            'asignaturasEstudiantes' => $asignaturasEstudiantes,
-        ]);
+            'asignaturas' => $asignaturas,
+        ])->layout('layouts.app');
     }
 }

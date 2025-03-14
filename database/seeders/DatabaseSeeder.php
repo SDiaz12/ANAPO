@@ -33,8 +33,7 @@ class DatabaseSeeder extends Seeder
             AsignaturaEstudianteSeeder::class,
             PromocionTableSeeder::class,
             AsignacionDocentesEstudiantesTableSeeder::class,
-            NotaTableSeeder::class,
-            CalificacionTableSeeder::class,
+            
             
         ]);
 
