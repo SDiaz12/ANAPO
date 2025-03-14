@@ -101,7 +101,7 @@
             </div>
             <div class="ml-5">
                 <p class="text-base font-medium text-gray-600 dark:text-gray-400">Matricula</p>
-                <h4 class="text-2xl font-bold text-gray-900 dark:text-white">12</h4>
+                <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{$matriculasCount}}</h4>
             </div>
         </div>
 
@@ -190,7 +190,7 @@
                         </div>
                     </div>
                     <!-- Donut Chart -->
-                    <div class="py-6" id="donut-chart"></div>
+                    <div class="py-6 text-white dark:text-gray-300" id="donut-chart"></div>
                 </div>
             </div>
             <div

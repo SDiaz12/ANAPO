@@ -18,9 +18,12 @@ return new class extends Migration
             $table->unsignedBigInteger('estudiante_id');
             $table->string('instituto');
             $table->tinyInteger('estado')->default(1);
-            $table->string('motivo_estado');
-            $table->string('observacion_estado');
+            $table->string('motivo_estado')->nullable();
+            $table->string('observacion_estado')->nullable();
             $table->softDeletes();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
             $table->unique(['estudiante_id', 'programaformacion_id']);
             $table->timestamps();
             $table->foreign('estudiante_id')->references('id')->on('estudiantes');

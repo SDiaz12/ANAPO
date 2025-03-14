@@ -249,7 +249,7 @@ class Docentes extends Component
     {
         return view('livewire.Placeholder.loader')->layout('layouts.app');
     }
-    public $perPage = 9;
+    public $perPage = 10;
     public function loadMore($suma)
     {
         $this->perPage = $suma;

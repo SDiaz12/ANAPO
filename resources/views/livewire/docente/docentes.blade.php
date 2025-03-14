@@ -60,26 +60,26 @@
                     aria-labelledby="dropdownRadioButton">
                     <li>
                         <div class="flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <input wire:click="loadMore({{9}})" checked="" id="filter-radio-example-2" type="radio" value="" name="filter-radio"
+                            <input wire:click="loadMore({{10}})" checked="" id="filter-radio-example-2" type="radio" value="" name="filter-radio"
                                 class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-2"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">9 docentes</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">10 docentes</label>
                         </div>
                     </li>
                     <li>
                         <div class="flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <input wire:click="loadMore({{15}})" id="filter-radio-example-3" type="radio" value="" name="filter-radio"
+                            <input wire:click="loadMore({{20}})" id="filter-radio-example-3" type="radio" value="" name="filter-radio"
                                 class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-3"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">15 docentes</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">20 docentes</label>
                         </div>
                     </li>
                     <li>
                         <div class="flex rounded-lg items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <input wire:click="loadMore({{24}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
+                            <input wire:click="loadMore({{30}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
                                 class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-4"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">24 docentes</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">30 docentes</label>
                         </div>
                     </li>
                     <li>
@@ -87,7 +87,7 @@
                             <input wire:click="loadMore({{$docentesCount}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
                                 class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-4"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">Mostrar todos</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">Todos</label>
                         </div>
                     </li>
                 </ul>

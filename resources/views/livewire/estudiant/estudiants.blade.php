@@ -60,34 +60,34 @@
                     aria-labelledby="dropdownRadioButton">
                     <li>
                         <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <input wire:click="loadMore({{9}})" checked="" id="filter-radio-example-2" type="radio" value="" name="filter-radio"
+                            <input wire:click="loadMore({{10}})" checked="" id="filter-radio-example-2" type="radio" value="" name="filter-radio"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-2"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">9 estudiantes</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">10 estudiantes</label>
                         </div>
                     </li>
                     <li>
                         <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <input wire:click="loadMore({{15}})" id="filter-radio-example-3" type="radio" value="" name="filter-radio"
+                            <input wire:click="loadMore({{20}})" id="filter-radio-example-3" type="radio" value="" name="filter-radio"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-3"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">15 estudiantes</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">20 estudiantes</label>
                         </div>
                     </li>
                     <li>
                         <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <input wire:click="loadMore({{24}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
+                            <input wire:click="loadMore({{30}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-4"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">24 estudiantes</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">30 estudiantes</label>
                         </div>
                     </li>
                     <li>
                         <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <input wire:click="loadMore({{36}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
+                            <input wire:click="loadMore({{$estudiantesCount}})" id="filter-radio-example-4" type="radio" value="" name="filter-radio"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="filter-radio-example-4"
-                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">36 estudiantes</label>
+                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded-sm dark:text-gray-300">Todos</label>
                         </div>
                     </li>
                 </ul>
@@ -151,14 +151,14 @@
             <tbody>
                 @foreach($estudiantes as $estudiante)
                 <tr
-                    class=" overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    class=" overflow-x-auto bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->codigo }}
                     </td>
                     <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->dni }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="cursor-pointer px-6 py-4">
                         @if($estudiante->foto)
                             <img src="{{ asset('storage/' . $estudiante->foto) }}"
                             alt="foto estudiante" class="w-12 h-12 rounded-full object-cover">
@@ -167,22 +167,22 @@
                             src="https://ui-avatars.com/api/?name={{ $estudiante->nombre }}&amp;color=000&amp;background=facc15">
                         @endif
                     </td>
-                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="cursor-pointer px-6 py-4">
                         {{ $estudiante->nombre }} {{ $estudiante->apellido }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="cursor-pointer px-6 py-4">
                         {{ $estudiante->fecha_nacimiento }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="cursor-pointer px-6 py-4">
                         {{ $estudiante->sexo }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="cursor-pointer px-6 py-4">
                         {{ $estudiante->residencia }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="cursor-pointer px-6 py-4">
                         {{ $estudiante->telefono }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
+                    <td wire:click="mostrarDatos({{ $estudiante->id }})" class="cursor-pointer px-6 py-4">
                         {{ $estudiante->correo }}
                     </td>
                     <td class="px-6 py-4">
