@@ -58,4 +58,9 @@ class Estudiante extends BaseModel
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function matricula()
+{
+    return $this->hasOne(Matricula::class, 'estudiante_id', 'id');
+}
+
 }

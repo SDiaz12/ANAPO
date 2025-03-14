@@ -22,7 +22,7 @@ class AsignaturaEstudiante extends Model
     }
     public function notas()
     {
-        return $this->hasMany(Nota::class, 'asignatura_estudiante_id');
+        return $this->hasMany(Nota::class, 'asignatura_estudiante_id', 'id');
     }
 
     public function periodo()
@@ -34,12 +34,15 @@ class AsignaturaEstudiante extends Model
     {
         return $this->belongsTo(Asignatura::class, 'asignatura_id');
     }
-    
+
+    public function matricula()
+    {
+        return $this->hasOne(\App\Models\Matricula::class, 'estudiante_id', 'estudiantes_id');
+    }
 
     public function estudiante()
     {
         return $this->belongsTo(Estudiante::class, 'estudiantes_id');
     }
-
    
 }

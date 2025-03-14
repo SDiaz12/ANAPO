@@ -7,6 +7,7 @@ use App\Livewire\Estudiant\Estudiants;
 use App\Livewire\Matricula\Matriculas;
 use App\Livewire\Nota\Notas;
 use App\Livewire\Principal\Principales;
+use App\Livewire\VistaNotasEstudiantes\VistaNotaEstudiantes;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Rol\Roles;
 use App\Livewire\AsignaturaDocente\AsignaturaDocentes;
@@ -22,6 +23,7 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
     Route::get('/principal', Principales::class)->name('principal');
+    Route::get('/notasEstudiante/{asignaturaEstudianteId}', VistaNotaEstudiantes::class)->name('notasEstudiante');
     Route::get('/rol', Roles::class)->name('rol');
     Route::get('/notas', Notas::class)->name('notas');
     Route::get('/docente', Docentes::class)->name('docente');
