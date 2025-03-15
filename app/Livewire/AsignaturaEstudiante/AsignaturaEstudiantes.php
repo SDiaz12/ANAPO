@@ -107,7 +107,7 @@ class AsignaturaEstudiantes extends Component
             ->whereHas('matricula', function($query) {
                 $query->whereNotNull('programaformacion_id');
             })
-            ->limit(15)
+            ->limit(10)
             ->get();
     }
 
