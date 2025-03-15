@@ -107,6 +107,11 @@ class AsignaturaEstudiantes extends Component
             ->whereHas('matricula', function($query) {
                 $query->whereNotNull('programaformacion_id');
             })
+            ->whereHas('matricula', function($query) {
+                $query->where('estado', 1);
+            })
+            ->where('estado', 1)
+
             ->limit(10)
             ->get();
     }

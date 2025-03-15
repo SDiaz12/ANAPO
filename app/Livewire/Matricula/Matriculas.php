@@ -37,9 +37,9 @@ class Matriculas extends Component
 
     public function buscarEstudiantePorDNI()
     {
-        // Busca al estudiante por su DNI exacto
-        $estudiante = Estudiante::where('dni', $this->dniBusqueda)->first();
-        
+        $estudiante = Estudiante::where('dni', $this->dniBusqueda)
+            ->where('estado', 1) // Asegúrate de que el estudiante esté activo
+            ->first();
         if ($estudiante) {
             // Si se encuentra, actualiza los campos
             $this->codigoEstudiante = $estudiante->codigo;
@@ -62,7 +62,6 @@ class Matriculas extends Component
 
     public function updatedInputSearchProgramaFormacion()
     {
-        
         $this->searchProgramasFormacion = ProgramaFormacion::where('nombre', 'like', '%' . $this->inputSearchProgramaFormacion . '%')
             ->limit(10)
             ->get();
