@@ -13,11 +13,18 @@ return new class extends Migration
     {
         Schema::create('programaformaciones', function (Blueprint $table) {
             $table->id();
+            $table->string('codigo', 100);
             $table->string('nombre', 100);
-            $table->string('descripcion', 255);
-            $table->string('nivel_formacion', 100);
-            $table->integer('duracion');
+            $table->date('fecha_aprobacion');
+            $table->date('fecha_final');
+            $table->time('hora_finalizacion');
+            $table->string('instituto', 100);
+            $table->string('tipo_programa', 100);
+            $table->integer('procentaje_aprobacion');
             $table->tinyInteger ('estado');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

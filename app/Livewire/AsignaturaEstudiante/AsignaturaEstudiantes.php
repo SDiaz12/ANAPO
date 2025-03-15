@@ -39,11 +39,15 @@ class AsignaturaEstudiantes extends Component
     public function closeModal()
     {
         $this->isOpen = false;
+        $this->resetInputFields();
     }
 
     public function resetInputFields()
     {
         $this->estudiantes_id = null;
+        $this->inputSearchEstudiante = '';
+        $this->searchEstudiante = [];
+        $this->asignaturaestudiante_id = null;
         $this->asignatura_id = null;
         $this->estado = '';
     }
@@ -72,7 +76,7 @@ class AsignaturaEstudiantes extends Component
                 ->where('periodo_id', $periodoActivo->id)
                 ->first();
             if ($matriculaExistente) {
-                session()->flash('error', 'La asignatura ya está matriculada para este estudiante.');
+               $this->error = 'La asignatura ya está matriculada para este estudiante.';
                 return;
             }
         }
@@ -99,9 +103,11 @@ class AsignaturaEstudiantes extends Component
 
     public function updatedInputSearchEstudiante()
     {
-
         $this->searchEstudiante = Estudiante::where('nombre', 'like', '%' . $this->inputSearchEstudiante . '%')
-            ->limit(10)
+            ->whereHas('matricula', function($query) {
+                $query->whereNotNull('programaformacion_id');
+            })
+            ->limit(15)
             ->get();
     }
 
@@ -173,7 +179,7 @@ class AsignaturaEstudiantes extends Component
             session()->flash('error', 'Docente no encontrado.');
             return;
         }
-        if ($asiganturaestudiante->asignaturas()->exists()) {
+        if ($asiganturaestudiante->asignatura()->exists()) {
             session()->flash('error', 'No se puede eliminar:  ' . $this->nombreAEliminar . ', porque está enlazada actualmente.');
             return;
         }

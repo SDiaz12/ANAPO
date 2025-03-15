@@ -67,7 +67,6 @@
                         placeholder="Nombre completo del estudiante">
                 </div>
             @endif
-
             <!-- Mensaje de error -->
             @if ($error)
                 <p class="text-red-500 text-sm mt-2">{{ $error }}</p>
@@ -95,11 +94,11 @@
                     @endforeach
                 </ul>
             @endif
-        </div>
-        @if ($errorUnique)
+            @if ($errorUnique)
                 <p class="text-red-500 text-sm mt-2">{{ $errorUnique }}</p>
             @endif
-
+        </div>
+        
         <!-- Campo: Instituto -->
         <div class="mb-4">
             <label for="instituto" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Instituto</label>

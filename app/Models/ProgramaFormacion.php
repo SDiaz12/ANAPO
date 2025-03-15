@@ -18,7 +18,7 @@ class ProgramaFormacion extends BaseModel
         'fecha_aprobacion',
         'fecha_final',
         'hora_finalizacion',
-        'instituto_id',
+        'instituto',
         'tipo_programa',
         'procentaje_aprobacion',
         'estado',

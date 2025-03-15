@@ -31,36 +31,34 @@
         <div>
             <!-- Campo: Busqueda estudiante -->
             <div class="mb-4">
-                <label for="inputSearchEstudiante" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
+                <label for="inputSearchEstudiante" class="mb-3 block text-base font-medium text-gray-700 dark:text-white">
                     Estudiante:
                 </label>
                 <input wire:model.live="inputSearchEstudiante" type="text" id="inputSearchEstudiante"
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
                     placeholder="Buscar estudiante...">
                 @error('inputSearchEstudiante') <span class="text-red-500">{{ $message }}</span> @enderror
         
                 <!-- Desplegable de resultados de búsqueda -->
                 @if(!empty($searchEstudiante))
-                    <ul class="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800">
-                        @foreach($searchEstudiante as $estudiante)
+                    <ul class="mt-2 bg-white border border-gray-700 rounded-lg shadow-lg dark:bg-gray-800">
+                        @forelse($searchEstudiante as $estudiante)
                             <li wire:click="selectEstudiante({{ $estudiante->id }})"
                                 class="p-2 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white">
                                 {{ $estudiante->nombre }} {{ $estudiante->apellido }}
                             </li>
-                        @endforeach
+                        @empty
+                            <li class="p-2 dark:text-white">No se encontró"{{ $inputSearchEstudiante }}". Tienes que matricular para poder asignar clases</li>
+                        @endforelse
                     </ul>
                 @endif
             </div>
-  <!-- Mensaje de error -->
-  @if ($error)
-  <p class="text-red-500 text-sm mt-2">{{ $error }}</p>
-@endif
             <div class="mb-4">
                 <label for="asignatura_id" class="block text-gray-700 text-sm font-bold mb-2 dark:text-white">
                     Asignatura
                 </label>
                 <select id="asignatura_id"
-                    class="shadow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
+                    class="shadow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
                     wire:model.live="asignatura_id">
                     <option value="">Seleccione Asignatura</option>
                     @forelse($asignaturas as $asignatura)
@@ -72,6 +70,10 @@
                 @error('asignatura_id') 
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
+                <!-- Mensaje de error -->
+            @if ($error)
+            <p class="text-red-500 text-sm mt-2">{{ $error }}</p>
+        @endif
             </div>
         </div>
 
