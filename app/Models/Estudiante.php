@@ -59,8 +59,13 @@ class Estudiante extends BaseModel
     }
 
     public function matricula()
-{
-    return $this->hasOne(Matricula::class, 'estudiante_id', 'id');
-}
+    {
+        return $this->hasOne(Matricula::class, 'estudiante_id', 'id');
+    }
+
+    public function asignaturaEstudiantes()
+    {
+        return $this->hasMany(\App\Models\AsignaturaEstudiante::class, 'estudiantes_id', 'id');
+    }
 
 }

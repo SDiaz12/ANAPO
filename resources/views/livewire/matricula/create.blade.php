@@ -96,6 +96,9 @@
                 </ul>
             @endif
         </div>
+        @if ($errorUnique)
+                <p class="text-red-500 text-sm mt-2">{{ $errorUnique }}</p>
+            @endif
 
         <!-- Campo: Instituto -->
         <div class="mb-4">

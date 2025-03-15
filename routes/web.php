@@ -2,12 +2,14 @@
 
 
 use App\Livewire\Asignatura\Asignaturas;
+use App\Livewire\AsignaturaEstudiante\AsignaturaEstudiantes;
 use App\Livewire\Docente\Docentes;
 use App\Livewire\Estudiant\Estudiants;
 use App\Livewire\Matricula\Matriculas;
 use App\Livewire\Nota\Notas;
 use App\Livewire\Principal\Principales;
 use App\Livewire\VistaNotasEstudiantes\VistaNotaEstudiantes;
+use App\Models\AsignaturaEstudiante;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Rol\Roles;
 use App\Livewire\AsignaturaDocente\AsignaturaDocentes;
@@ -30,5 +32,6 @@ Route::middleware([
     Route::get('/estudiante', Estudiants::class)->name('estudiante');
     Route::get('/asignatura', Asignaturas::class)->name('asignatura');
     Route::get('/asignaturaDocente', AsignaturaDocentes::class)->name('asignaturaDocente');
+    Route::get('/asignaturaEstudiante', AsignaturaEstudiantes::class)->name('asignaturaEstudiante');
     Route::get('/matricula', Matriculas::class)->name('matricula');
 });

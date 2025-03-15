@@ -15,6 +15,7 @@ class Matriculas extends Component
     public $codigoEstudiante;         
     public $nombreCompleto;
     public $error;
+    public $errorUnique;
     public $inputSearchProgramaFormacion = '';  
     public $searchProgramasFormacion = []; 
     public $isOpen = 0;
@@ -99,8 +100,20 @@ class Matriculas extends Component
             'estudiante_id' => 'required|integer|exists:estudiantes,id',
             'instituto' => 'required',
         ]);
-            $this->fecha_matricula = Carbon::today();
-            Matricula::updateOrCreate(
+
+        // Si no se está actualizando (es creación) verificamos duplicado
+        if (!$this->matricula_id) {
+            $matriculaExistente = Matricula::where('estudiante_id', $this->estudiante_id)
+                ->where('programaformacion_id', $this->programaformacion_id)
+                ->first();
+            if ($matriculaExistente) {
+                $this->errorUnique = 'El estudiante ya está matriculado en ese programa.';
+                return;
+            }
+        }
+
+        $this->fecha_matricula = Carbon::today();
+        Matricula::updateOrCreate(
             ['id' => $this->matricula_id],
             [
                 'fecha_matricula' => $this->fecha_matricula,
