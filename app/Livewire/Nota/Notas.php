@@ -155,7 +155,7 @@ class Notas extends Component
     // Cargar más notas por página
     public function loadMore($suma)
     {
-        $this->perPage += $suma;
+        $this->perPage = $suma;
     }
 
     // Renderizar el componente con las asignaturas y estudiantes
