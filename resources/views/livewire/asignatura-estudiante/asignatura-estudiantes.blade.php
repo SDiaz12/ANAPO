@@ -76,7 +76,7 @@
             </div>
             <input wire:model.live="search" type="text" id="table-search"
                 class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
-                placeholder="Buscar docente">
+                placeholder="Buscar por asignatura o estudiante" aria-placeholder="Buscar por asignatura o estudiante">
         </div>
     </div>
     <div class="relative overflow-x-auto scrollbar-hidden">

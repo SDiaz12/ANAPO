@@ -3,7 +3,7 @@
         <div
             class="flex flex-col sm:flex-row rounded-lg px-16 py-6 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-800 items-center gap-4">
             @if($datos->foto)
-                <img class="w-36 h-36 object-cover rounded-sm" src="{{ asset('storage/' . $datos->foto) }}"
+                <img class="w-36 h-36 object-cover rounded-full" src="{{ asset('storage/' . $datos->foto) }}"
                     alt="{{$datos->nombre}}">
             @else
                 <img class="w-36 h-36 object-cover rounded-full" alt="{{$datos->nombre}}"
