@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class ProgramaFormaciones extends Component
 {
-    public $search, $programaformacion_id, $codigo, $nombre, $fecha_aprobación, $fecha_final, $hora_finalizacion, $instituto, $tipo_programa, $procentaje_aprobacion, $estado;
+    public $search, $programaformacion_id, $codigo, $nombre, $fecha_aprobación, $fecha_final, $hora_finalizacion, $instituto, $tipo_programa, $procentaje_aprobacion, $estado = 1;
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
@@ -71,7 +71,7 @@ class ProgramaFormaciones extends Component
             'instituto' => $this->instituto,
             'tipo_programa' => $this->tipo_programa,
             'procentaje_aprobacion' => $this->procentaje_aprobacion,
-            'estado' => 1,
+            'estado'         => $this->estado,
         ]);
         session()->flash(
             'message',

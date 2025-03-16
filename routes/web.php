@@ -2,6 +2,8 @@
 
 
 use App\Livewire\Asignatura\Asignaturas;
+use App\Livewire\Estudiant\EstudiantePorUsuario;
+use App\Livewire\Seccion\Secciones;
 use App\Livewire\AsignaturaEstudiante\AsignaturaEstudiantes;
 use App\Livewire\Docente\Docentes;
 use App\Livewire\Estudiant\Estudiants;
@@ -31,7 +33,9 @@ Route::middleware([
     Route::get('/notas', Notas::class)->name('notas');
     Route::get('/docente', Docentes::class)->name('docente');
     Route::get('/estudiante', Estudiants::class)->name('estudiante');
+    Route::get('/userEstudiante', EstudiantePorUsuario::class)->name('userEstudiante');
     Route::get('/asignatura', Asignaturas::class)->name('asignatura');
+    Route::get('/seccion', Secciones::class)->name('seccion');
     Route::get('/asignaturaDocente', AsignaturaDocentes::class)->name('asignaturaDocente');
     Route::get('/asignaturaEstudiante', AsignaturaEstudiantes::class)->name('asignaturaEstudiante');
     Route::get('/matricula', Matriculas::class)->name('matricula');

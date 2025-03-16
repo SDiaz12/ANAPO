@@ -50,7 +50,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="asignatura_id" class="block text-gray-700 text-sm font-bold mb-2 dark:text-white">
-                            Asignatura
+                            Asignatura:
                         </label>
                         <select id="asignatura_id"
                             class="shadow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"

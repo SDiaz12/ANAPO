@@ -15,7 +15,7 @@ class AsignaturaEstudiantes extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $search, $asignaturaestudiante_id, $estudiantes_id, $asignatura_id, $periodo_id, $estado;
+    public $search, $asignaturaestudiante_id, $estudiantes_id, $asignatura_id, $periodo_id, $estado = 1;
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
@@ -55,48 +55,51 @@ class AsignaturaEstudiantes extends Component
     public function store()
     {
         $this->validate([
-            'estudiantes_id' => 'required',
-            'asignatura_id' => 'required',
+            'estudiantes_id' => 'required|integer|exists:estudiantes,id',
+            'asignatura_id'  => 'required',
         ]);
-
+    
         // Obtenemos el período activo
         $periodoActivo = Periodo::where('estado', 1)->first();
-
-        // Verificamos que exista un período activo
+    
         if (!$periodoActivo) {
             $this->error = 'No hay período activo.';
             return;
         }
-
-        // Verificamos si ya existe una matrícula para el estudiante en esa asignatura y período
-        // Se comprueba únicamente en creación (no en actualización)
+    
+        // Verificamos si ya existe una matrícula para el estudiante en esa asignatura y período (en creación)
         if (!$this->asignaturaestudiante_id) {
             $matriculaExistente = AsignaturaEstudiante::where('estudiantes_id', $this->estudiantes_id)
                 ->where('asignatura_id', $this->asignatura_id)
                 ->where('periodo_id', $periodoActivo->id)
                 ->first();
             if ($matriculaExistente) {
-               $this->error = 'La asignatura ya está matriculada para este estudiante.';
+                $this->error = 'La asignatura ya está matriculada para este estudiante.';
                 return;
             }
         }
-
+    
+        // Si $this->estado está vacío, asignamos 1 por defecto
+        $estado = ($this->estado === '' || is_null($this->estado)) ? 1 : $this->estado;
+    
         // Procedemos a crear o actualizar la matrícula
         AsignaturaEstudiante::updateOrCreate(
             ['id' => $this->asignaturaestudiante_id],
             [
                 'estudiantes_id' => $this->estudiantes_id,
-                'asignatura_id' => $this->asignatura_id,
-                'periodo_id' => $periodoActivo->id,
-                'estado' => 1,
+                'asignatura_id'  => $this->asignatura_id,
+                'periodo_id'     => $periodoActivo->id,
+                'estado'         => $estado,
             ]
         );
-
+    
         session()->flash(
             'message',
-            $this->asignaturaestudiante_id ? 'Matrícula de asignatura actualizada correctamente!' : 'Matrícula de asignatura creada correctamente!'
+            $this->asignaturaestudiante_id
+                ? 'Matrícula de asignatura actualizada correctamente!'
+                : 'Matrícula de asignatura creada correctamente!'
         );
-
+    
         $this->closeModal();
         $this->resetInputFields();
     }
@@ -127,7 +130,7 @@ class AsignaturaEstudiantes extends Component
     {
         $asiganturaestudiante = AsignaturaEstudiante::findOrFail($id);
         $this->asignaturaestudiante_id = $asiganturaestudiante->id;
-        $this->estudiantes_id = $id;
+        $this->estudiantes_id = $asiganturaestudiante->estudiante->id;
         $this->inputSearchEstudiante = $asiganturaestudiante->estudiante->nombre . ' ' . $asiganturaestudiante->estudiante->apellido;
         $this->asignatura_id = $asiganturaestudiante->asignatura_id;
         $this->estado = $asiganturaestudiante->estado;
@@ -184,10 +187,6 @@ class AsignaturaEstudiantes extends Component
             session()->flash('error', 'Docente no encontrado.');
             return;
         }
-        if ($asiganturaestudiante->asignatura()->exists()) {
-            session()->flash('error', 'No se puede eliminar:  ' . $this->nombreAEliminar . ', porque está enlazada actualmente.');
-            return;
-        }
 
         $this->IdAEliminar = $id;
         $this->nombreAEliminar = $asiganturaestudiante->asignatura->nombre;
@@ -221,7 +220,7 @@ class AsignaturaEstudiantes extends Component
                 $q->whereHas('periodo', function ($q2) {
                     $q2->where('estado', 1);
                 });
-            })->get();
+            })->where('estado', 1)->get();
 
         $asignaturaestudianteCount = AsignaturaEstudiante::count();
 

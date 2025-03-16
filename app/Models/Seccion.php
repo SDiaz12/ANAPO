@@ -11,11 +11,12 @@ class Seccion extends BaseModel
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-        'nombre', 
-        'programaformacion_id', 
-        'created_by', 
-        'deleted_by', 
-        'updated_by'];
+        'nombre',
+        'programaformacion_id',
+        'created_by',
+        'deleted_by',
+        'updated_by'
+    ];
     protected $table = 'secciones';
 
     public function programaformacion()

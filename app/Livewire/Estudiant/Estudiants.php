@@ -17,7 +17,7 @@ class Estudiants extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $search, $estudiante_id, $created_at, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado;
+    public $search, $estudiante_id, $created_at, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado = 1;
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
@@ -163,6 +163,7 @@ class Estudiants extends Component
             $estudiante = Estudiante::findOrFail($this->estudiante_id);
             $this->foto = $estudiante->foto;
         }
+           
             Estudiante::updateOrCreate(['id' => $this->estudiante_id], [
             'codigo' => $this->codigo,
             'dni' => $this->dni,
@@ -175,7 +176,7 @@ class Estudiants extends Component
             'sexo' => $this->sexo,
             'telefono' => $this->telefono,
             'correo' => $this->correo,
-            'estado' => 1,
+            'estado'         => $this->estado,
         ]);
 
         session()->flash(

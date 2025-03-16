@@ -17,7 +17,7 @@ class Docentes extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $search, $docente_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado, $created_at;
+    public $search, $docente_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado = 1, $created_at;
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
@@ -164,6 +164,7 @@ class Docentes extends Component
             $docente = Docente::findOrFail($this->docente_id);
             $this->foto = $docente->foto;
         }
+
         Docente::updateOrCreate(['id' => $this->docente_id], [
             'codigo' => $this->codigo,
             'dni' => $this->dni,
@@ -176,7 +177,7 @@ class Docentes extends Component
             'sexo' => $this->sexo,
             'telefono' => $this->telefono,
             'correo' => $this->correo,
-            'estado' => 1,
+            'estado'         => $this->estado,
         ]);
 
         session()->flash(
