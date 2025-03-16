@@ -25,7 +25,14 @@ class VistaNotaEstudiantes extends Component
             'asignaturaDocente',
             'estudiante',
             'matricula'
-        ])->find($this->asignaturaEstudianteId);
+        ])
+        ->whereHas('estudiante', function ($query) {
+            $query->where('estado', '!=', 0);
+        })
+        ->whereHas('matricula', function ($query) {
+            $query->where('estado', '!=', 0); // Asumiendo que el ID de la matrícula es el campo relevante
+        })
+        ->find($this->asignaturaEstudianteId);
 
         // Verificar si se encontró la asignatura del estudiante
         if ($asignaturaEstudiante) {
@@ -35,8 +42,7 @@ class VistaNotaEstudiantes extends Component
             $seccion = $asignaturaEstudiante->asignaturaDocente; // Información de la sección
             $datos = $asignaturaEstudiante->estudiante; // Información del estudiante
             $instituto = $asignaturaEstudiante->estudiante->matricula; // Información del instituto
-            $programaformacion = $asignaturaEstudiante->estudiante->matricula->programaFormacion; // Información del programa de formación
-
+            $programaformacion = optional($asignaturaEstudiante->estudiante->matricula)->programaFormacion;// Información del programa de formación
             $promedioCalculado = $notas->map(function ($nota) {
                 return ($nota->primerparcial + $nota->segundoparcial + $nota->tercerparcial) / 3;
             })->avg();
@@ -93,7 +99,8 @@ class VistaNotaEstudiantes extends Component
             'instituto',
             'programaformacion',
             'globalIndice',
-            'periodIndice'
+            'periodIndice',
+            'asignaturaEstudiante'
         ))->layout('layouts.app');
     }
 }

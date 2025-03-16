@@ -1,4 +1,5 @@
 <div>
+    @if ($asignaturaEstudiante)
         <!-- Información del Estudiante -->
         <div
             class="flex flex-col sm:flex-row rounded-lg px-16 py-6 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-800 items-center gap-4">
@@ -132,4 +133,20 @@
                     </tbody>
                 </table>
             </div>
+        @else
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl dark:bg-gray-800 dark:text-white">
+            <div class="md:flex">
+                <div class="p-8">
+                    <div class="uppercase tracking-wide text-sm text-red-600 font-semibold dark:text-red-600"></div>
+                    <p class="block mt-1 text-lg leading-tight font-medium text-black dark:text-white">¡Aquí veras tus calificaciones!</p>
+                    <p class="mt-2 text-gray-500 dark:text-gray-400">Una vez que te matricules en un programa de formación y califiquen tus clases, podrás ver tu información y tus calificaciones.</p>
+                    <div class="mt-4">
+                        <a href="{{ route('dashboard') }}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded dark:bg-red-600 dark:hover:bg-red-700">
+                           Ir al inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
