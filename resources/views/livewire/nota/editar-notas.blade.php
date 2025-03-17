@@ -1,6 +1,6 @@
 <div>
     @if($isOpen)
-        @include('livewire.nota.create')
+        @include('livewire.nota.verNotas')
     @endif
 
     @if (session()->has('message'))
@@ -100,82 +100,85 @@
     </div>
 
     @if ($viewMode === 'table')
-        <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                   
-                        <th class="py-2 px-4">Código</th>
-                        <th class="py-2 px-4">Nombre</th>
-                        <th class="py-2 px-4">UV</th>
-                        <th class="py-2 px-4">Docente</th>
-                        <th class="py-2 px-4">Duración</th>
-                        <th class="py-2 px-4">Estudiantes</th>
-                        <th class="py-2 px-4">Acciones</th>
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th class="py-2 px-4">Código</th>
+                    <th class="py-2 px-4">Nombre</th>
+                    <th class="py-2 px-4">UV</th>
+                    <th class="py-2 px-4">Docente</th>
+                    <th class="py-2 px-4">Duración</th>
+                    <th class="py-2 px-4">Estudiantes</th>
+                    <th class="py-2 px-4">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($asignaturas as $asignatura)
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->codigo }}</td>
+                        <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->nombre }}</td>
+                        <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->creditos }}</td>
+                        <td class="py-2 px-4">{{ $asignatura->asignaturadocente->docente->nombre }}</td>
+                        <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->horas }}</td>
+                        <td class="py-2 px-4">{{ $asignatura->estudiantes_count }}</td>
+                        <td class="py-2 px-4 flex space-x-2">
+                            @if (!$this->hasNotas($asignatura->asignaturadocente->asignatura->codigo, $asignatura->asignaturadocente->docente->codigo))
+                                <button wire:click="create('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
+                                    class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                    ➕ Agregar
+                                </button>
+                            @else
+                                <button wire:click="edit('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+                                    class="bg-green-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                    📖 Ver
+                                </button>
+                                <button wire:click="exportNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+    class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+    📥 Descargar Notas
+</button>
+
+
+                            @endif
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($asignaturas as $asignatura)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                           
-                            <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->codigo }}</td>
-                            <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->nombre }}</td>
-                            <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->creditos }}</td>
-                            <td class="py-2 px-4">{{ $asignatura->asignaturadocente->docente->nombre }}</td>
-                            <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->horas }}</td>
-                            <td class="py-2 px-4">{{ $asignatura->estudiantes_count }}</td>
-                            <td class="py-2 px-4 flex space-x-2">
-                                
-                                    <button wire:click="create('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
-                                        class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        ➕ Agregar
-                                    </button>
-                                    <button 
-                                        wire:click="exportarNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
-                                        class="bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        📄 Excel Notas
-                                    </button>
-
-
-
-                            </td>
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        @else
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-5">
-            @foreach ($asignaturas as $asignatura)
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-                    <div class="flex items-center justify-center w-16 h-16 bg-blue-500 text-white text-xl font-bold rounded-full mx-auto">
-                        {{ substr($asignatura->asignaturadocente->asignatura->nombre, 0, 2) }}
-                    </div>
-                    
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white text-center mt-2">{{ $asignatura->asignaturadocente->asignatura->nombre }}</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">UV: {{ $asignatura->asignaturadocente->asignatura->creditos }}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Docente: {{ $asignatura->asignaturadocente->docente->nombre }} horas</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Duración: {{ $asignatura->asignaturadocente->asignatura->horas }} horas</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Estudiantes: {{ $asignatura->estudiantes_count }}</p>
-                    <div class="mt-3 flex space-x-1">
-                        
-                            </button> <button wire:click="create('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
-                                class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        ➕ Agregar
-                            </button>
-                        
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    @endif
-
-    <div class="px-5 bg-white border-t rounded-b-lg dark:bg-gray-800 dark:border-gray-600 border-gray-200">
-        <br>
-        {{ $asignaturas->links() }}
-        <br>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    
+@else
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-5">
+        @foreach ($asignaturas as $asignatura)
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+                <div class="flex items-center justify-center w-16 h-16 bg-blue-500 text-white text-xl font-bold rounded-full mx-auto">
+                    {{ substr($asignatura->asignaturadocente->asignatura->nombre, 0, 2) }}
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white text-center mt-2">{{ $asignatura->asignaturadocente->asignatura->nombre }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">UV: {{ $asignatura->asignaturadocente->asignatura->creditos }}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Docente: {{ $asignatura->asignaturadocente->docente->nombre }} horas</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Duración: {{ $asignatura->asignaturadocente->asignatura->horas }} horas</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Estudiantes: {{ $asignatura->estudiantes_count }}</p>
+                <div class="mt-3 flex space-x-1">
+                    
+                        <button wire:click="edit('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+                            class="bg-green-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                            📖 Ver
+                        </button>
+                        <button wire:click="exportNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}, '{{ $asignatura->notas->first()->id ?? '' }}')"
+                            class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                            📥 Descargar Notas
+                        </button>
+
+                   
+                </div>
+            </div>
+        @endforeach
+    </div>
+@endif
+
+<div class="px-5 bg-white border-t rounded-b-lg dark:bg-gray-800 dark:border-gray-600 border-gray-200">
+    <br>
+    {{ $asignaturas->links() }}
+    <br>
 </div>
 

@@ -170,6 +170,30 @@
             </x-nav-link>
          </li>
          <li>
+            <x-nav-link href="{{ route('notas') }}" :active="request()->routeIs('notas')"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-green-500 dark:hover:bg-gray-700 group">
+               <x-activeIcons :active="request()->routeIs('notas')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                  width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                     d="M4 2h10l6 6v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm10 7h-4v2h4v-2zm0 4h-4v2h4v-2zm-6-4H6v2h2V9zm0 4H6v2h2v-2zm7-7.586L14.586 3H14v2a1 1 0 0 0 1 1h2v-.586z" />
+               </x-activeIcons>
+               <span class="flex-1 ms-3 whitespace-nowrap">Descargar Notas</span>
+            </x-nav-link>
+         </li>
+
+         <li>
+            <x-nav-link href="{{ route('editarnotas') }}" :active="request()->routeIs('editarnotas')"
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-green-500 dark:hover:bg-gray-700 group">
+               <x-activeIcons :active="request()->routeIs('editarnotas')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                  width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                     d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-.55 0-1-.45-1-1v-5H9l3-3 3 3h-2v5c0 .55-.45 1-1 1z" />
+               </x-activeIcons>
+                  <span class="flex-1 ms-3 whitespace-nowrap">Editar Notas</span>
+            </x-nav-link>
+         </li>
+
+         <li>
             <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
          </li>
          <li>
@@ -192,15 +216,15 @@
             <ul id="dropdown-menu2" class="hidden py-2 space-y-2 dark:bg-gray-900 bg-gray-100 rounded-md">
 
                <li>
-                  <x-nav-link href="{{ route('asignatura') }}" :active="request()->routeIs('asignatura')"
+                  <x-nav-link href="{{ route('asignaturaDocente') }}" :active="request()->routeIs('asignaturaDocente')"
                      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                     <x-activeIcons :active="request()->routeIs('asignatura')"
+                     <x-activeIcons :active="request()->routeIs('asignaturaDocente')"
                         class="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path
                            d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
                      </x-activeIcons >
-                     <span class="flex-1 ms-3 whitespace-nowrap">Asignaturas</span>
+                     <span class="flex-1 ms-3 whitespace-nowrap">Asignación Asignaturas</span>
                   </x-nav-link>
                   <x-nav-link href="{{ route('rol') }}" :active="request()->routeIs('rol')"
                      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">

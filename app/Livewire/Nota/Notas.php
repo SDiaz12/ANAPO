@@ -8,10 +8,22 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\FormatoNotasExport;
-
+use Illuminate\Http\Request;
+use App\Exports\FormatoNotasImport;
 class Notas extends Component
 {
     use WithPagination;
+    public $file;
+    public function exportarNotas($codigo_asignatura, $codigo_docente)
+{
+    
+    $nombreArchivo = 'Asignatura_' . $codigo_asignatura . '_Docente_' . $codigo_docente . '_Notas.xlsx';
+
+   
+    return Excel::download(new FormatoNotasExport($codigo_asignatura, $codigo_docente), $nombreArchivo);
+}
+
+    
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar, $search, $estudiantes, $nota_id;
@@ -49,7 +61,7 @@ class Notas extends Component
             return;
         }
 
-        // Agrupar estudiantes con su asignatura y docente
+   
         $this->estudiantes = $asignaturaEstudiantes->map(function ($asignaturaEstudiante) {
             return [
                 'asignatura_estudiante_id' => $asignaturaEstudiante->id,
@@ -60,13 +72,14 @@ class Notas extends Component
                 'docente' => $asignaturaEstudiante->asignaturadocente->docente->nombre ?? 'Sin docente',
             ];
         });
+        
 
         $this->openModal();
         
 
     }
 
-    
+  
     public function openModal()
     {
         $this->isOpen = true;
@@ -91,11 +104,22 @@ class Notas extends Component
         $this->observacion = '';
         $this->estado = 1;
     }
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
 
-    // Guardar las notas en la base de datos
+       
+        Excel::import(new FormatoNotasImport, $request->file('file'));
+
+        return back()->with('success', 'Notas importadas exitosamente.');
+    }
+
+  
     public function store()
     {
-       
+
         $this->validate([
             'notas.*.asignatura_estudiante_id' => 'required|integer|exists:asignatura_estudiantes,id',
             'notas.*.primerparcial' => 'required|numeric',
@@ -105,36 +129,54 @@ class Notas extends Component
             'notas.*.recuperacion' => 'nullable|numeric',
             'notas.*.observacion' => 'nullable|string',
         ]);
-
+        
+       
         foreach ($this->notas as $id => $nota) {
-            // Asegurarse de que se reciba un ID de asignatura_estudiante
             if (empty($nota['asignatura_estudiante_id'])) {
-                session()->flash('error', "Falta el ID de asignatura para el estudiante con ID $id.");
+                session()->flash('error', 'El ID de asignatura del estudiante no está disponible.');
                 return;
             }
-
-            // Usar updateOrCreate para guardar o actualizar la nota
-            Nota::updateOrCreate(
-                ['id' => $this->nota_id],
-                [
-                    'asignatura_estudiante_id' => $nota['asignatura_estudiante_id'],
-                    'primerparcial' => $nota['primerparcial'],
-                    'segundoparcial' => $nota['segundoparcial'],
-                    'tercerparcial' => $nota['tercerparcial'],
-                    'asistencia' => $nota['asistencia'],
-                    'recuperacion' => $nota['recuperacion'],
-                    'observacion' => $nota['observacion'],
-                    'estado' => $this->estado,
-                ]
-            );
+            try {
+                Nota::updateOrCreate(
+                    ['asignatura_estudiante_id' => $nota['asignatura_estudiante_id']],
+                    [
+                        'primerparcial' => $nota['primerparcial'],
+                        'segundoparcial' => $nota['segundoparcial'],
+                        'tercerparcial' => $nota['tercerparcial'],
+                        'asistencia' => $nota['asistencia'],
+                        'recuperacion' => $nota['recuperacion'],
+                        'observacion' => $nota['observacion'],
+                        'estado' => $this->estado,
+                    ]
+                );
+            } catch (\Exception $e) {
+                session()->flash('error', 'Error al guardar las notas: ' . $e->getMessage());
+                return;
+            }
+            
         }
-
-        session()->flash('success', 'Notas guardadas correctamente.');
+    
+        session()->flash('success', 'Notas actualizadas correctamente.');
         $this->closeModal();
         $this->resetInputFields();
     }
-
-    // Eliminar la nota de un estudiante
+    
+    
+    public function mount()
+    {
+        $this->estudiantes = AsignaturaEstudiante::all(); 
+    }
+    public function hasNotas($codigo_asignatura, $codigo_docente)
+    {
+        return Nota::whereHas('asignaturaEstudiante.asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente) {
+            $query->whereHas('asignatura', function ($query) use ($codigo_asignatura) {
+                $query->where('codigo', $codigo_asignatura);
+            })
+            ->whereHas('docente', function ($query) use ($codigo_docente) {
+                $query->where('codigo', $codigo_docente);
+            });
+        })->exists();
+    }
     public function delete()
     {
         if ($this->confirmingDelete) {
@@ -144,7 +186,7 @@ class Notas extends Component
         }
     }
 
-    // Cambiar el estado de la nota (activo/inactivo)
+    
     public function toggleEstado($id)
     {
         $nota = Nota::findOrFail($id);
@@ -152,16 +194,20 @@ class Notas extends Component
         $nota->save();
     }
 
-    // Cargar más notas por página
     public function loadMore($suma)
     {
         $this->perPage += $suma;
     }
-
-    // Renderizar el componente con las asignaturas y estudiantes
+      
+    
+    
+    public $nombre_docente;
+    
     public function render()
     {
+        
         $asignaturas = AsignaturaEstudiante::with('asignaturadocente.asignatura', 'estudiante')
+            ->whereDoesntHave('notas') 
             ->whereHas('asignaturadocente.asignatura', function ($query) {
                 $query->where('estado', 1);
             })

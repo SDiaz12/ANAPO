@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('asistencia');
             $table->float('recuperacion')->nullable();
             $table->string('observacion');
-            $table->integer('estado');
+            $table->integer('estado')->default(1);
+
             $table->timestamps();
             $table->softDeletes();
             $table->unsignedBigInteger('created_by')->nullable();

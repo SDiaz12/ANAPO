@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Nota;
 use App\Models\AsignaturaEstudiante;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -10,9 +11,8 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize, WithEvents
-{
-    protected $codigo_asignatura;
+class ActualizarNotasExport  implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize, WithEvents
+{    protected $codigo_asignatura;
     protected $codigo_docente;
 
     public function __construct($codigo_asignatura, $codigo_docente)
@@ -38,7 +38,6 @@ class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, Sh
         ];
     }
 
-   
     public function collection()
     {
         return AsignaturaEstudiante::whereHas('asignaturadocente', function ($query) {
@@ -52,8 +51,9 @@ class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, Sh
         ->with(['estudiante', 'asignaturadocente.asignatura', 'notas'])
         ->get()
         ->map(function ($item) {
-            $nota = $item->notas->first(); 
-        
+            
+            $nota = $item->notas->first();
+
             return [
                 'asignatura_estudiante_id' => $item->id ?? 'Sin código',
                 'codigo_estudiante' => $item->estudiante->codigo ?? 'Sin código',
@@ -70,16 +70,13 @@ class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, Sh
         });
     }
 
-    
     public function styles($sheet)
     {
-        
         $sheet->getStyle('A1:K' . $sheet->getHighestRow())
             ->getFont()
             ->setName('Times New Roman')
             ->setSize(11);
 
-       
         $sheet->getStyle('A1:K1')->applyFromArray([
             'font' => [
                 'bold' => true,
@@ -95,35 +92,27 @@ class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, Sh
             ],
         ]);
 
-        
         $sheet->getStyle('A2:K' . $sheet->getHighestRow())->applyFromArray([
             'fill' => [
                 'fillType' => 'solid',
-                'startColor' => ['argb' => 'D9EAF7'], // Azul claro
+                'startColor' => ['argb' => 'D9EAF7'],
             ],
         ]);
 
-        
         $sheet->getStyle('A1:K' . $sheet->getHighestRow())
             ->getBorders()->getAllBorders()
             ->setBorderStyle('thin');
 
-       
         $sheet->getStyle('A1:K' . $sheet->getHighestRow())
             ->getAlignment()->setHorizontal('center');
     }
 
-    
     public function registerEvents(): array
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
-
-                
                 $sheet->getDelegate()->setAutoFilter('A1:K1');
-
-                
                 foreach (range('A', 'K') as $column) {
                     $sheet->getDelegate()->getColumnDimension($column)->setAutoSize(true);
                 }

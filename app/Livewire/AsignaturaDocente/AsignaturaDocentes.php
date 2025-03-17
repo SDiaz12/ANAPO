@@ -5,6 +5,7 @@ namespace App\Livewire\AsignaturaDocente;
 use App\Models\AsignaturaDocente;
 use App\Models\Docente;
 use App\Models\Asignatura;
+use App\Models\AsignaturaEstudiante;
 use App\Models\Periodo;
 use App\Models\Seccion;
 use Livewire\Component;
@@ -25,28 +26,31 @@ class AsignaturaDocentes extends Component
     public $secciones = [];
     public $periodos = [];
     public $selectedPeriodos = [];
-   public $selectedSecciones = [];
+    public $selectedSecciones = [];
     
-    // Toggle entre vista de tabla y tarjetas
+   
     public function toggleViewMode()
     {
         $this->viewMode = $this->viewMode === 'table' ? 'cards' : 'table';
     }
 
-    // Abrir modal para crear
+ 
     public function create()
     {
         $this->resetInputFields();
         $this->openModal();
     }
+
     public function toggleEstado($id)
     {
         $asignatura = AsignaturaDocente::findOrFail($id);
         $asignatura->estado = !$asignatura->estado;
         $asignatura->save();
     }
+
     public $codigoDocente, $nombreCompleto, $error;
     public $selectedAsignaturas = [];
+    
     public function toggleAsignaturaSelection($asignaturaId)
     {
         if (in_array($asignaturaId, $this->selectedAsignaturas)) {
@@ -55,12 +59,12 @@ class AsignaturaDocentes extends Component
             $this->selectedAsignaturas[] = $asignaturaId;
         }
     }
+
     public $inputSearchdocente = '';  
     public $searchdocente= []; 
 
     public function updatedInputSearchdocente()
     {
-        
         $this->searchdocente = Docente::where('nombre', 'like', '%' . $this->inputSearchdocente . '%')
             ->limit(10)
             ->get();
@@ -72,9 +76,7 @@ class AsignaturaDocentes extends Component
         $this->inputSearchdocente = Docente::find($id)->nombre;
         $this->searchdocente = [];
     }
-    
-    
-    
+
     public function openModal()
     {
         $this->isOpen = true;
@@ -85,17 +87,16 @@ class AsignaturaDocentes extends Component
         $this->isOpen = false;
     }
 
-    
     public function resetInputFields()
     {
-        $this->docente_id = null;
-        $this->asignatura_id = null;
-        $this->periodo_id = null;
-        $this->seccion_id = null;
-        $this->estado = 1;
+        $this->docente_id = '';
+        $this->asignatura_id = '';
+        $this->periodo_id = '';
+        $this->seccion_id = '';
+        $this->estado = '';
     }
 
-    // Eliminar AsignaturaDocente
+ 
     public function delete()
     {
         if ($this->confirmingDelete) {
@@ -113,94 +114,72 @@ class AsignaturaDocentes extends Component
         }
     }
 
-    // Almacenar o actualizar AsignaturaDocente
-    public function store()
-{
-    // Asegúrate de que el array no esté vacío antes de usarlo
-    if (empty($this->selectedSecciones)) {
-        session()->flash('error', 'Por favor, selecciona al menos una sección.');
-        return;
-    }
+    public $cantidad_materias; 
 
-    // Validación de los campos
-    $this->validate([
-        'docente_id' => 'required|integer|exists:docentes,id',
-        'selectedAsignaturas' => 'required|array|min:1',
-        'selectedAsignaturas.*' => 'integer|exists:asignaturas,id',
-        'selectedSecciones' => 'required|array|min:1',
-        'selectedSecciones.*' => 'integer|exists:secciones,id',
-        'selectedPeriodos' => 'required|array|min:1',
-        'selectedPeriodos.*' => 'integer|exists:periodos,id',
-    ]);
-
-    // Asegúrate de que los índices coincidan entre los arrays
-    if (count($this->selectedAsignaturas) !== count($this->selectedSecciones) || count($this->selectedAsignaturas) !== count($this->selectedPeriodos)) {
-        session()->flash('error', 'La cantidad de asignaturas, secciones y períodos debe coincidir.');
-        return;
-    }
-
-    // Guardar los registros
-    foreach ($this->selectedAsignaturas as $key => $asignaturaId) {
-        AsignaturaDocente::updateOrCreate(
-            [
-                'docente_id' => $this->docente_id,
-                'asignatura_id' => $asignaturaId,
-            ],
-            [
-                'periodo_id' => $this->selectedPeriodos[$key], 
-                'seccion_id' => $this->selectedSecciones[$key],
-                'estado' => 1,
-            ]
-        );
-    }
-    if (!empty($this->selectedSecciones) && isset($this->selectedSecciones[0])) {
-        // Acceder al índice 0
-        $firstSeccion = $this->selectedSecciones[0];
-    } else {
-        // Manejar el caso en que el array está vacío o no tiene índice 0
-        session()->flash('error', 'Por favor, selecciona al menos una sección.');
-        return;
-    }
-    
-
-    session()->flash('message', 'Asignaturas asignadas correctamente!');
-    $this->resetInputFields();
-}
-
-    
-
-
-
-    // Editar AsignaturaDocente
-    public function edit($id)
+    public function updatedCantidadMaterias()
     {
-        $asignaturaDocente = AsignaturaDocente::findOrFail($id);
-        $this->docente_id = $asignaturaDocente->docente_id;
-        $this->asignatura_id = $asignaturaDocente->asignatura_id;
-        $this->periodo_id = $asignaturaDocente->periodo_id;
-        $this->seccion_id = $asignaturaDocente->seccion_id;
-        $this->estado = $asignaturaDocente->estado;
-
-        $this->openModal();
+        
+        $this->selectedAsignaturas = array_fill(0, $this->cantidad_materias, null);
+        $this->selectedPeriodos = array_fill(0, $this->cantidad_materias, null);
+        $this->selectedSecciones = array_fill(0, $this->cantidad_materias, null);
     }
 
-    // Confirmar eliminación
+    public function store()
+    {
+        $this->validate([
+            'docente_id' => 'required|integer|exists:docentes,id',
+            'selectedAsignaturas' => 'required|array|min:1',
+            'selectedAsignaturas.*' => 'integer|exists:asignaturas,id',
+            'selectedSecciones' => 'required|array|min:1',
+            'selectedSecciones.*' => 'integer|exists:secciones,id',
+            'selectedPeriodos' => 'required|array|min:1',
+            'selectedPeriodos.*' => 'integer|exists:periodos,id',
+        ]);
+
+      
+        foreach ($this->selectedAsignaturas as $key => $asignaturaId) {
+            AsignaturaDocente::updateOrCreate(
+                [
+                    'docente_id' => $this->docente_id,
+                    'asignatura_id' => $asignaturaId,
+                ],
+                [
+                    'periodo_id' => $this->selectedPeriodos[$key],
+                    'seccion_id' => $this->selectedSecciones[$key],
+                    'estado' => 1,
+                ]
+            );
+        }
+
+        session()->flash('message', 'Asignaturas asignadas correctamente!');
+        $this->resetInputFields();
+    }
+
     public function confirmDelete($id)
     {
         $asignaturaDocente = AsignaturaDocente::find($id);
-
+       
         if (!$asignaturaDocente) {
             session()->flash('error', 'AsignaturaDocente no encontrada.');
             return;
         }
-
+        $tieneEstudiantes = AsignaturaEstudiante::whereHas('asignaturaDocente', function ($query) use ($asignaturaDocente) {
+            $query->where('id', $asignaturaDocente->id);
+        })->exists();
+        
+        if ($tieneEstudiantes) {
+            session()->flash('error', 'No se puede eliminar la asignación porque tiene estudiantes asociados al docente y la asignatura.');
+            return;
+        }
+        
+    
         $this->IdAEliminar = $id;
         $this->docenteAEliminar = $asignaturaDocente->docente->nombre;
         $this->confirmingDelete = true;
     }
 
-    // Cargar más AsignaturasDocentes
-    public $perPage = 10;
+    
+    public $perPage = 9;
     public function loadMore($suma)
     {
         $this->perPage = $suma;
@@ -214,10 +193,10 @@ class AsignaturaDocentes extends Component
             ->orderBy('id', 'DESC')
             ->paginate($this->perPage);
 
-            $this->docentes = Docente::all();
-            $this->asignaturas = Asignatura::all();
-            $this->periodos = Periodo::all();
-            $this->secciones = Seccion::all();
+        $this->docentes = Docente::all();
+        $this->asignaturas = Asignatura::all();
+        $this->periodos = Periodo::all();
+        $this->secciones = Seccion::all();
 
         return view('livewire.asignatura-docente.asignatura-docentes', [
             'asignaturasDocentes' => $asignaturasDocentes,

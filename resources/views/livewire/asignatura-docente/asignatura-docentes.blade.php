@@ -126,28 +126,15 @@
                             </label>
                         </td>
                         <td class="px-6 py-4">
-                            <button wire:click="edit({{ $asignaturaDocente->id }})"
-                                class="mb-1 px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                </svg>
-                                Editar
-                            </button>
-                            <button wire:click="confirmDelete({{ $asignaturaDocente->id }})"
-                                class="px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-center dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-800">
-                                <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                </svg>
-                                Borrar
-                            </button>
+                          
+                        <button wire:click="confirmDelete({{ $asignaturaDocente->id }})"
+                            class="mb-1 px-4 py-2 text-sm font-medium text-white bg-gray-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg dark:bg-gray-600 dark:hover:bg-red-600 dark:focus:ring-red-800 flex items-center transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6M12 18l-6-6m0 0l6-6" />
+                            </svg>
+                            Eliminar Asignación
+                        </button>
+
                         </td>
                     </tr>
                     @endforeach
@@ -172,12 +159,12 @@
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Sección: </span>{{ $asignaturaDocente->seccion->nombre}}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Periodo: </span>{{ $asignaturaDocente->periodo->nombre}}</p>
                         <div class="mt-2">
-                            <button wire:click="edit({{ $asignaturaDocente->id }})" class="mb-1 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Editar
-                            </button>
-                            <button wire:click="confirmDelete({{ $asignaturaDocente->id }})" class="mb-1 px-3 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                Borrar
-                            </button>
+                           
+                        <button wire:click="confirmDelete({{ $asignaturaDocente->id }})"
+                            class="mb-1 px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                           Eliminar Asignación
+                        </button>
+
                         </div>
                     </div>
                 </div>
@@ -227,7 +214,7 @@
                             <svg class="mx-auto mb-4 animate-bounce text-red-600 w-12 h-12 dark:text-red-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                             </svg>
-                            <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">¿Estás seguro de que deseas eliminar la asignación al docente: "<strong>{{ $docenteAEliminar}}</strong>"? <br>Esta
+                            <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">¿Estás seguro de que deseas des-asignarle la clase al docente: "<strong>{{ $docenteAEliminar}}</strong>"? <br>Esta
                                 acción no se puede deshacer.</h3>
                             <button wire:click="delete" type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                                 Eliminar
