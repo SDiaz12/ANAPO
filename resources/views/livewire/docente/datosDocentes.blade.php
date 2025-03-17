@@ -105,7 +105,7 @@
                             <td class="py-2 px-4 text-gray-400">{{ $clasedada->periodo->nombre }}</td>
                             <td class="py-2 px-4 text-gray-400">{{ $clasedada->asignatura->nombre }}</td>
                             <td class="py-2 px-4 text-gray-400">{{ $clasedada->seccion->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-600">{{ $clase->seccion->nombre }}</td>
+                            <td class="py-2 px-4 text-gray-600">{{ $clasedada->seccion->nombre }}</td>
                         </tr>
                     @empty  
                         <tr>

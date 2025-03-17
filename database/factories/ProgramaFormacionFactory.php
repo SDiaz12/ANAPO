@@ -17,10 +17,14 @@ class ProgramaFormacionFactory extends Factory
     public function definition(): array
     {
         return [
+            'codigo' => $this->faker->name,
             'nombre' => $this->faker->name,
-            'descripcion' => $this->faker->text,
-            'nivel_formacion' => $this->faker->randomElement(['Tecnico', 'Tecnologo', 'Profesional', 'Especializacion', 'Maestria', 'Doctorado']),
-            'duracion' => $this->faker->randomNumber(2),
+            'fecha_aprobacion' => $this->faker->date(),
+            'fecha_final' => $this->faker->date(),
+            'hora_finalizacion' => $this->faker->time(),
+            'instituto' => $this->faker->name,
+            'procentaje_aprobacion' => $this->faker->randomNumber(),
+            'tipo_programa' => $this->faker->randomElement(['Tecnico', 'Tecnologo', 'Profesional', 'Especializacion', 'Maestria', 'Doctorado']),
             'estado' => $this->faker->randomElement([1, 0]),
 
         ];

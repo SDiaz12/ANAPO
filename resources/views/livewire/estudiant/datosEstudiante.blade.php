@@ -62,7 +62,6 @@
                         <th class="py-2 px-4 text-left">Periodo</th>
                         <th class="py-2 px-4 text-left">Asignatura</th>
                         <th class="py-2 px-4 text-left">Docente</th>
-                        <th class="py-2 px-4 text-left">Nota</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,8 +69,7 @@
                         <tr class="overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"> 
                             <td class="py-2 px-4 text-gray-400">{{ $clase->periodo->nombre }}</td>
                             <td class="py-2 px-4 text-gray-400">{{ $clase->asignatura->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-400">{{ $clase->docente->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-400">{{ $clase->nota }}</td>
+                            <td class="py-2 px-4 text-gray-400">{{ $clase->asignaturaDocente->docente->nombre }}</td>
                         </tr>
                     @empty  
                         <tr>
@@ -96,7 +94,6 @@
                         <th class="py-2 px-4 text-left">Periodo</th>
                         <th class="py-2 px-4 text-left">Asignatura</th>
                         <th class="py-2 px-4 text-left">Docente</th>
-                        <th class="py-2 px-4 text-left">Nota</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,8 +101,7 @@
                         <tr class="overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="py-2 px-4 text-gray-400">{{ $clasedada->periodo->nombre }}</td>
                             <td class="py-2 px-4 text-gray-400">{{ $clasedada->asignatura->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-400">{{ $clasedada->docente->nombre }}</td>
-                            <td class="py-2 px-4 text-gray-400">{{ $clasedada->nota }}</td>
+                            <td class="py-2 px-4 text-gray-400">{{ $clasedada->asignaturaDocente->docente->nombre }}</td>
                         </tr>
                     @empty  
                         <tr>

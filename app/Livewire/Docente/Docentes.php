@@ -17,7 +17,7 @@ class Docentes extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $search, $docente_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado, $created_at;
+    public $search, $docente_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado = 1, $created_at;
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
@@ -63,22 +63,19 @@ class Docentes extends Component
 
     public function historialAsignaturasDocente($idDocente)
     {
-        $periodoActual = Periodo::where('estado', true)->first();
-        $periodosHistoricos = Periodo::where('estado', false)->pluck('id'); // Obtiene IDs de todos los períodos históricos
+        // Clases con período activo usando la relación "periodo"
+        $this->clasesDocente = AsignaturaDocente::where('docente_id', $idDocente)
+            ->whereHas('periodo', function ($query) {
+                $query->where('estado', true);
+            })
+            ->get();
 
-        // Verificamos si hay un periodo activo antes de hacer la consulta
-        $this->clasesDocente = $periodoActual
-            ? AsignaturaDocente::where('docente_id', $idDocente)
-                ->where('periodo_id', $periodoActual->id)
-                ->get()
-            : collect(); // Si no hay período activo, devolvemos una colección vacía
-
-        // Si hay periodos históricos, obtenemos todas sus clases
-        $this->clasesHistorial = $periodosHistoricos->isNotEmpty()
-            ? AsignaturaDocente::where('docente_id', $idDocente)
-                ->whereIn('periodo_id', $periodosHistoricos)
-                ->get()
-            : collect(); // Si no hay periodos históricos, devolvemos una colección vacía
+        // Clases con períodos históricos (inactivos) usando la relación "periodo"
+        $this->clasesHistorial = AsignaturaDocente::where('docente_id', $idDocente)
+            ->whereHas('periodo', function ($query) {
+                $query->where('estado', false);
+            })
+            ->get();
     }
 
     public function infoDocente($idDocente)
@@ -167,6 +164,7 @@ class Docentes extends Component
             $docente = Docente::findOrFail($this->docente_id);
             $this->foto = $docente->foto;
         }
+
         Docente::updateOrCreate(['id' => $this->docente_id], [
             'codigo' => $this->codigo,
             'dni' => $this->dni,
@@ -179,7 +177,7 @@ class Docentes extends Component
             'sexo' => $this->sexo,
             'telefono' => $this->telefono,
             'correo' => $this->correo,
-            'estado' => 1,
+            'estado'         => $this->estado,
         ]);
 
         session()->flash(

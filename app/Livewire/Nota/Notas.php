@@ -28,7 +28,7 @@ class Notas extends Component
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar, $search, $estudiantes, $nota_id;
     public $promedio, $asignatura_estudiante_id, $primerparcial, $segundoparcial, $tercerparcial;
-    public $asistencia, $recuperacion, $observacion, $estado, $asignatura_id;
+    public $asistencia, $recuperacion, $observacion, $estado = 1, $asignatura_id;
     public $isOpen = false, $viewMode = 'table', $codigo_estudiante, $nombre_estudiante, $apellido_estudiante;
     public $perPage = 9, $notas = [];
 
@@ -196,7 +196,7 @@ class Notas extends Component
 
     public function loadMore($suma)
     {
-        $this->perPage += $suma;
+        $this->perPage = $suma;
     }
       
     
