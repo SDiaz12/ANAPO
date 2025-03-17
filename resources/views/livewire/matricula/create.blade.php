@@ -91,12 +91,14 @@
                     <!-- Desplegable de resultados de búsqueda -->
                     @if(!empty($searchProgramasFormacion))
                         <ul class="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800">
-                            @foreach($searchProgramasFormacion as $programa)
+                            @forelse($searchProgramasFormacion as $programa)
                                 <li wire:click="selectProgramaFormacion({{ $programa->id }})"
                                     class="p-2 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white">
                                     {{ $programa->nombre }}
                                 </li>
-                            @endforeach
+                                @empty
+                                <li class="p-2 dark:text-white">No se encontró "{{ $inputSearchProgramaFormacion }}". Probablemente esté inactivo o necesitas crearlo.</li>
+                            @endforelse
                         </ul>
                     @endif
                     @if ($errorUnique)

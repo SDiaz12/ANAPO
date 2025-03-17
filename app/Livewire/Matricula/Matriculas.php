@@ -63,6 +63,7 @@ class Matriculas extends Component
     public function updatedInputSearchProgramaFormacion()
     {
         $this->searchProgramasFormacion = ProgramaFormacion::where('nombre', 'like', '%' . $this->inputSearchProgramaFormacion . '%')
+            ->where('estado', 1)    
             ->limit(10)
             ->get();
     }
