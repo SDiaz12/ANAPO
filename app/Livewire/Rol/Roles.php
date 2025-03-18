@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Rol;
 
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Log;
-
+//#[Lazy()]
 class Roles extends Component
 {
     use WithPagination;
@@ -25,6 +26,11 @@ class Roles extends Component
         'name' => 'required|unique:roles,name',
         'selectedPermissions' => 'required|array',
     ];
+
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
     
 
     protected $listeners = ['roleStored' => '$refresh'];

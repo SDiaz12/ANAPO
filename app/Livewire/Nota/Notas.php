@@ -4,12 +4,14 @@ namespace App\Livewire\Nota;
 
 use App\Models\Nota;
 use App\Models\AsignaturaEstudiante;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\FormatoNotasExport;
 use Illuminate\Http\Request;
 use App\Exports\FormatoNotasImport;
+//#[Lazy()]
 class Notas extends Component
 {
     use WithPagination;
@@ -21,6 +23,11 @@ class Notas extends Component
 
    
     return Excel::download(new FormatoNotasExport($codigo_asignatura, $codigo_docente), $nombreArchivo);
+}
+
+public function placeholder()
+{
+    return view('livewire.Placeholder.loader')->layout('layouts.app');
 }
 
     

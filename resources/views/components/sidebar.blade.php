@@ -25,7 +25,7 @@
                <div class="flex items-center ms-3">
                   <div>
                      <button id="theme-toggle" type="button"
-                        class="text-gray-500 mr-3 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                        class="text-gray-500 mr-3 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5">
                         <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                            xmlns="http://www.w3.org/2000/svg">
                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
@@ -46,9 +46,9 @@
                         @if (Auth::user()->profile_photo_path)
                      <img class="w-9 h-9 rounded-full object-cover"
                         src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}">
-                  @else 
+                  @else
                <img class="w-9 h-9 rounded-full object-cover"
-                  src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&amp;color=000&amp;background=facc15"
+                  src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&amp;color=fff&amp;background=ef4444"
                   alt="{{ Auth::user()->name }}">
             @endif
                      </button>
@@ -98,55 +98,64 @@
             <li>
                <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                  <x-activeIcons :active="request()->routeIs('dashboard')"  class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                     <path fill-rule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clip-rule="evenodd"/>
-                   </x-activeIcons >
+                  <x-activeIcons :active="request()->routeIs('dashboard')" class="w-6 h-6 text-gray-800 dark:text-white"
+                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                     viewBox="0 0 24 24">
+                     <path fill-rule="evenodd"
+                        d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
+                        clip-rule="evenodd" />
+                  </x-activeIcons>
                   <span class="ms-3">Inicio</span>
                </x-nav-link>
             </li>
             <li>
                <x-nav-link href="{{ route('principal') }}" :active="request()->routeIs('principal')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                  <x-activeIcons :active="request()->routeIs('principal')"
-                     class="w-6 h-6"
-                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+                  <x-activeIcons :active="request()->routeIs('principal')" class="w-6 h-6" aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                      <path
                         d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                      <path
                         d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-               </x-activeIcons>
+                  </x-activeIcons>
                   <span class="ms-3">Principal</span>
                </x-nav-link>
             </li>
             <li>
                <x-nav-link href="{{ route('matricula') }}" :active="request()->routeIs('matricula')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                  <x-activeIcons :active="request()->routeIs('matricula')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <x-activeIcons :active="request()->routeIs('matricula')" class="w-6 h-6 text-gray-800 dark:text-white"
+                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                     viewBox="0 0 24 24">
                      <path fill-rule="evenodd"
                         d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm10 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-8-5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm1.942 4a3 3 0 0 0-2.847 2.051l-.044.133-.004.012c-.042.126-.055.167-.042.195.006.013.02.023.038.039.032.025.08.064.146.155A1 1 0 0 0 6 17h6a1 1 0 0 0 .811-.415.713.713 0 0 1 .146-.155c.019-.016.031-.026.038-.04.014-.027 0-.068-.042-.194l-.004-.012-.044-.133A3 3 0 0 0 10.059 14H7.942Z"
                         clip-rule="evenodd" />
-                  </x-activeIcons >
+                  </x-activeIcons>
 
                   <span class="flex-1 ms-3 whitespace-nowrap">Matriculas</span>
 
                </x-nav-link>
             </li>
             <li>
-               <x-nav-link href="{{ route('asignaturaEstudiante') }}" :active="request()->routeIs('asignaturaEstudiante')"
+               <x-nav-link href="{{ route('asignaturaEstudiante') }}"
+                  :active="request()->routeIs('asignaturaEstudiante')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                  <x-activeIcons :active="request()->routeIs('asignaturaEstudiante')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-               xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M6 2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 1 0 0-2h-2v-2h2a1 1 0 0 0 1-1V4a2 2 0 0 0-2-2h-8v16h5v2H7a1 1 0 1 1 0-2h1V2H6Z" clip-rule="evenodd"/>
-                  </x-activeIcons >
+                  <x-activeIcons :active="request()->routeIs('asignaturaEstudiante')"
+                     class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                     width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                     <path fill-rule="evenodd"
+                        d="M6 2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 1 0 0-2h-2v-2h2a1 1 0 0 0 1-1V4a2 2 0 0 0-2-2h-8v16h5v2H7a1 1 0 1 1 0-2h1V2H6Z"
+                        clip-rule="evenodd" />
+                  </x-activeIcons>
                   <span class="flex-1 ms-3 whitespace-nowrap">Matricular Asignatura</span>
                </x-nav-link>
             </li>
             <li>
                <x-nav-link href="{{ route('docente') }}" :active="request()->routeIs('docente')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                  <x-activeIcons :active="request()->routeIs('docente')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <x-activeIcons :active="request()->routeIs('docente')" class="w-6 h-6 text-gray-800 dark:text-white"
+                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                     viewBox="0 0 24 24">
                      <path
                         d="M6 2c-1.10457 0-2 .89543-2 2v4c0 .55228.44772 1 1 1s1-.44772 1-1V4h12v7h-2c-.5523 0-1 .4477-1 1v2h-1c-.5523 0-1 .4477-1 1s.4477 1 1 1h5c.5523 0 1-.4477 1-1V3.85714C20 2.98529 19.3667 2 18.268 2H6Z" />
                      <path
@@ -155,133 +164,143 @@
                   <span class="flex-1 ms-3 whitespace-nowrap">Docentes</span>
                </x-nav-link>
             </li>
-           
+
             <li>
                <x-nav-link href="{{ route('estudiante') }}" :active="request()->routeIs('estudiante')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                  <x-activeIcons :active="request()->routeIs('estudiante')" class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                     <path d="M12.4472 2.10557c-.2815-.14076-.6129-.14076-.8944 0L5.90482 4.92956l.37762.11119c.01131.00333.02257.00687.03376.0106L12 6.94594l5.6808-1.89361.3927-.13363-5.6263-2.81313ZM5 10V6.74803l.70053.20628L7 7.38747V10c0 .5523-.44772 1-1 1s-1-.4477-1-1Zm3-1c0-.42413.06601-.83285.18832-1.21643l3.49538 1.16514c.2053.06842.4272.06842.6325 0l3.4955-1.16514C15.934 8.16715 16 8.57587 16 9c0 2.2091-1.7909 4-4 4-2.20914 0-4-1.7909-4-4Z"/>
-                     <path d="M14.2996 13.2767c.2332-.2289.5636-.3294.8847-.2692C17.379 13.4191 19 15.4884 19 17.6488v2.1525c0 1.2289-1.0315 2.1428-2.2 2.1428H7.2c-1.16849 0-2.2-.9139-2.2-2.1428v-2.1525c0-2.1409 1.59079-4.1893 3.75163-4.6288.32214-.0655.65589.0315.89274.2595l2.34883 2.2606 2.3064-2.2634Z"/>
+                  <x-activeIcons :active="request()->routeIs('estudiante')" class="w-6 h-6" aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                     <path
+                        d="M12.4472 2.10557c-.2815-.14076-.6129-.14076-.8944 0L5.90482 4.92956l.37762.11119c.01131.00333.02257.00687.03376.0106L12 6.94594l5.6808-1.89361.3927-.13363-5.6263-2.81313ZM5 10V6.74803l.70053.20628L7 7.38747V10c0 .5523-.44772 1-1 1s-1-.4477-1-1Zm3-1c0-.42413.06601-.83285.18832-1.21643l3.49538 1.16514c.2053.06842.4272.06842.6325 0l3.4955-1.16514C15.934 8.16715 16 8.57587 16 9c0 2.2091-1.7909 4-4 4-2.20914 0-4-1.7909-4-4Z" />
+                     <path
+                        d="M14.2996 13.2767c.2332-.2289.5636-.3294.8847-.2692C17.379 13.4191 19 15.4884 19 17.6488v2.1525c0 1.2289-1.0315 2.1428-2.2 2.1428H7.2c-1.16849 0-2.2-.9139-2.2-2.1428v-2.1525c0-2.1409 1.59079-4.1893 3.75163-4.6288.32214-.0655.65589.0315.89274.2595l2.34883 2.2606 2.3064-2.2634Z" />
                   </x-activeIcons>
-                   
+
                   <span class="flex-1 ms-3 whitespace-nowrap">Estudiantes</span>
                </x-nav-link>
             </li>
-         <li>
-            <x-nav-link href="{{ route('asignatura') }}" :active="request()->routeIs('asignatura')"
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-               <x-activeIcons :active="request()->routeIs('asignatura')" class="w-6 h-6" aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                     d="M9 6c0-1.65685 1.3431-3 3-3s3 1.34315 3 3-1.3431 3-3 3-3-1.34315-3-3Zm2 3.62992c-.1263-.04413-.25-.08799-.3721-.13131-1.33928-.47482-2.49256-.88372-4.77995-.8482C4.84875 8.66593 4 9.46413 4 10.5v7.2884c0 1.0878.91948 1.8747 1.92888 1.8616 1.283-.0168 2.04625.1322 2.79671.3587.29285.0883.57733.1863.90372.2987l.00249.0008c.11983.0413.24534.0845.379.1299.2989.1015.6242.2088.9892.3185V9.62992Zm2-.00374V20.7551c.5531-.1678 1.0379-.3374 1.4545-.4832.2956-.1034.5575-.1951.7846-.2653.7257-.2245 1.4655-.3734 2.7479-.3566.5019.0065.9806-.1791 1.3407-.4788.3618-.3011.6723-.781.6723-1.3828V10.5c0-.58114-.2923-1.05022-.6377-1.3503-.3441-.29904-.8047-.49168-1.2944-.49929-2.2667-.0352-3.386.36906-4.6847.83812-.1256.04539-.253.09138-.3832.13765Z" />
-         
-               </x-activeIcons>
-               <span class="flex-1 ms-3 whitespace-nowrap">Asignaturas</span>
-            </x-nav-link>
-         </li>
-         <li>
-            <x-nav-link href="{{ route('notas') }}" :active="request()->routeIs('notas')"
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-green-500 dark:hover:bg-gray-700 group">
-               <x-activeIcons :active="request()->routeIs('notas')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                     d="M4 2h10l6 6v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm10 7h-4v2h4v-2zm0 4h-4v2h4v-2zm-6-4H6v2h2V9zm0 4H6v2h2v-2zm7-7.586L14.586 3H14v2a1 1 0 0 0 1 1h2v-.586z" />
-               </x-activeIcons>
-               <span class="flex-1 ms-3 whitespace-nowrap">Descargar Notas</span>
-            </x-nav-link>
-         </li>
+            <li>
+               <x-nav-link href="{{ route('asignatura') }}" :active="request()->routeIs('asignatura')"
+                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                  <x-activeIcons :active="request()->routeIs('asignatura')" class="w-6 h-6" aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                     <path
+                        d="M9 6c0-1.65685 1.3431-3 3-3s3 1.34315 3 3-1.3431 3-3 3-3-1.34315-3-3Zm2 3.62992c-.1263-.04413-.25-.08799-.3721-.13131-1.33928-.47482-2.49256-.88372-4.77995-.8482C4.84875 8.66593 4 9.46413 4 10.5v7.2884c0 1.0878.91948 1.8747 1.92888 1.8616 1.283-.0168 2.04625.1322 2.79671.3587.29285.0883.57733.1863.90372.2987l.00249.0008c.11983.0413.24534.0845.379.1299.2989.1015.6242.2088.9892.3185V9.62992Zm2-.00374V20.7551c.5531-.1678 1.0379-.3374 1.4545-.4832.2956-.1034.5575-.1951.7846-.2653.7257-.2245 1.4655-.3734 2.7479-.3566.5019.0065.9806-.1791 1.3407-.4788.3618-.3011.6723-.781.6723-1.3828V10.5c0-.58114-.2923-1.05022-.6377-1.3503-.3441-.29904-.8047-.49168-1.2944-.49929-2.2667-.0352-3.386.36906-4.6847.83812-.1256.04539-.253.09138-.3832.13765Z" />
 
-         <li>
-            <x-nav-link href="{{ route('editarnotas') }}" :active="request()->routeIs('editarnotas')"
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-green-500 dark:hover:bg-gray-700 group">
-               <x-activeIcons :active="request()->routeIs('editarnotas')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                     d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-.55 0-1-.45-1-1v-5H9l3-3 3 3h-2v5c0 .55-.45 1-1 1z" />
-               </x-activeIcons>
+                  </x-activeIcons>
+                  <span class="flex-1 ms-3 whitespace-nowrap">Asignaturas</span>
+               </x-nav-link>
+            </li>
+            <li>
+               <x-nav-link href="{{ route('notas') }}" :active="request()->routeIs('notas')"
+                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                  <x-activeIcons :active="request()->routeIs('notas')" class="w-6 h-6 text-gray-800 dark:text-white"
+                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                     viewBox="0 0 24 24">
+                     <path
+                        d="M4 2h10l6 6v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm10 7h-4v2h4v-2zm0 4h-4v2h4v-2zm-6-4H6v2h2V9zm0 4H6v2h2v-2zm7-7.586L14.586 3H14v2a1 1 0 0 0 1 1h2v-.586z" />
+                  </x-activeIcons>
+                  <span class="flex-1 ms-3 whitespace-nowrap">Descargar Notas</span>
+               </x-nav-link>
+            </li>
+
+            <li>
+               <x-nav-link href="{{ route('editarnotas') }}" :active="request()->routeIs('editarnotas')"
+                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                  <x-activeIcons :active="request()->routeIs('editarnotas')"
+                     class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                     width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                     <path
+                        d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-.55 0-1-.45-1-1v-5H9l3-3 3 3h-2v5c0 .55-.45 1-1 1z" />
+                  </x-activeIcons>
                   <span class="flex-1 ms-3 whitespace-nowrap">Editar Notas</span>
-            </x-nav-link>
-         </li>
+               </x-nav-link>
+            </li>
 
-         <li>
-            <x-nav-link href="{{ route('programas') }}" :active="request()->routeIs('programas')"
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-               <x-activeIcons :active="request()->routeIs('programas')" class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12.8638 3.49613C12.6846 3.18891 12.3557 3 12 3s-.6846.18891-.8638.49613l-3.49998 6c-.18042.30929-.1817.69147-.00336 1.00197S8.14193 11 8.5 11h7c.3581 0 .6888-.1914.8671-.5019.1784-.3105.1771-.69268-.0033-1.00197l-3.5-6ZM4 13c-.55228 0-1 .4477-1 1v6c0 .5523.44772 1 1 1h6c.5523 0 1-.4477 1-1v-6c0-.5523-.4477-1-1-1H4Zm12.5-1c-2.4853 0-4.5 2.0147-4.5 4.5s2.0147 4.5 4.5 4.5 4.5-2.0147 4.5-4.5-2.0147-4.5-4.5-4.5Z"/>
-               </x-activeIcons>
-               <span class="flex-1 ms-3 whitespace-nowrap">Programas Formación</span>
-            </x-nav-link>
-         </li>
-         <li>
-            <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
-         </li>
-         <li>
-            <button type="button"
-               class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-red-500 dark:text-white dark:hover:bg-gray-700"
-               id="dropdown2">
-               <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                  <path fill-rule="evenodd"
-                     d="M9.586 2.586A2 2 0 0 1 11 2h2a2 2 0 0 1 2 2v.089l.473.196.063-.063a2.002 2.002 0 0 1 2.828 0l1.414 1.414a2 2 0 0 1 0 2.827l-.063.064.196.473H20a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-.089l-.196.473.063.063a2.002 2.002 0 0 1 0 2.828l-1.414 1.414a2 2 0 0 1-2.828 0l-.063-.063-.473.196V20a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.089l-.473-.196-.063.063a2.002 2.002 0 0 1-2.828 0l-1.414-1.414a2 2 0 0 1 0-2.827l.063-.064L4.089 15H4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h.09l.195-.473-.063-.063a2 2 0 0 1 0-2.828l1.414-1.414a2 2 0 0 1 2.827 0l.064.063L9 4.089V4a2 2 0 0 1 .586-1.414ZM8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
-                     clip-rule="evenodd" />
-               </svg >
-               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Mantenimiento</span>
-               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                  viewBox="0 0 10 6">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                     d="m1 1 4 4 4-4" />
-            </svg>
-            </button>
-            <ul id="dropdown-menu2" class="hidden py-2 space-y-2 dark:bg-gray-900 bg-gray-100 rounded-md">
-
-               <li>
-                  <x-nav-link href="{{ route('asignaturaDocente') }}" :active="request()->routeIs('asignaturaDocente')"
-                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                     <x-activeIcons :active="request()->routeIs('asignaturaDocente')"
-                        class="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                           d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
-                     </x-activeIcons >
-                     <span class="flex-1 ms-3 whitespace-nowrap">Asignación Asignaturas</span>
-                  </x-nav-link>
-                  <x-nav-link href="{{ route('rol') }}" :active="request()->routeIs('rol')"
-                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                     <x-activeIcons :active="request()->routeIs('rol')"
-                        class="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                           d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
-                     </x-activeIcons >
-                     <span class="flex-1 ms-3 whitespace-nowrap">Rol</span>
-                  </x-nav-link>
-               </li>
-               
-            </ul>
-         </li>
-
-         {{-- <div id="dropdown-cta" class="p-4 mt-6 rounded-lg bg-yellow-50 dark:bg-blue-900" role="alert">
-            <div class="flex items-center mb-3">
-               <span
-                  class="bg-orange-100 text-orange-800 text-sm font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-orange-200 dark:text-orange-900">¡Bienvenido!</span>
+            <li>
+               <x-nav-link href="{{ route('programas') }}" :active="request()->routeIs('programas')"
+                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                  <x-activeIcons :active="request()->routeIs('programas')" class="w-6 h-6" aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                     <path
+                        d="M12.8638 3.49613C12.6846 3.18891 12.3557 3 12 3s-.6846.18891-.8638.49613l-3.49998 6c-.18042.30929-.1817.69147-.00336 1.00197S8.14193 11 8.5 11h7c.3581 0 .6888-.1914.8671-.5019.1784-.3105.1771-.69268-.0033-1.00197l-3.5-6ZM4 13c-.55228 0-1 .4477-1 1v6c0 .5523.44772 1 1 1h6c.5523 0 1-.4477 1-1v-6c0-.5523-.4477-1-1-1H4Zm12.5-1c-2.4853 0-4.5 2.0147-4.5 4.5s2.0147 4.5 4.5 4.5 4.5-2.0147 4.5-4.5-2.0147-4.5-4.5-4.5Z" />
+                  </x-activeIcons>
+                  <span class="flex-1 ms-3 whitespace-nowrap">Programas Formación</span>
+               </x-nav-link>
+            </li>
+            <li>
+               <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+            </li>
+            <li>
                <button type="button"
-                  class="ms-auto -mx-1.5 -my-1.5 bg-blue-50 inline-flex justify-center items-center w-6 h-6 text-blue-900 rounded-lg focus:ring-2 focus:ring-blue-400 p-1 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-400 dark:hover:bg-blue-800"
-                  data-dismiss-target="#dropdown-cta" aria-label="Close">
-                  <span class="sr-only">Close</span>
-                  <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                     viewBox="0 0 14 14">
+                  class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-red-500 dark:text-white dark:hover:bg-gray-700"
+                  id="dropdown2">
+                  <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                     <path fill-rule="evenodd"
+                        d="M9.586 2.586A2 2 0 0 1 11 2h2a2 2 0 0 1 2 2v.089l.473.196.063-.063a2.002 2.002 0 0 1 2.828 0l1.414 1.414a2 2 0 0 1 0 2.827l-.063.064.196.473H20a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-.089l-.196.473.063.063a2.002 2.002 0 0 1 0 2.828l-1.414 1.414a2 2 0 0 1-2.828 0l-.063-.063-.473.196V20a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.089l-.473-.196-.063.063a2.002 2.002 0 0 1-2.828 0l-1.414-1.414a2 2 0 0 1 0-2.827l.063-.064L4.089 15H4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h.09l.195-.473-.063-.063a2 2 0 0 1 0-2.828l1.414-1.414a2 2 0 0 1 2.827 0l.064.063L9 4.089V4a2 2 0 0 1 .586-1.414ZM8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
+                        clip-rule="evenodd" />
+                  </svg>
+                  <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Mantenimiento</span>
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 10 6">
                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        d="m1 1 4 4 4-4" />
                   </svg>
                </button>
-            </div>
-            <p class="mb-3 text-sm text-gray-800 dark:text-white">
-               Este es tu panel de control donde puedes ver y administrar tus eventos.
-            </p>
-            <x-nav-link
-               class="text-sm text-blue-800 underline font-medium hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-               href="{{ route('profile.show') }}"> Ver y administrar Perfil</x-nav-link>
-         </div>--}}
+               <ul id="dropdown-menu2" class="hidden py-2 space-y-2 dark:bg-gray-900 bg-gray-100 rounded-md">
+
+                  <li>
+                     <x-nav-link href="{{ route('asignaturaDocente') }}"
+                        :active="request()->routeIs('asignaturaDocente')"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                        <x-activeIcons :active="request()->routeIs('asignaturaDocente')"
+                           class="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
+                           aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                           viewBox="0 0 20 20">
+                           <path
+                              d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
+                        </x-activeIcons>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Asignación Asignaturas</span>
+                     </x-nav-link>
+                     <x-nav-link href="{{ route('rol') }}" :active="request()->routeIs('rol')"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                        <x-activeIcons :active="request()->routeIs('rol')"
+                           class="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
+                           aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                           viewBox="0 0 20 20">
+                           <path
+                              d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
+                        </x-activeIcons>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Rol</span>
+                     </x-nav-link>
+                  </li>
+
+               </ul>
+            </li>
+
+            {{-- <div id="dropdown-cta" class="p-4 mt-6 rounded-lg bg-yellow-50 dark:bg-blue-900" role="alert">
+               <div class="flex items-center mb-3">
+                  <span
+                     class="bg-orange-100 text-orange-800 text-sm font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-orange-200 dark:text-orange-900">¡Bienvenido!</span>
+                  <button type="button"
+                     class="ms-auto -mx-1.5 -my-1.5 bg-blue-50 inline-flex justify-center items-center w-6 h-6 text-blue-900 rounded-lg focus:ring-2 focus:ring-blue-400 p-1 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-400 dark:hover:bg-blue-800"
+                     data-dismiss-target="#dropdown-cta" aria-label="Close">
+                     <span class="sr-only">Close</span>
+                     <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                           d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                     </svg>
+                  </button>
+               </div>
+               <p class="mb-3 text-sm text-gray-800 dark:text-white">
+                  Este es tu panel de control donde puedes ver y administrar tus eventos.
+               </p>
+               <x-nav-link
+                  class="text-sm text-blue-800 underline font-medium hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                  href="{{ route('profile.show') }}"> Ver y administrar Perfil</x-nav-link>
+            </div>--}}
 
          </ul>
       </div>

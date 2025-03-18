@@ -4,9 +4,10 @@ namespace App\Livewire\Asignatura;
 
 use App\Models\Asignatura;
 use App\Models\ProgramaFormacion;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
-
+//#[Lazy()]
 class Asignaturas extends Component
 {
     use WithPagination;
@@ -28,6 +29,10 @@ class Asignaturas extends Component
         $this->viewMode = $this->viewMode === 'table' ? 'cards' : 'table';
     }
 
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
    
     public function create()
     {

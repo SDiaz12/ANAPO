@@ -3,8 +3,9 @@
 namespace App\Livewire\ProgramaFormacion;
 
 use App\Models\ProgramaFormacion;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
-
+//#[Lazy()]
 class ProgramaFormaciones extends Component
 {
     public $search, $programaformacion_id, $codigo, $nombre, $fecha_aprobación, $fecha_final, $hora_finalizacion, $instituto, $tipo_programa, $procentaje_aprobacion, $estado = 1;

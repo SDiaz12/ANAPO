@@ -32,7 +32,7 @@
                         </label>
                         <input wire:model.live="inputSearchEstudiante" type="text" id="inputSearchEstudiante"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                            placeholder="Buscar estudiante...">
+                            placeholder="Buscar estudiante por nombre, DNI o código" autocomplete="off">
                         @error('inputSearchEstudiante') <span class="text-red-500">{{ $message }}</span> @enderror
 
                         @if(!empty($searchEstudiante))

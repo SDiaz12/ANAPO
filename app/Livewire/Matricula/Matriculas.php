@@ -6,8 +6,9 @@ use App\Models\Estudiante;
 use App\Models\Matricula;
 use App\Models\ProgramaFormacion;
 use Carbon\Carbon;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
-
+//#[Lazy()]
 class Matriculas extends Component
 {
     public $search, $matricula_id, $fecha_matricula, $programaformacion_id, $estado = 1, $motivo_estado, $observacion_estado, $estudiante_id, $instituto;
@@ -19,6 +20,11 @@ class Matriculas extends Component
     public $inputSearchProgramaFormacion = '';  
     public $searchProgramasFormacion = []; 
     public $isOpen = 0;
+
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
 
     // Este método se ejecuta automáticamente cuando $dniBusqueda cambia
     public function updatedDniBusqueda($value)

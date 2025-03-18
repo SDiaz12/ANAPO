@@ -4,10 +4,11 @@ namespace App\Livewire\Estudiant;
 
 use App\Models\Estudiante;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-
+//#[Lazy()]
 class EstudiantePorUsuario extends Component
 {
     use WithFileUploads;

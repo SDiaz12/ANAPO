@@ -6,10 +6,11 @@ use App\Models\Asignatura;
 use App\Models\AsignaturaEstudiante;
 use App\Models\Periodo;
 use App\Models\Estudiante;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-
+//#[Lazy()]
 class AsignaturaEstudiantes extends Component
 {
     use WithFileUploads;
@@ -114,7 +115,10 @@ class AsignaturaEstudiantes extends Component
                 $query->where('estado', 1);
             })
             ->where('estado', 1)
-
+            ->orWhere('nombre', 'like', '%' . $this->dniBusqueda . '%')
+            ->orWhere('apellido', 'like', '%' . $this->inputSearchEstudiante . '%')
+            ->orWhere('dni', 'like', '%' . $this->inputSearchEstudiante . '%')
+            ->orWhere('codigo', 'like', '%' . $this->inputSearchEstudiante . '%')
             ->limit(10)
             ->get();
     }

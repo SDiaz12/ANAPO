@@ -4,9 +4,10 @@ namespace App\Livewire\Seccion;
 
 use App\Models\ProgramaFormacion;
 use App\Models\Seccion;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
-
+//#[Lazy()]
 class Secciones extends Component
 {
     use WithPagination;
@@ -20,6 +21,11 @@ class Secciones extends Component
     public $inputSearchProgramaFormacion = '';  
     public $searchProgramasFormacion = [];  
    
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
+
     public function create()
     {
         $this->resetInputFields();
