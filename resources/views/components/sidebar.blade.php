@@ -194,12 +194,10 @@
             <li>
                <x-nav-link href="{{ route('notas') }}" :active="request()->routeIs('notas')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                  <x-activeIcons :active="request()->routeIs('notas')" class="w-6 h-6 text-gray-800 dark:text-white"
-                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                     viewBox="0 0 24 24">
-                     <path
-                        d="M4 2h10l6 6v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm10 7h-4v2h4v-2zm0 4h-4v2h4v-2zm-6-4H6v2h2V9zm0 4H6v2h2v-2zm7-7.586L14.586 3H14v2a1 1 0 0 0 1 1h2v-.586z" />
-                  </x-activeIcons>
+                  <x-activeIcons :active="request()->routeIs('editarnotas')"
+                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                         <path fill-rule="evenodd" d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9h5a2 2 0 0 0 2-2Zm-1 9a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2Zm2-5a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Zm4 4a1 1 0 1 0-2 0v3a1 1 0 1 0 2 0v-3Z" clip-rule="evenodd"/>
+                   </x-activeIcons>
                   <span class="flex-1 ms-3 whitespace-nowrap">Descargar Notas</span>
                </x-nav-link>
             </li>
