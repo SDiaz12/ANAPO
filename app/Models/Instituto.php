@@ -6,11 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Instituto extends Model
 {
+    protected $table = 'instituto';
     protected $fillable = ['nombre', 'codigo', 'estado'];
 
     public function asignaturas()
     {
         return $this->hasMany(Asignatura::class, 'instituto_id');
+    }
+
+    public function instituto()
+    {
+        return $this->hasMany(Matricula::class, 'instituto_id');
     }
 
     public function estudiantes()

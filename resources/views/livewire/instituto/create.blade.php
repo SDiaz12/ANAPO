@@ -10,7 +10,7 @@
             role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <div class="flex justify-between items-center p-4 md:p-5 mb-1 rounded-t border-b dark:border-gray-600">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ $instituto_id ? 'Editar isntituto' : 'Matricular instituto' }}
+                    {{ $instituto_id ? 'Editar instituto' : 'Crear instituto' }}
                 </h3>
                 <button wire:click="closeModal()" type="button"
                     class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">

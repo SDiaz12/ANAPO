@@ -108,11 +108,25 @@
 
                 <!-- Campo: Instituto -->
                 <div class="mb-4">
-                    <label for="instituto"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Instituto</label>
-                    <input type="text" id="instituto" name="instituto" wire:model="instituto"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                        placeholder="Instituto">
+                    <label for="asignatura_id" class="block text-gray-700 text-sm font-bold mb-2 dark:text-white">
+                        Instituto:
+                    </label>
+                    <select id="instituto_id"
+                        class="shadow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
+                        wire:model.live="instituto_id">
+                        <option value="">Seleccione Instituto</option>
+                        @forelse($institutos as $instituto)
+                            <option value="{{ $instituto->id }}">{{ $instituto->nombre }}</option>
+                        @empty
+                            <option value="">No hay institutos</option>
+                        @endforelse
+                    </select>
+                    @error('instituto_id')
+                        <span class="text-red-500">{{ $message }}</span>
+                    @enderror
+                    @if ($error)
+                        <p class="text-red-500 text-sm mt-2">{{ $error }}</p>
+                    @endif
                 </div>
 
                 <!-- Botón de Enviar -->

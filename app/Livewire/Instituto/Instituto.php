@@ -4,6 +4,7 @@ namespace App\Livewire\Instituto;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\Instituto as InstitutoModel; 
 
 class Instituto extends Component
 {
@@ -11,6 +12,7 @@ class Instituto extends Component
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
+    public $isOpen = 0;
     public $search, $instituto_id, $codigo, $nombre, $estado;
     public function create()
     {
@@ -24,7 +26,6 @@ class Instituto extends Component
         $this->isOpen = true;
     }
 
-  
     public function closeModal()
     {
         $this->isOpen = false;
@@ -44,7 +45,7 @@ class Instituto extends Component
             'codigo' => 'required|string|max:50|unique:asignaturas,codigo,' . $this->instituto_id,
         ]);
 
-        $asignatura = Instituto::updateOrCreate(
+        $asignatura = InstitutoModel::updateOrCreate(
             ['id' => $this->instituto_id],
             [
                 'nombre' => $this->nombre,
@@ -55,7 +56,7 @@ class Instituto extends Component
 
         session()->flash(
             'message',
-            $this->instituto_id ? 'Instituto actualizada correctamente!' : 'Instituto creado correctamente!'
+            $this->instituto_id ? 'Instituto actualizado correctamente!' : 'Instituto creado correctamente!'
         );
 
         $this->closeModal();
@@ -65,7 +66,7 @@ class Instituto extends Component
    
     public function edit($id)
     {
-        $instituto = Instituto::with('requisitos', 'programaFormacion')->findOrFail($id); 
+        $instituto = InstitutoModel::findOrFail($id); 
         $this->instituto_id = $id;
         $this->nombre = $instituto->nombre;
         $this->codigo = $instituto->codigo; 
@@ -76,16 +77,16 @@ class Instituto extends Component
     public function delete()
     {
         if ($this->confirmingDelete) {
-            $instituto = Instituto::find($this->IdAEliminar);
+            $instituto = InstitutoModel::find($this->IdAEliminar);
 
             if (!$instituto) {
-                session()->flash('error', 'Instituto no encontrada.');
+                session()->flash('error', 'Instituto no encontrado.');
                 $this->confirmingDelete = false;
                 return;
             }
 
             $instituto->forceDelete();
-            session()->flash('message', 'Instituto eliminada correctamente!');
+            session()->flash('message', 'Instituto eliminado correctamente!');
             $this->confirmingDelete = false;
         }
     }
@@ -93,7 +94,7 @@ class Instituto extends Component
     // Método para alternar el estado de la asignatura (activo o inactivo)
     public function toggleEstado($id)
     {
-        $instituto = Instituto::findOrFail($id);
+        $instituto = InstitutoModel::findOrFail($id);
         $instituto->estado = !$instituto->estado;
         $instituto->save();
     }
@@ -107,10 +108,10 @@ class Instituto extends Component
     
     public function confirmDelete($id)
     {
-        $instituto = Instituto::find($id);
+        $instituto = InstitutoModel::find($id);
     
         if (!$instituto) {
-            session()->flash('error', 'Instituto no encontrada.');
+            session()->flash('error', 'Instituto no encontrado.');
             return;
         }
     
@@ -121,13 +122,15 @@ class Instituto extends Component
     
     public function render()
     {
-        $institutos = Instituto::where('nombre', 'like', '%' . $this->search . '%')
+        $institutosCount = InstitutoModel::count();
+        $institutos = InstitutoModel::where('nombre', 'like', '%' . $this->search . '%')
             ->orWhere('codigo', 'like', '%' . $this->search . '%')
             ->orderBy('id', 'DESC')
             ->paginate($this->perPage);
 
         return view('livewire.instituto.instituto', [
             'institutos' => $institutos,
-        ]);
+            'institutosCount' => $institutosCount,
+        ])->layout('layouts.app');
     }
 }
