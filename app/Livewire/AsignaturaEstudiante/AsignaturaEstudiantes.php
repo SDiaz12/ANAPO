@@ -115,7 +115,7 @@ class AsignaturaEstudiantes extends Component
                 $query->where('estado', 1);
             })
             ->where('estado', 1)
-            ->orWhere('nombre', 'like', '%' . $this->dniBusqueda . '%')
+            ->orWhere('nombre', 'like', '%' . $this->inputSearchEstudiante . '%')
             ->orWhere('apellido', 'like', '%' . $this->inputSearchEstudiante . '%')
             ->orWhere('dni', 'like', '%' . $this->inputSearchEstudiante . '%')
             ->orWhere('codigo', 'like', '%' . $this->inputSearchEstudiante . '%')
