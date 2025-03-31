@@ -14,13 +14,13 @@ class Matricula extends BaseModel
     protected $table = 'matriculas';
 
     protected $fillable = [
-        'fecha_matricula',
+       'fecha_matricula',
         'programaformacion_id',
+        'estudiante_id',
+        'instituto_id',
         'estado',
         'motivo_estado',
         'observacion_estado',
-        'estudiante_id',
-        'instituto'
     ];
 
     public function estudiante()
@@ -46,6 +46,11 @@ class Matricula extends BaseModel
     public function asignaturasEstudiantes()
     {
         return $this->hasMany(Nota::class, 'matricula_id');
+    }
+
+    public function institutos()
+    {
+        return $this->belongsTo(Instituto::class, 'instituto_id');
     }
 
 }

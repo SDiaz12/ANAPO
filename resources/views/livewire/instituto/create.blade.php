@@ -32,7 +32,7 @@
                         </label>
                         <input wire:model="codigo" type="text" id="codigo"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                            placeholder="Buscar estudiante por nombre, DNI o código" autocomplete="off">
+                            placeholder="Codigo del instituto" autocomplete="off">
                         @error('codigo') <span class="text-red-500">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-4">
@@ -41,7 +41,7 @@
                         </label>
                         <input wire:model="nombre" type="text" id="nombre"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                            placeholder="Buscar estudiante por nombre, DNI o código" autocomplete="off">
+                            placeholder="Nombre del instituto" autocomplete="off">
                         @error('nombre') <span class="text-red-500">{{ $message }}</span> @enderror
                     </div>
                 </div>

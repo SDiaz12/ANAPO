@@ -105,7 +105,7 @@ class Matriculas extends Component
         'motivo_estado' => 'nullable|string',
         'observacion_estado' => 'nullable|string',
         'estudiante_id' => 'required|integer|exists:estudiantes,id',
-        'instituto_id' => 'required',
+        'instituto_id'         => 'required|integer|exists:instituto,id',
     ]);
 
     // Verificamos duplicado
@@ -131,7 +131,7 @@ class Matriculas extends Component
             'motivo_estado'      => $this->motivo_estado,
             'observacion_estado' => $this->observacion_estado,
             'estudiante_id'      => $this->estudiante_id,
-            'instituto_id'          => $this->instituto_id,
+            'instituto_id'      => $this->instituto_id,
         ]
     );
 
@@ -152,7 +152,6 @@ class Matriculas extends Component
         $this->error = '';
         $this->dniBusqueda = '';
         $this->inputSearchProgramaFormacion = '';
-
         $this->motivo_estado = '';
         $this->observacion_estado = '';
         $this->estudiante_id = '';
