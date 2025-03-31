@@ -124,9 +124,6 @@
                     @error('instituto_id')
                         <span class="text-red-500">{{ $message }}</span>
                     @enderror
-                    @if ($error)
-                        <p class="text-red-500 text-sm mt-2">{{ $error }}</p>
-                    @endif
                 </div>
 
                 <!-- Botón de Enviar -->

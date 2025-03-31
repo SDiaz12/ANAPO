@@ -45,7 +45,7 @@ class EstudiantePorUsuario extends Component
     {
         $this->validate([
             'codigo' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255',
                 'unique:estudiantes,codigo,' . $this->estudiante_id,
@@ -77,7 +77,7 @@ class EstudiantePorUsuario extends Component
             $this->user_id = Auth::user()->id;
             Estudiante::updateOrCreate(['id' => $this->estudiante_id], [
             'user_id' => $this->user_id,
-            'codigo' => $this->codigo,
+            'codigo' => $this->codigo ?: '',
             'dni' => $this->dni,
             'foto' => $this->foto ? str_replace('public/', 'storage/', $this->foto) : null,
             'nombre' => $this->nombre,

@@ -44,29 +44,14 @@
                     </p>
 
                 </div>
-                <div class="-mx-3 flex flex-wrap">
-                    <div class="w-full px-3 sm:w-1/2">
-                        <div class="mb-5">
-                            <label for="date" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
-                                Código:
-                            </label>
-                            <input type="text" name="codigo" id="codigo" placeholder="Código de estudiante"
-                                wire:model="codigo"
-                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
-                            @error('codigo') <span class="text-red-500">{{ $message }}</span> @enderror
-                        </div>
+                    <div class="mb-5">
+                        <label for="nombre" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
+                            DNI:
+                        </label>
+                        <input type="text" name="dni" id="dni" placeholder="DNI del estudiante" wire:model="dni"
+                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                        @error('dni') <span class="text-red-500">{{ $message }}</span> @enderror
                     </div>
-                    <div class="w-full px-3 sm:w-1/2">
-                        <div class="mb-5">
-                            <label for="time" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
-                                DNI:
-                            </label>
-                            <input type="text" name="dni" id="dni" placeholder="DNI del estudiante" wire:model="dni"
-                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
-                            @error('dni') <span class="text-red-500">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-                </div>
                 <div class="mb-5">
                     <label for="nombre" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
                         Nombres:

@@ -153,7 +153,11 @@
                 <tr
                     class=" overflow-x-auto bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
-                        {{ $estudiante->codigo }}
+                        @if ($estudiante->codigo == null)
+                            <span class="text-red-500">No asignado</span>
+                        @else
+                            {{ $estudiante->codigo }}
+                        @endif
                     </td>
                     <td wire:click="mostrarDatos({{ $estudiante->id }})" class="px-6 py-4">
                         {{ $estudiante->dni }}

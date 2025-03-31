@@ -39,7 +39,11 @@
         </div>
         <div class="sm:ml-16 mt-4 sm:mt-0">
             <ul class="space-y-1 text-gray-700 grid lg:grid-cols-1 grid-cols-2 dark:text-gray-300">
-                <li><span class="font-bold">Código:</span> {{$codigo}}</li>
+                <li><span class="font-bold">Código:</span> @if ($codigo == null)
+                    <span class="text-red-500">No asignado</span>
+                @else
+                    {{ $estudiante->codigo }}
+                @endif</li>
                 <li><span class="font-bold">DNI:</span> {{$dni}}</li>
                 <li><span class="font-bold">Género:</span> {{$sexo}}</li>
                 <li><span class="font-bold">Teléfono:</span> {{$telefono}}</li>
