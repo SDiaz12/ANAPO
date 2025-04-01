@@ -2,15 +2,17 @@
 
 namespace App\Livewire\Matricula;
 
+use App\Models\Instituto;
 use App\Models\Estudiante;
 use App\Models\Matricula;
 use App\Models\ProgramaFormacion;
 use Carbon\Carbon;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
-
+//#[Lazy()]
 class Matriculas extends Component
 {
-    public $search, $matricula_id, $fecha_matricula, $programaformacion_id, $estado = 1, $motivo_estado, $observacion_estado, $estudiante_id, $instituto;
+    public $search, $matricula_id, $fecha_matricula, $programaformacion_id, $estado = 1, $motivo_estado, $observacion_estado, $estudiante_id, $instituto_id;
     public $dniBusqueda; 
     public $codigoEstudiante;         
     public $nombreCompleto;
@@ -19,6 +21,11 @@ class Matriculas extends Component
     public $inputSearchProgramaFormacion = '';  
     public $searchProgramasFormacion = []; 
     public $isOpen = 0;
+
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
 
     // Este método se ejecuta automáticamente cuando $dniBusqueda cambia
     public function updatedDniBusqueda($value)
@@ -98,7 +105,7 @@ class Matriculas extends Component
         'motivo_estado' => 'nullable|string',
         'observacion_estado' => 'nullable|string',
         'estudiante_id' => 'required|integer|exists:estudiantes,id',
-        'instituto' => 'required',
+        'instituto_id'         => 'required|integer|exists:instituto,id',
     ]);
 
     // Verificamos duplicado
@@ -124,7 +131,7 @@ class Matriculas extends Component
             'motivo_estado'      => $this->motivo_estado,
             'observacion_estado' => $this->observacion_estado,
             'estudiante_id'      => $this->estudiante_id,
-            'instituto'          => $this->instituto,
+            'instituto_id'      => $this->instituto_id,
         ]
     );
 
@@ -145,11 +152,10 @@ class Matriculas extends Component
         $this->error = '';
         $this->dniBusqueda = '';
         $this->inputSearchProgramaFormacion = '';
-
         $this->motivo_estado = '';
         $this->observacion_estado = '';
         $this->estudiante_id = '';
-        $this->instituto = '';
+        $this->instituto_id = '';
     }
 
     public function edit($id)
@@ -161,7 +167,7 @@ class Matriculas extends Component
         $this->codigoEstudiante = $matricula->estudiante->codigo;
         $this->nombreCompleto = $matricula->estudiante->nombre . ' ' . $matricula->estudiante->apellido;
         $this->estudiante_id = $matricula->estudiante->id;
-        $this->instituto = $matricula->instituto;
+        $this->instituto_id = $matricula->instituto_id;
         $this->dniBusqueda = $matricula->estudiante->dni;
         $this->openModal();
     }
@@ -174,6 +180,11 @@ class Matriculas extends Component
     }
     public function render()
     {
+
+        $institutos = Instituto::where('estado', 1)->get();
+        
+
+
         $matriculasCount = Matricula::count();
         $matriculas = Matricula::with(['programaFormacion', 'estudiante'])
     ->where(function ($query) {
@@ -184,14 +195,14 @@ class Matriculas extends Component
         })
         ->orWhereHas('programaFormacion', function ($q) {
             $q->where('nombre', 'like', '%' . $this->search . '%');
-        })
-        ->orWhere('instituto', 'like', '%' . $this->search . '%'); // Búsqueda por instituto
+        });
     })
     ->orderBy('id', 'DESC')
     ->paginate($this->perPage);
 
         return view('livewire.matricula.matriculas', [
             'matriculas' => $matriculas,
+            'institutos' => $institutos,
             'matriculasCount' => $matriculasCount,
         ])->layout('layouts.app');
     }

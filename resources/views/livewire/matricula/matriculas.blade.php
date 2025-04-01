@@ -120,7 +120,7 @@
                     </th>
                     <td class="px-6 py-4">{{ $matricula->fecha_matricula }}</td>
                     <td class="px-6 py-4">{{ $matricula->programaFormacion->nombre }}</td>
-                    <td class="px-6 py-4">{{ $matricula->instituto }}</td>
+                    <td class="px-6 py-4">{{ $matricula->institutos->nombre }}</td>
                     <td class="px-6 py-4">
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox" class="sr-only peer" wire:click="toggleEstado({{ $matricula->id }})" {{ $matricula->estado ? 'checked' : '' }}>

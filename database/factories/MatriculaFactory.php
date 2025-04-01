@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Asignatura;
 use App\Models\Estudiante;
+use App\Models\Instituto;
 use App\Models\ProgramaFormacion;
 use App\Models\Seccion;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,9 +21,8 @@ class MatriculaFactory extends Factory
      */
     public function definition(): array
     {
-        $id_asignatura = Asignatura::inRandomOrder()->first()->id;
         $id_estudiante = Estudiante::inRandomOrder()->first()->id;
-        $id_seccion = Seccion::inRandomOrder()->first()->id;
+        $id_insituto = Instituto::inRandomOrder()->first()->id;
         $id_programaformacion = ProgramaFormacion::inRandomOrder()->first()->id;
         return [
             'fecha_matricula' => $this->faker->date(),
@@ -31,7 +31,7 @@ class MatriculaFactory extends Factory
             'estado' => 1,
             'motivo_estado' => $this->faker->sentence(),
             'observacion_estado' => $this->faker->sentence(),
-            'instituto' => $this->faker->sentence(),
+            'instituto_id' => $id_insituto,
         ];
     }
 }

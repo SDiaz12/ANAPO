@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('matriculas')) {
         Schema::create('matriculas', function (Blueprint $table) {
             $table->id();
             $table->date('fecha_matricula');
             $table->unsignedBigInteger('programaformacion_id');
             $table->unsignedBigInteger('estudiante_id');
-            $table->string('instituto');
+            $table->unsignedBigInteger('instituto_id');
             $table->tinyInteger('estado')->default(1);
             $table->string('motivo_estado')->nullable();
             $table->string('observacion_estado')->nullable();
@@ -27,9 +28,11 @@ return new class extends Migration
             $table->unique(['estudiante_id', 'programaformacion_id']);
             $table->timestamps();
             $table->foreign('estudiante_id')->references('id')->on('estudiantes');
+            $table->foreign('instituto_id')->references('id')->on('instituto');
             $table->foreign('programaformacion_id')->references('id')->on('programaformaciones');
 
         });
+    }
     }
 
     /**

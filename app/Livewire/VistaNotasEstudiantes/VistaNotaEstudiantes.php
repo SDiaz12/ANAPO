@@ -3,11 +3,17 @@
 namespace App\Livewire\VistaNotasEstudiantes;
 
 use App\Models\AsignaturaEstudiante;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
-
+//#[Lazy()]
 class VistaNotaEstudiantes extends Component
 {
     public $asignaturaEstudianteId;
+
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
 
     // Recibimos el ID de la asignatura del estudiante
     public function mount($asignaturaEstudianteId)

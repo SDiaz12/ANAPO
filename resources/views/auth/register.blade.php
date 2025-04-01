@@ -55,9 +55,9 @@
                                 <div class="flex items-center">
                                     <x-checkbox id="terms" name="terms" required class="w-5 h-5 text-red-600 bg-white border-gray-200 rounded" />
                                     <label for="terms" class="ml-3 text-sm font-medium text-gray-500">
-                                        {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                            'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="text-red-600 hover:text-red-700 hover:underline">Terms of Service</a>',
-                                            'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="text-red-600 hover:text-red-700 hover:underline">Privacy Policy</a>',
+                                        {!! __('Acepto los :terms_of_service y :privacy_policy', [
+                                            'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="text-red-600 hover:text-red-700 hover:underline">Términos de Servicio</a>',
+                                            'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="text-red-600 hover:text-red-700 hover:underline">la Política de Privacidad</a>',
                                         ]) !!}
                                     </label>
                                 </div>

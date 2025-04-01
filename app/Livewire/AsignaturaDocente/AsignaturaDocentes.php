@@ -8,9 +8,10 @@ use App\Models\Asignatura;
 use App\Models\AsignaturaEstudiante;
 use App\Models\Periodo;
 use App\Models\Seccion;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
-
+//#[Lazy()]
 class AsignaturaDocentes extends Component
 {
     use WithPagination;
@@ -28,7 +29,11 @@ class AsignaturaDocentes extends Component
     public $selectedPeriodos = [];
     public $selectedSecciones = [];
     
-   
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
+
     public function toggleViewMode()
     {
         $this->viewMode = $this->viewMode === 'table' ? 'cards' : 'table';

@@ -3,6 +3,7 @@
 namespace App\Livewire\Nota;
 
 use App\Models\Nota;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\AsignaturaEstudiante;
@@ -12,10 +13,16 @@ use App\Imports\ActualizarNotas;
 use App\Exports\ActualizarNotasExport;
 use Livewire\WithFileUploads;
 use Illuminate\Http\Request;
+//#[Lazy()]
 class EditarNotas extends Component
 {
     use WithPagination;
     public $archivo;
+
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
 
     public function actualizarNotas(Request $request)
     {
@@ -116,7 +123,7 @@ class EditarNotas extends Component
 
     public function loadMore($suma)
     {
-        $this->perPage += $suma;
+        $this->perPage = $suma;
     }
     public $estudiantes;
     public function mount()
