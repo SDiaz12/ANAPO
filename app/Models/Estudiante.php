@@ -33,7 +33,7 @@ class Estudiante extends BaseModel
     //asignaturas a las que esta enlazado
     public function asignaturas()
     {
-        return $this->belongsToMany(Asignatura::class, 'asignaturaestudiantes', 'estudiantes_id', 'asignatura_id')
+        return $this->belongsToMany(Asignatura::class, 'asignatura_estudiantes', 'estudiantes_id', 'asignatura_id')
             ->withPivot('nota', 'observaciones', 'estado')
             ->withTimestamps();
     }

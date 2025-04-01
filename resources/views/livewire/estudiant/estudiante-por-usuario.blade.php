@@ -49,7 +49,7 @@
                             DNI:
                         </label>
                         <input type="text" name="dni" id="dni" placeholder="DNI del estudiante" wire:model="dni"
-                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md" />
                         @error('dni') <span class="text-red-500">{{ $message }}</span> @enderror
                     </div>
                 <div class="mb-5">
@@ -57,7 +57,7 @@
                         Nombres:
                     </label>
                     <input type="text" name="nombre" id="nombre" placeholder="Nombres del estudiante" wire:model="nombre"
-                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md" />
                     @error('nombre') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
                 <div class="mb-5">
@@ -66,7 +66,7 @@
                     </label>
                     <input type="apellido" name="apellido" id="apellido" placeholder="Apellidos del estudiante"
                         wire:model="apellido"
-                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md" />
                     @error('apellido') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
                 <div class="-mx-3 flex flex-wrap">
@@ -76,7 +76,7 @@
                                 Fecha Nacimiento:
                             </label>
                             <input type="date" name="date" id="date" wire:model="fecha_nacimiento"
-                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md" />
                             @error('fecha_nacimiento') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                         <div class="mb-5">
                             <label class="block text-sm mb-4 font-medium text-gray-700 dark:text-gray-300">Sexo:</label>
                             <select
-                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md"
+                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md"
                                 id="sexo" name="sexo" wire:model.live="sexo" required>
                                 <option value="">Seleccione el sexo</option>
                                 <option value="Femenino">Femenino</option>
@@ -100,7 +100,7 @@
                             </label>
                             <input type="text" name="area" id="area" placeholder="Ingrese teléfono"
                                 wire:model="telefono"
-                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md" />
                             @error('telefono') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                                 Correo electrónico:
                             </label>
                             <input type="email" name="correo" id="correo" placeholder="Ingrese correo" wire:model="correo"
-                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md" />
                             @error('correo') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -122,7 +122,7 @@
                     </label>
                     <textarea type="email" name="email" id="email" placeholder="Residencia del estudiante"
                         wire:model="residencia"
-                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-[#6A64F1] focus:shadow-md"></textarea>
+                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md"></textarea>
                     @error('residencia') <span class="text-red-500">{{ $message }}</span> @enderror
                 </div>
 
