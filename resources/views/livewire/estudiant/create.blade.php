@@ -25,6 +25,22 @@
                 </button>
             </div>
             <form class="p-4 md:p-5">
+                <h2 class="text-xl font-bold mb-2">Datos de usuario</h2>
+                <div>
+                    <x-label for="name" class="text-base font-medium text-gray-900" />
+                    <div class="mt-2">
+                        <x-input id="name" wire:model="name" class="block w-full p-3 text-black border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-red-600 focus:bg-white caret-red-600"
+                            type="text" name="name" :value="old('name')" required autofocus placeholder="Ingresa el nombre de usuario" />
+                    </div>
+                </div>
+                <div>
+                    <x-label for="password" class="text-base font-medium text-gray-900" />
+                    <div class="mt-2">
+                        <x-input id="password" wire:model="password" class="block w-full p-3 text-black border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-red-600 focus:bg-white caret-red-600"
+                            type="password" name="password" required placeholder="Ingresa tu contraseña" />
+                    </div>
+                </div>
+                <h2 class="text-xl font-bold mb-2">Datos del estudiante</h2>
                 <div class="mb-5">
                     <div class="flex">
                         <label class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300"
@@ -44,6 +60,7 @@
                     </p>
 
                 </div>
+
                 <div class="-mx-3 flex flex-wrap">
                     <div class="w-full px-3 sm:w-1/2">
                         <div class="mb-5">
