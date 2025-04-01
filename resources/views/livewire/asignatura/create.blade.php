@@ -101,7 +101,7 @@
                 <div class="mb-5">
                     <label for="tiene_requisitos" class="flex items-center mb-3 text-base font-medium text-gray-700 dark:text-gray-300">
                         <input type="checkbox" id="tiene_requisitos" wire:model.live="tiene_requisitos" class="mr-2"> 
-                        ¿Tiene requisitos?
+                        Proyectos
                     </label>
 
                     @if($tiene_requisitos)

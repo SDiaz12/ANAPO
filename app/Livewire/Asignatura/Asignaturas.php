@@ -191,7 +191,6 @@ class Asignaturas extends Component
         }
     }
 
-    // Método para alternar el estado de la asignatura (activo o inactivo)
     public function toggleEstado($id)
     {
         $asignatura = Asignatura::findOrFail($id);
@@ -199,7 +198,7 @@ class Asignaturas extends Component
         $asignatura->save();
     }
 
-    // Método para cargar más asignaturas
+  
     public $perPage = 9;
     public function loadMore($suma)
     {

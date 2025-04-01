@@ -22,7 +22,6 @@ class Estudiante extends BaseModel
         'telefono', 
         'correo', 
         'fecha_ingreso',
-        'estado', 
         'user_id', 
         'created_by', 
         'deleted_by', 

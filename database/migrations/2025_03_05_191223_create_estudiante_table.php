@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('fecha_ingreso');
             $table->string('telefono');
             $table->string('correo');
-            $table->integer('estado');
+            $table->integer('estado')->default(1);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')
             ->references('id')

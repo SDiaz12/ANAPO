@@ -11,8 +11,9 @@ class Promocion extends BaseModel
     use HasFactory;
     use SoftDeletes;
     protected $table = 'promociones';
-    protected $primaryKey = 'id_promocion';
+    protected $primaryKey = 'id';
     protected $fillable = [
+        'nombre',
         'estudiante_id', 
         'programaformacion_id',
         'periodo_id',
@@ -31,6 +32,7 @@ class Promocion extends BaseModel
     {
         return $this->belongsTo(ProgramaFormacion::class, 'programaformacion_id');
     }
+
 
     public function periodo()
     {

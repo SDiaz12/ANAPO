@@ -19,7 +19,7 @@
 
 
             <form class="p-6">
-                <!-- Docente Selection -->
+               
                 <div class="mb-5">
                     <label for="id_docente" class="block text-base font-medium text-gray-900 dark:text-gray-300">Docente:</label>
                     <input wire:model.live="inputSearchdocente" type="text" id="id_docente"
@@ -37,7 +37,7 @@
                     @endif
                 </div>
 
-                <!-- Número de asignaturas -->
+               
                 <div class="mb-5">
                     <label for="cantidad_materias" class="block text-base font-medium text-gray-900 dark:text-gray-300">¿Cuántas asignaturas asignar?</label>
                     <input wire:model.live="cantidad_materias" type="number" min="1" id="cantidad_materias"

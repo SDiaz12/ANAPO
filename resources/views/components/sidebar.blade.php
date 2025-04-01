@@ -187,19 +187,19 @@
                   <path
                      d="M4 2h10l6 6v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm10 7h-4v2h4v-2zm0 4h-4v2h4v-2zm-6-4H6v2h2V9zm0 4H6v2h2v-2zm7-7.586L14.586 3H14v2a1 1 0 0 0 1 1h2v-.586z" />
                </x-activeIcons>
-               <span class="flex-1 ms-3 whitespace-nowrap">Descargar Notas</span>
+               <span class="flex-1 ms-3 whitespace-nowrap">Notas</span>
             </x-nav-link>
          </li>
 
          <li>
-            <x-nav-link href="{{ route('editarnotas') }}" :active="request()->routeIs('editarnotas')"
+            <x-nav-link href="{{ route('promocion') }}" :active="request()->routeIs('promocion')"
                class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-green-500 dark:hover:bg-gray-700 group">
-               <x-activeIcons :active="request()->routeIs('editarnotas')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+               <x-activeIcons :active="request()->routeIs('promocion')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                   width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                   <path
                      d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-.55 0-1-.45-1-1v-5H9l3-3 3 3h-2v5c0 .55-.45 1-1 1z" />
                </x-activeIcons>
-                  <span class="flex-1 ms-3 whitespace-nowrap">Editar Notas</span>
+                  <span class="flex-1 ms-3 whitespace-nowrap">Promoción</span>
             </x-nav-link>
          </li>
 

@@ -17,6 +17,7 @@ use App\Models\AsignaturaEstudiante;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Rol\Roles;
 use App\Livewire\AsignaturaDocente\AsignaturaDocentes;
+use App\Livewire\Promocion\Promociones;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,7 +33,6 @@ Route::middleware([
     Route::get('/notasEstudiante/{asignaturaEstudianteId}', VistaNotaEstudiantes::class)->name('notasEstudiante');
     Route::get('/rol', Roles::class)->name('rol');
     Route::get('/notas', Notas::class)->name('notas');
-    Route::get('/editarnotas', EditarNotas::class)->name('editarnotas');
     Route::get('/docente', Docentes::class)->name('docente');
     Route::get('/estudiante', Estudiants::class)->name('estudiante');
     Route::get('/userEstudiante', EstudiantePorUsuario::class)->name('userEstudiante');
@@ -41,8 +41,9 @@ Route::middleware([
     Route::get('/asignaturaDocente', AsignaturaDocentes::class)->name('asignaturaDocente');
     Route::get('/asignaturaEstudiante', AsignaturaEstudiantes::class)->name('asignaturaEstudiante');
     Route::get('/matricula', Matriculas::class)->name('matricula');
+    Route::get('/promocion', Promociones::class)->name('promocion');
     Route::get('/programas', ProgramaFormaciones::class)->name('programas');
-    Route::post('/actualizarNotas', [EditarNotas::class, 'actualizarNotas'])->name('actualizarNotas');
+    Route::post('/actualizarNotas', [Notas::class, 'actualizarNotas'])->name('actualizarNotas');
     Route::post('/importar-notas', [Notas::class, 'import'])->name('notas.import');
-    Route::get('/notas/edit/{asignatura_codigo}/{docente_codigo}', EditarNotas::class)->name('notas.edit');
+    Route::get('/notas/edit/{asignatura_codigo}/{docente_codigo}', Notas::class)->name('notas.edit');
 });
