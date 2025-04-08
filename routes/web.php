@@ -35,7 +35,7 @@ Route::middleware([
     Route::get('/rol', Roles::class)->name('rol');
     Route::get('/instituto', Instituto::class)->name('instituto');
     Route::get('/notas', Notas::class)->name('notas');
-    Route::get('/editarnotas', EditarNotas::class)->name('editarnotas');
+    Route::get('/editarnotas', Notas::class)->name('editarnotas');
     Route::get('/docente', Docentes::class)->name('docente');
     Route::get('/estudiante', Estudiants::class)->name('estudiante');
     Route::get('/userEstudiante', EstudiantePorUsuario::class)->name('userEstudiante');

@@ -5,7 +5,10 @@
     @if($showVerNotasModal)
         @include('livewire.nota.verNotas')
     @endif
-
+    @if($showGenerarCuadrosModal)
+    @include('livewire.nota.generar-cuadros')
+@endif
+    <!-- Mensajes de sesión -->
     @if (session()->has('message'))
     <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
         <div class="flex">
@@ -14,11 +17,32 @@
             </div>
         </div>
     </div>
-@endif
+    @endif
+
+    @if (session()->has('info'))
+    <div class="bg-blue-100 border-t-4 border-blue-500 rounded-b text-blue-900 px-4 py-3 shadow-md my-3" role="alert">
+        <div class="flex">
+            <div>
+                <p class="text-sm">{{ session('info') }}</p>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    @if (session()->has('error'))
+    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md my-3" role="alert">
+        <div class="flex">
+            <div>
+                <p class="text-sm">{{ session('error') }}</p>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Contenido principal -->
+    @if($asignaturas->isNotEmpty())
     <div class="flex flex-column bg-white rounded-t-lg dark:bg-gray-800 p-5 sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         <div class="flex items-center space-x-2">
-            
-            
             <button id="dropdownRadioButton" data-dropdown-toggle="dropdownRadio"
                 class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                 type="button">
@@ -33,7 +57,6 @@
             <button wire:click="toggleViewMode"
             class="inline-flex items-center ml-2 text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
             type="button">
-                    <!-- Icono y texto cambian según la vista -->
                     @if ($viewMode === 'table')
                       <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd" d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6Zm2 8v-2h7v2H4Zm0 2v2h7v-2H4Zm9 2h7v-2h-7v2Zm7-4v-2h-7v2h7Z" clip-rule="evenodd"/>
@@ -44,7 +67,7 @@
                       </svg>  
                     @endif
                 </button>
-            <!-- Dropdown menu -->
+            
             <div id="dropdownRadio"
                 class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600"
                 data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top"
@@ -107,7 +130,6 @@
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                   
                         <th class="py-2 px-4">Código</th>
                         <th class="py-2 px-4">Nombre</th>
                         <th class="py-2 px-4">UV</th>
@@ -120,7 +142,6 @@
                 <tbody>
                     @foreach ($asignaturas as $asignatura)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                           
                             <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->codigo }}</td>
                             <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->nombre }}</td>
                             <td class="py-2 px-4">{{ $asignatura->asignaturadocente->asignatura->creditos }}</td>
@@ -129,7 +150,6 @@
                             <td class="py-2 px-4">{{ $asignatura->estudiantes_count }}</td>
                             <td class="py-2 px-4 flex space-x-2">
                                 @if (!$this->hasNotas($asignatura->asignaturadocente->asignatura->codigo, $asignatura->asignaturadocente->docente->codigo))
-                                    
                                     <button wire:click="create('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
                                             class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                             ➕ Agregar
@@ -148,15 +168,18 @@
                                         class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                         📥 Descargar Notas
                                     </button>
+                                    <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
+                                        class="bg-purple-600 text-white px-3 py-2 rounded-md text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                        📊 Generar Cuadros
+                                    </button>
                                 @endif
                             </td>
-
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-        @else
+    @else
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-5">
             @foreach ($asignaturas as $asignatura)
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
@@ -166,31 +189,34 @@
                     
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white text-center mt-2">{{ $asignatura->asignaturadocente->asignatura->nombre }}</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400">UV: {{ $asignatura->asignaturadocente->asignatura->creditos }}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Docente: {{ $asignatura->asignaturadocente->docente->nombre }} horas</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Docente: {{ $asignatura->asignaturadocente->docente->nombre }}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Duración: {{ $asignatura->asignaturadocente->asignatura->horas }} horas</p>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Estudiantes: {{ $asignatura->estudiantes_count }}</p>
                     <div class="mt-3 flex space-x-1">
-                                @if (!$this->hasNotas($asignatura->asignaturadocente->asignatura->codigo, $asignatura->asignaturadocente->docente->codigo))
-                                    
-                                    <button wire:click="create('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
-                                            class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                            ➕ Agregar
-                                    </button>
-                                    <button 
-                                            wire:click="exportarNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
-                                            class="bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                            📄 Excel Notas
-                                    </button>
-                                @else
-                                    <button wire:click="edit('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
-                                        class="bg-green-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        📖 Ver
-                                    </button>
-                                    <button wire:click="exportNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
-                                        class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        📥 Descargar Notas
-                                    </button>
-                                @endif                      
+                        @if (!$this->hasNotas($asignatura->asignaturadocente->asignatura->codigo, $asignatura->asignaturadocente->docente->codigo))
+                            <button wire:click="create('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
+                                    class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                    ➕ Agregar
+                            </button>
+                            <button 
+                                    wire:click="exportarNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
+                                    class="bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                    📄 Excel Notas
+                            </button>
+                            <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
+                                class="bg-purple-600 text-white px-3 py-2 rounded-md text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                📊 Generar Cuadros
+                            </button>
+                        @else
+                            <button wire:click="edit('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+                                class="bg-green-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                📖 Ver
+                            </button>
+                            <button wire:click="exportNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+                                class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                📥 Descargar Notas
+                            </button>
+                        @endif                      
                     </div>
                 </div>
             @endforeach
@@ -202,6 +228,9 @@
         {{ $asignaturas->links() }}
         <br>
     </div>
-    
+    @elseif(!session()->has('info'))
+    <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+        No se encontraron asignaturas activas.
+    </div>
+    @endif
 </div>
-

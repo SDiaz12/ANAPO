@@ -14,10 +14,14 @@ use App\Exports\ActualizarNotasExport;
 use Livewire\WithFileUploads;
 use Illuminate\Http\Request;
 use App\Exports\FormatoNotasImport;
+
 //#[Lazy()]
 class Notas extends Component
 {
+    public $showGenerarCuadrosModal = false;
+
     use WithPagination;
+    public $docente_id;
     public $file;
     public function exportarNotas($codigo_asignatura, $codigo_docente)
     {
@@ -27,11 +31,16 @@ class Notas extends Component
     
         return Excel::download(new FormatoNotasExport($codigo_asignatura, $codigo_docente), $nombreArchivo);
     }
-
-public function placeholder()
-{
-    return view('livewire.Placeholder.loader')->layout('layouts.app');
-}
+    public function abrirModalGenerarCuadros($codigo_asignatura, $codigo_docente)
+    {
+        $this->asignatura_id = $codigo_asignatura;
+        $this->docente_id = $codigo_docente;
+        $this->showGenerarCuadrosModal = true;
+    }
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
 
     
 
@@ -123,6 +132,9 @@ public function placeholder()
     {
         $this->isOpen = false;
         $this->showVerNotasModal = false;
+        $this->showGenerarCuadrosModal = false;
+
+
     }
 
     
@@ -308,18 +320,33 @@ public function placeholder()
     
     public $nombre_docente;
     
+   
     public function render()
     {
+        $user = auth()->user();
         
-        $asignaturas = AsignaturaEstudiante::with('asignaturadocente.asignatura', 'estudiante')
-             
-            ->whereHas('asignaturadocente.asignatura', function ($query) {
+        $query = AsignaturaEstudiante::query()
+            ->with(['asignaturadocente.asignatura', 'asignaturadocente.docente', 'estudiante'])
+            ->whereHas('asignaturadocente.asignatura', function($query) {
                 $query->where('estado', 1);
-            })
-            ->selectRaw('asignatura_id, COUNT(id) as estudiantes_count')
+            });
+    
+       
+        if ($user && !$user->hasRole('root')) { 
+            $query->whereHas('asignaturadocente.docente', function($q) use ($user) {
+                $q->where('user_id', $user->id); 
+            });
+        }
+    
+        $asignaturas = $query->selectRaw('asignatura_id, COUNT(id) as estudiantes_count')
             ->groupBy('asignatura_id')
             ->paginate($this->perPage);
-
+    
+        
+        if ($user && !$user->hasRole('root') && $asignaturas->isEmpty()) {
+            session()->flash('info', 'No tiene asignaturas asignadas activas.');
+        }
+    
         return view('livewire.nota.notas', [
             'asignaturas' => $asignaturas,
         ])->layout('layouts.app');

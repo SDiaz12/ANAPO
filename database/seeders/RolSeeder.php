@@ -9,23 +9,41 @@ use Spatie\Permission\Models\Role;
 
 class RolSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        // Verifica si el rol 'Estudiantes' ya existe
-        $role = Role::firstOrCreate(
+        // 1. Crear o actualizar permisos necesarios
+        Permission::firstOrCreate(['name' => 'admin-Notas', 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'admin-Matricula', 'guard_name' => 'web']);
+
+        // 2. Crear rol de Estudiantes (como ya tenías)
+        $roleEstudiantes = Role::firstOrCreate(
             ['name' => 'Estudiantes', 'guard_name' => 'web'],
             ['name' => 'Estudiantes', 'guard_name' => 'web']
         );
 
-        // Encuentra los permisos 'Admin-Participante' y 'Admin-Estudiante' y 'Admin-Historial'
-        $permissions = Permission::whereIn('name', ['admin-Participante', 'admin-Estudiante','admin-Historial'])->get();
+        $permisosEstudiantes = Permission::whereIn('name', [
+            'admin-Participante', 
+            'admin-Estudiante',
+            'admin-Historial'
+        ])->get();
 
-        // Asigna los permisos al rol
-        if ($permissions) {
-            $role->givePermissionTo($permissions);
+        if ($permisosEstudiantes->isNotEmpty()) {
+            $roleEstudiantes->givePermissionTo($permisosEstudiantes);
+        }
+
+        // 3. Crear rol de Docentes con sus permisos
+        $roleDocentes = Role::firstOrCreate(
+            ['name' => 'docente', 'guard_name' => 'web'],
+            ['name' => 'docente', 'guard_name' => 'web']
+        );
+
+        $permisosDocentes = Permission::whereIn('name', [
+            'admin-Notas',
+            'admin-Matricula'
+        ])->get();
+
+        if ($permisosDocentes->isNotEmpty()) {
+            $roleDocentes->givePermissionTo($permisosDocentes);
         }
     }
 }
