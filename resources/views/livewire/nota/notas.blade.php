@@ -160,11 +160,11 @@
                                             📄 Excel Notas
                                     </button>
                                 @else
-                                    <button wire:click="edit('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+                                    <button wire:click="edit('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->id ?? '' }}')" 
                                         class="bg-green-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                         📖 Ver
                                     </button>
-                                    <button wire:click="exportNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+                                    <button wire:click="exportNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->id ?? '' }}')" 
                                         class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                         📥 Descargar Notas
                                     </button>

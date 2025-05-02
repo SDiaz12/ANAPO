@@ -15,6 +15,7 @@ use App\Livewire\Principal\Principales;
 use App\Livewire\ProgramaFormacion\ProgramaFormaciones;
 use App\Livewire\VistaNotasEstudiantes\VistaNotaEstudiantes;
 use App\Models\AsignaturaEstudiante;
+use App\Http\Controllers\ReporteNotasController;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Rol\Roles;
 use App\Livewire\AsignaturaDocente\AsignaturaDocentes;
@@ -29,6 +30,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('/cuadro/pdf/{codigo_asignatura}/{codigo_docente}', [ReporteNotasController::class, 'cuadro'])->name('cuadro.pdf');
+    Route::get('/boletas/pdf/{codigo_asignatura}/{codigo_docente}', [ReporteNotasController::class, 'boletas'])->name('boletas.pdf');
+
     Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
     Route::get('/principal', Principales::class)->name('principal');
     Route::get('/notasEstudiante/{asignaturaEstudianteId}', VistaNotaEstudiantes::class)->name('notasEstudiante');

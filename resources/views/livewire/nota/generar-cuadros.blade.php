@@ -15,33 +15,22 @@
                     </h3>
                     
                     <div class="space-y-4">
+                                             
                         <div class="flex items-center">
-                            <input wire:model="cuadroSeleccionado" id="cuadro1" value="cuadro1" type="radio" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300">
-                            <label for="cuadro1" class="ml-3 block text-sm font-medium text-gray-700">
-                                Cuadro 1 (Parciales)
-                            </label>
-                        </div>
-                        
-                        <div class="flex items-center">
-                            <input wire:model="cuadroSeleccionado" id="cuadro_final" value="cuadro_final" type="radio" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300">
+                            <input wire:model.live="cuadroSeleccionado" id="cuadro_final" value="cuadro_final" type="radio" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300">
                             <label for="cuadro_final" class="ml-3 block text-sm font-medium text-gray-700">
-                                Cuadro Final (Consolidado)
+                                Cuadro Consolidado
                             </label>
                         </div>
                         
                         <div class="flex items-center">
-                            <input wire:model="cuadroSeleccionado" id="boletas" value="boletas" type="radio" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300">
+                            <input wire:model.live="cuadroSeleccionado" id="boletas" value="boletas" type="radio" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300">
                             <label for="boletas" class="ml-3 block text-sm font-medium text-gray-700">
                                 Boletas (Todos estudiantes)
                             </label>
                         </div>
                         
-                        <div class="flex items-center">
-                            <input wire:model="cuadroSeleccionado" id="boletas_individuales" value="boletas_individuales" type="radio" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300">
-                            <label for="boletas_individuales" class="ml-3 block text-sm font-medium text-gray-700">
-                                Boletas Individuales
-                            </label>
-                        </div>
+                        
                     </div>
                 </div>
                 

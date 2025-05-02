@@ -15,7 +15,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Http\Request;
 use App\Exports\FormatoNotasImport;
 
-//#[Lazy()]
+
 class Notas extends Component
 {
     public $showGenerarCuadrosModal = false;
@@ -115,7 +115,23 @@ class Notas extends Component
     {
         return Excel::download(new ActualizarNotasExport($codigo_asignatura, $codigo_docente), 'notas.xlsx');
     }
-  
+    public $cuadroSeleccionado;
+
+    public function generarCuadro()
+    {
+        if ($this->cuadroSeleccionado === 'cuadro_final') {
+            return redirect()->route('cuadro.pdf', [
+                'codigo_asignatura' => $this->asignatura_id,
+                'codigo_docente' => $this->docente_id
+            ]);
+        } elseif ($this->cuadroSeleccionado === 'boletas') {
+            return redirect()->route('boletas.pdf', [
+                'codigo_asignatura' => $this->asignatura_id,
+                'codigo_docente' => $this->docente_id
+            ]);
+        }
+    }
+
     public function openModal()
     {
         $this->isOpen = true;
