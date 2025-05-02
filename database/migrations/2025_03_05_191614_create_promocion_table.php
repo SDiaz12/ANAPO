@@ -22,11 +22,14 @@ return new class extends Migration
             $table->string('nivel_actual', 100);
             $table->date('fecha_promocion');
             $table->integer('estado');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('estudiante_id')->references('id')->on('estudiantes');
-            $table->foreign('programaformacion_id')->references('id')->on('asignaturas');
+            $table->foreign('programaformacion_id')->references('id')->on('programaformaciones');
             $table->foreign('periodo_id')->references('id')->on('periodos');
         });
     }

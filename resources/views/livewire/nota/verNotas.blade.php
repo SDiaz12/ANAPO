@@ -1,8 +1,9 @@
 <div>
-    @if ($isOpen)
+    @if ($showVerNotasModal)
         <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-5xl">
-                <h2 class="text-xl font-bold mb-5 text-gray-800">Agregar Notas</h2>
+            <h2 class="text-xl font-bold mb-5 text-gray-800">Ver Notas</h2>
+
                 <div class="mb-4">
                     <form action="{{ route('actualizarNotas') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-4">
                         @csrf
@@ -25,7 +26,7 @@
                 </div>
 
                 
-                <form wire:submit.prevent="store">
+                <form wire:submit.prevent="storeEditar">
                     <div class="overflow-x-auto">
                         <div class="max-h-[500px] overflow-y-auto border border-gray-300 rounded-lg">
                             <table class="w-full border-collapse border border-gray-300 text-sm">
@@ -111,7 +112,7 @@
                         <div>
                         <button type="submit" 
                             class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition duration-300 transform hover:scale-105">
-                            💾 Guardar
+                            💾 Actualizar
                         </button>
                     </div>
                 </div>

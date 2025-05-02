@@ -22,7 +22,6 @@ class Estudiante extends BaseModel
         'telefono', 
         'correo', 
         'fecha_ingreso',
-        'estado', 
         'user_id', 
         'created_by', 
         'deleted_by', 
@@ -67,5 +66,11 @@ class Estudiante extends BaseModel
     {
         return $this->hasMany(\App\Models\AsignaturaEstudiante::class, 'estudiantes_id', 'id');
     }
+    // En App\Models\AsignaturaEstudiante.php
+    public function notas()
+    {
+        return $this->hasOne(\App\Models\Nota::class, 'asignatura_estudiante_id');
+    }
+
 
 }

@@ -9,26 +9,38 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\FormatoNotasExport;
+use App\Imports\ActualizarNotas;
+use App\Exports\ActualizarNotasExport;
+use Livewire\WithFileUploads;
 use Illuminate\Http\Request;
 use App\Exports\FormatoNotasImport;
-//#[Lazy()]
+
+
 class Notas extends Component
 {
+    public $showGenerarCuadrosModal = false;
+
     use WithPagination;
+    public $docente_id;
     public $file;
     public function exportarNotas($codigo_asignatura, $codigo_docente)
-{
+    {
+        
+        $nombreArchivo = 'Asignatura_' . $codigo_asignatura . '_Docente_' . $codigo_docente . '_Notas.xlsx';
+
     
-    $nombreArchivo = 'Asignatura_' . $codigo_asignatura . '_Docente_' . $codigo_docente . '_Notas.xlsx';
-
-   
-    return Excel::download(new FormatoNotasExport($codigo_asignatura, $codigo_docente), $nombreArchivo);
-}
-
-public function placeholder()
-{
-    return view('livewire.Placeholder.loader')->layout('layouts.app');
-}
+        return Excel::download(new FormatoNotasExport($codigo_asignatura, $codigo_docente), $nombreArchivo);
+    }
+    public function abrirModalGenerarCuadros($codigo_asignatura, $codigo_docente)
+    {
+        $this->asignatura_id = $codigo_asignatura;
+        $this->docente_id = $codigo_docente;
+        $this->showGenerarCuadrosModal = true;
+    }
+    public function placeholder()
+    {
+        return view('livewire.Placeholder.loader')->layout('layouts.app');
+    }
 
     
 
@@ -85,16 +97,60 @@ public function placeholder()
         
 
     }
+    public function actualizarNotas(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+    
+        
+        Excel::import(new ActualizarNotas, $request->file('file'));
+    
+        return back()->with('success', 'Notas importadas y actualizadas exitosamente.');
+    }
+    
+   
 
-  
+    public function exportNotas($codigo_asignatura, $codigo_docente)
+    {
+        return Excel::download(new ActualizarNotasExport($codigo_asignatura, $codigo_docente), 'notas.xlsx');
+    }
+    public $cuadroSeleccionado;
+
+    public function generarCuadro()
+    {
+        if ($this->cuadroSeleccionado === 'cuadro_final') {
+            return redirect()->route('cuadro.pdf', [
+                'codigo_asignatura' => $this->asignatura_id,
+                'codigo_docente' => $this->docente_id
+            ]);
+        } elseif ($this->cuadroSeleccionado === 'boletas') {
+            return redirect()->route('boletas.pdf', [
+                'codigo_asignatura' => $this->asignatura_id,
+                'codigo_docente' => $this->docente_id
+            ]);
+        }
+    }
+
     public function openModal()
     {
         $this->isOpen = true;
+    }
+    public $showVerNotasModal = false;
+    public function openModalEditar($modal = 'default')
+    {
+        if ($modal === 'VerNotas') {
+            $this->showVerNotasModal = true; 
+        } 
     }
 
        public function closeModal()
     {
         $this->isOpen = false;
+        $this->showVerNotasModal = false;
+        $this->showGenerarCuadrosModal = false;
+
+
     }
 
     
@@ -206,22 +262,107 @@ public function placeholder()
         $this->perPage = $suma;
     }
       
+    public function edit($codigo_asignatura, $codigo_docente)
+    {
+        $notas = Nota::whereHas('asignaturaEstudiante.asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente) {
+            $query->whereHas('asignatura', function ($q) use ($codigo_asignatura) {
+                $q->where('codigo', $codigo_asignatura);
+            })
+            ->whereHas('docente', function ($q) use ($codigo_docente) {
+                $q->where('codigo', $codigo_docente);
+            });
+        })->with('asignaturaEstudiante.estudiante')->get();
+   
+        if ($notas->isEmpty()) {
+            session()->flash('error', 'No hay notas registradas para esta asignatura y docente.');
+            return;
+        }
     
+        $this->estudiantes = $notas->map(function ($nota) {
+            return [
+                'asignatura_estudiante_id' => $nota->asignatura_estudiante_id,
+                'id' => $nota->asignaturaEstudiante->estudiante->id,
+                'codigo' => $nota->asignaturaEstudiante->estudiante->codigo,
+                'nombre' => $nota->asignaturaEstudiante->estudiante->nombre,
+                'apellido' => $nota->asignaturaEstudiante->estudiante->apellido,
+                'id_nota' => $nota->id,  
+                'primerparcial' => $nota->primerparcial,
+                'segundoparcial' => $nota->segundoparcial,
+                'tercerparcial' => $nota->tercerparcial,
+                'asistencia' => $nota->asistencia,
+                'recuperacion' => $nota->recuperacion,
+                'observacion' => $nota->observacion,
+            ];
+        })->toArray();
+    
+        $this-> openModalEditar('VerNotas'); 
+    }
+    public function storeEditar()
+    {
+        
+        $this->validate([
+            'notas.*.asignatura_estudiante_id' => 'required|integer|exists:asignatura_estudiantes,id',
+            'notas.*.primerparcial' => 'required|numeric',
+            'notas.*.segundoparcial' => 'nullable|numeric',
+            'notas.*.tercerparcial' => 'nullable|numeric',
+            'notas.*.asistencia' => 'nullable|string',
+            'notas.*.recuperacion' => 'nullable|numeric',
+            'notas.*.observacion' => 'nullable|string',
+        ]);
+    
+        foreach ($this->estudiantes as $key => $estudiante) {
+            $nota = Nota::find($estudiante['id_nota']);
+        
+            if ($nota) {
+        
+                $nota->update([  
+                    'asignatura_estudiante_id' => $estudiante['asignatura_estudiante_id'],
+                    'primerparcial' => $estudiante['primerparcial'],
+                    'segundoparcial' => $estudiante['segundoparcial'],
+                    'tercerparcial' => $estudiante['tercerparcial'],
+                    'asistencia' => $estudiante['asistencia'],
+                    'recuperacion' => $estudiante['recuperacion'],
+                    'observacion' => $estudiante['observacion'],
+                    
+                ]);
+            }
+        }
+        
+    
+        session()->flash('success', 'Notas actualizadas correctamente.');
+        $this->closeModal();
+        $this->resetInputFields();
+    }
     
     public $nombre_docente;
     
+   
     public function render()
     {
+        $user = auth()->user();
         
-        $asignaturas = AsignaturaEstudiante::with('asignaturadocente.asignatura', 'estudiante')
-            ->whereDoesntHave('notas') 
-            ->whereHas('asignaturadocente.asignatura', function ($query) {
+        $query = AsignaturaEstudiante::query()
+            ->with(['asignaturadocente.asignatura', 'asignaturadocente.docente', 'estudiante'])
+            ->whereHas('asignaturadocente.asignatura', function($query) {
                 $query->where('estado', 1);
-            })
-            ->selectRaw('asignatura_id, COUNT(id) as estudiantes_count')
+            });
+    
+       
+        if ($user && !$user->hasRole('root')) { 
+            $query->whereHas('asignaturadocente.docente', function($q) use ($user) {
+                $q->where('user_id', $user->id); 
+            });
+        }
+    
+        $asignaturas = $query->selectRaw('asignatura_id, COUNT(id) as estudiantes_count')
             ->groupBy('asignatura_id')
             ->paginate($this->perPage);
-
+    
+        
+        if ($user && !$user->hasRole('root') && $asignaturas->isEmpty()) {
+            session()->flash('info', 'No tiene asignaturas asignadas activas.');
+        }
+    
         return view('livewire.nota.notas', [
             'asignaturas' => $asignaturas,
         ])->layout('layouts.app');

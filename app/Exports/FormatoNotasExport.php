@@ -99,7 +99,7 @@ class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, Sh
         $sheet->getStyle('A2:K' . $sheet->getHighestRow())->applyFromArray([
             'fill' => [
                 'fillType' => 'solid',
-                'startColor' => ['argb' => 'D9EAF7'], // Azul claro
+                'startColor' => ['argb' => 'D9EAF7'], 
             ],
         ]);
 

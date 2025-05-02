@@ -11,6 +11,7 @@ class Docente extends BaseModel
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
+        'user_id',
         'codigo', 
         'dni', 
         'foto', 
@@ -24,7 +25,6 @@ class Docente extends BaseModel
         'fecha_ingreso',
         'permanente',
         'lugar_asignado',
-        'estado', 
         'created_by', 
         'deleted_by', 
         'updated_by'
@@ -38,7 +38,11 @@ class Docente extends BaseModel
     {
         return $this->belongsTo(ProgramaFormacion::class, 'programa_formacion_id');
     }
-
+   
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function asignaturas()
     {

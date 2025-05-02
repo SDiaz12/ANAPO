@@ -44,6 +44,23 @@
                     </p>
 
                 </div>
+<!-- Campos del usuario -->
+<div class="mb-4">
+    <label for="user_email" class="block text-gray-700 text-sm font-bold mb-2">Email del usuario:</label>
+    <input type="email" wire:model="user_email" id="user_email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    @error('user_email') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+</div>
+
+<div class="mb-4">
+    <label for="user_password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+    <input type="password" wire:model="user_password" id="user_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    @error('user_password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+</div>
+
+<div class="mb-4">
+    <label for="user_password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Confirmar contraseña:</label>
+    <input type="password" wire:model="user_password_confirmation" id="user_password_confirmation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+</div>
                 <div class="-mx-3 flex flex-wrap">
                     <div class="w-full px-3 sm:w-1/2">
                         <div class="mb-5">
