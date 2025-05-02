@@ -53,8 +53,8 @@
                 <th>3er Parcial</th>
                 <th>Asistencia</th>
                 <th>Recuperación</th>
-                <th>Observación</th>
                 <th>Promedio</th>
+                <th>Observación</th>
             </tr>
         </thead>
         <tbody>
@@ -73,8 +73,8 @@
                     <td>{{ $nota->tercerparcial ?? '-' }}</td>
                     <td>{{ $nota->asistencia ?? '-' }}</td>
                     <td>{{ $nota->recuperacion ?? '-' }}</td>
-                    <td>{{ $nota->observacion ?? '-' }}</td>
                     <td>{{ $promedio ?? '-' }}</td>
+                    <td>{{ $nota->observacion ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

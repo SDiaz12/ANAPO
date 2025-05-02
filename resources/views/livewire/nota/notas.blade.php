@@ -203,18 +203,19 @@
                                     class="bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                     📄 Excel Notas
                             </button>
-                            <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
-                                class="bg-purple-600 text-white px-3 py-2 rounded-md text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                📊 Generar Cuadros
-                            </button>
+                          
                         @else
-                            <button wire:click="edit('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+                            <button wire:click="edit('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->id ?? '' }}')" 
                                 class="bg-green-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                 📖 Ver
                             </button>
-                            <button wire:click="exportNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->first()->id ?? '' }}')" 
+                            <button wire:click="exportNotas('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}', '{{ $asignatura->notas->id ?? '' }}')" 
                                 class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                 📥 Descargar Notas
+                            </button>
+                            <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignaturadocente->asignatura->codigo }}', '{{ $asignatura->asignaturadocente->docente->codigo }}')" 
+                                class="bg-purple-600 text-white px-3 py-2 rounded-md text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                📊 Generar Cuadros
                             </button>
                         @endif                      
                     </div>
