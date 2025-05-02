@@ -107,8 +107,6 @@
                 </td>
             </tr>
         </table>
-
-        <!-- Tabla de notas -->
         <table>
             <thead>
                 <tr>
@@ -141,12 +139,10 @@
             </tbody>
         </table>
 
-
-        <!-- Datos del alumno -->
         <p><strong>Nombre del Alumno:</strong> {{ $estudiante->nombre }} {{ $estudiante->apellido }}</p>
         <p><strong>DNI:</strong> {{ $estudiante->dni }}</p>
 
-        <!-- Firmas sin bordes, alineadas -->
+     
         <table class="firmas-table">
             <tr>
                 <td>
