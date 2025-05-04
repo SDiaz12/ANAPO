@@ -123,11 +123,20 @@ class AsignaturaDocentes extends Component
 
     public function updatedCantidadMaterias()
     {
-        
-        $this->selectedAsignaturas = array_fill(0, $this->cantidad_materias, null);
-        $this->selectedPeriodos = array_fill(0, $this->cantidad_materias, null);
-        $this->selectedSecciones = array_fill(0, $this->cantidad_materias, null);
+        $cantidad = intval($this->cantidad_materias);
+    
+        if ($cantidad > 0) {
+            $this->selectedAsignaturas = array_fill(0, $cantidad, null);
+            $this->selectedPeriodos = array_fill(0, $cantidad, null);
+            $this->selectedSecciones = array_fill(0, $cantidad, null);
+        } else {
+            
+            $this->selectedAsignaturas = [];
+            $this->selectedPeriodos = [];
+            $this->selectedSecciones = [];
+        }
     }
+    
 
     public function store()
     {

@@ -22,10 +22,10 @@ class AsignaturaEstudiante extends Model
     }
   
 
-public function notas()
-{
-    return $this->hasOne(\App\Models\Nota::class, 'asignatura_estudiante_id');
-}
+    public function notas()
+    {
+        return $this->hasOne(\App\Models\Nota::class, 'asignatura_estudiante_id');
+    }
 
     public function periodo()
     {

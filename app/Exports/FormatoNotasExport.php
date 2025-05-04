@@ -52,7 +52,7 @@ class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, Sh
         ->with(['estudiante', 'asignaturadocente.asignatura', 'notas'])
         ->get()
         ->map(function ($item) {
-            $nota = $item->notas->first(); 
+            $nota = $item->notas;
         
             return [
                 'asignatura_estudiante_id' => $item->id ?? 'Sin código',

@@ -82,6 +82,16 @@ class Notas extends Component
 
    
         $this->estudiantes = $asignaturaEstudiantes->map(function ($asignaturaEstudiante) {
+            $this->notas[$asignaturaEstudiante->estudiante->id] = [
+                'asignatura_estudiante_id' => $asignaturaEstudiante->id,
+                'primerparcial' => null,
+                'segundoparcial' => null,
+                'tercerparcial' => null,
+                'asistencia' => '',
+                'recuperacion' => null,
+                'observacion' => '',
+            ];
+            
             return [
                 'asignatura_estudiante_id' => $asignaturaEstudiante->id,
                 'id' => $asignaturaEstudiante->estudiante->id,
@@ -182,7 +192,7 @@ class Notas extends Component
   
     public function store()
     {
-
+        
         $this->validate([
             'notas.*.asignatura_estudiante_id' => 'required|integer|exists:asignatura_estudiantes,id',
             'notas.*.primerparcial' => 'required|numeric',
@@ -216,6 +226,7 @@ class Notas extends Component
                 session()->flash('error', 'Error al guardar las notas: ' . $e->getMessage());
                 return;
             }
+           
             
         }
     

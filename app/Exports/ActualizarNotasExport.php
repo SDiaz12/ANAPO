@@ -52,7 +52,7 @@ class ActualizarNotasExport  implements FromCollection, WithHeadings, WithStyles
         ->get()
         ->map(function ($item) {
             
-            $nota = $item->notas->first();
+            $nota = $item->notas;
 
             return [
                 'asignatura_estudiante_id' => $item->id ?? 'Sin código',
