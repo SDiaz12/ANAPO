@@ -204,12 +204,12 @@ class Docentes extends Component
     
                     // Asignar rol si no tiene ninguno
                     if ($user && !$user->roles()->exists()) {
-                        $user->assignRole('docente');
+                        $user->assignRole('Docente');
                     }
                 } else {
                     // Modo creación
                     $user = User::create($userData);
-                    $user->assignRole('docente'); // Asignar rol automáticamente
+                    $user->assignRole('Docente'); // Asignar rol automáticamente
                 }
     
                 // Preparar datos del docente
@@ -234,11 +234,11 @@ class Docentes extends Component
 
                 // Para usuarios existentes
                 if ($user && !$user->roles()->exists()) {
-                    $user->assignRole('docente');
+                    $user->assignRole('Docente');
                 }
 
                 // Para nuevos usuarios
-                $user->assignRole('docente'); // Asignar rol automáticamente
+                $user->assignRole('Docente'); // Asignar rol automáticamente
             });
     
             // Mensaje de éxito
