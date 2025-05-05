@@ -39,6 +39,10 @@ class RolSeeder extends Seeder
             'docente-admin-editarnotas',
             'docente-admin-notasestudiante',
             'ver-dashboard-docente',
+            'docente-admin-notas',
+            'docente-admin-importarnotas',
+            'docente-admin-actualizarnotas'
+
         ])->get();
 
         if ($permisosDocentes->isNotEmpty()) {

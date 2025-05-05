@@ -209,9 +209,10 @@ class Estudiants extends Component
                 'telefono' => $this->telefono,
                 'correo' => $this->correo,
                 'user_id' => $this->user_id,
-                'estado' => $this->estado, // Asegúrate de incluir estado
+                'estado' => $this->estado, 
             ]
         );
+        $user->assignRole('Estudiante');
 
         // Mensaje de éxito
         session()->flash(
