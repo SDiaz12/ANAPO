@@ -121,7 +121,7 @@
 
                 <div>
                     <x-button wire:click.prevent="store()" wire:loading.attr="disabled" wire:target="foto" type="button" class="mt-4 w-full">
-                        {{ $programaformacion_id ? 'Editar docente' : 'Crear docente' }}
+                        {{ $programaformacion_id ? 'Editar programa' : 'Crear programa' }}
                     </x-button>
                 </div>
             </form>

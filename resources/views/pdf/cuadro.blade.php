@@ -67,7 +67,7 @@
                 @endphp
                 <tr>
                     <td>{{ $i + 1 }}</td>
-                    <td>{{ $registro->estudiante->nombre }} {{ $registro->estudiante->apellido }}</td>
+                    <td>{{ $registro->matricula->estudiante->nombre }} {{ $registro->matricula->estudiante->apellido }}</td>
                     <td>{{ $nota->primerparcial ?? '-' }}</td>
                     <td>{{ $nota->segundoparcial ?? '-' }}</td>
                     <td>{{ $nota->tercerparcial ?? '-' }}</td>

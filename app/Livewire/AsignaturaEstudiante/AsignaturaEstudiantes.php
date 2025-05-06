@@ -2,29 +2,39 @@
 
 namespace App\Livewire\AsignaturaEstudiante;
 
-use App\Models\Asignatura;
+use App\Models\AsignaturaDocente;
 use App\Models\AsignaturaEstudiante;
 use App\Models\Periodo;
-use App\Models\Estudiante;
-use Livewire\Attributes\Lazy;
+use App\Models\Matricula;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-//#[Lazy()]
+
 class AsignaturaEstudiantes extends Component
 {
-    use WithFileUploads;
     use WithPagination;
 
-    public $search, $asignaturaestudiante_id, $estudiantes_id, $asignatura_id, $periodo_id, $estado = 1;
-
+    public $search, $asignaturaestudiante_id, $matricula_id, $asignaturadocente_id, $estado = 1;
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
     public $isOpen = false;
-    public $isOpenDatos = false;
     public $error;
+    public $viewMode = 'table';  
+    public function toggleViewMode()
+    {
+        $this->viewMode = $this->viewMode === 'table' ? 'cards' : 'table';
+    }
+    public function toggleEstado($id)
+    {
+        $asignatura = AsignaturaEstudiante::findOrFail($id);
+        $asignatura->estado = !$asignatura->estado;
+        $asignatura->save();
+    }
     public $inputSearchEstudiante = '';
     public $searchEstudiante = [];
+    public $inputSearchAsignatura = '';
+    public $searchAsignatura = [];
+    
+    public $perPage = 10;
 
     public function create()
     {
@@ -45,52 +55,59 @@ class AsignaturaEstudiantes extends Component
 
     public function resetInputFields()
     {
-        $this->estudiantes_id = null;
+        $this->matricula_id = null;
         $this->inputSearchEstudiante = '';
         $this->searchEstudiante = [];
         $this->asignaturaestudiante_id = null;
-        $this->asignatura_id = null;
-        $this->estado = '';
+        $this->asignaturadocente_id = null;
+        $this->inputSearchAsignatura = '';
+        $this->searchAsignatura = [];
+        $this->estado = 1;
+        $this->error = null;
     }
 
     public function store()
     {
         $this->validate([
-            'estudiantes_id' => 'required|integer|exists:estudiantes,id',
-            'asignatura_id'  => 'required',
+            'matricula_id' => 'required|integer|exists:matriculas,id',
+            'asignaturadocente_id' => 'required|integer|exists:asignaturadocentes,id',
         ]);
-    
-        // Obtenemos el período activo
+
         $periodoActivo = Periodo::where('estado', 1)->first();
-    
         if (!$periodoActivo) {
             $this->error = 'No hay período activo.';
             return;
         }
+
+        $matricula = Matricula::find($this->matricula_id);
+        $asignaturaDocente = AsignaturaDocente::with('asignatura')->find($this->asignaturadocente_id);
+
+        // Verificar que la asignatura pertenece al programa del estudiante
+        if ($asignaturaDocente->asignatura->programa_formacion_id != $matricula->programaformacion_id) {
+            $this->error = 'La asignatura no pertenece al programa de formación del estudiante.';
+            return;
+        }
     
-        // Verificamos si ya existe una matrícula para el estudiante en esa asignatura y período (en creación)
+        // Verificar si ya está matriculado
         if (!$this->asignaturaestudiante_id) {
-            $matriculaExistente = AsignaturaEstudiante::where('estudiantes_id', $this->estudiantes_id)
-                ->where('asignatura_id', $this->asignatura_id)
+            $existente = AsignaturaEstudiante::where('estudiantes_id', $this->matricula_id)
+                ->where('asignatura_id', $this->asignaturadocente_id)
                 ->where('periodo_id', $periodoActivo->id)
                 ->first();
-            if ($matriculaExistente) {
-                $this->error = 'La asignatura ya está matriculada para este estudiante.';
+                
+            if ($existente) {
+                $this->error = 'El estudiante ya está matriculado en esta asignatura.';
                 return;
             }
         }
     
-        // Si $this->estado está vacío, asignamos 1 por defecto
-        $estado = ($this->estado === '' || is_null($this->estado)) ? 1 : $this->estado;
-    
-        // Procedemos a crear o actualizar la matrícula
         AsignaturaEstudiante::updateOrCreate(
             ['id' => $this->asignaturaestudiante_id],
             [
-                'estudiantes_id' => $this->estudiantes_id,
-                'asignatura_id'  => $this->asignatura_id,
-                'periodo_id'     => $periodoActivo->id,
-                'estado'         => $estado,
+                'estudiantes_id' => $this->matricula_id,
+                'asignatura_id' => $this->asignaturadocente_id,
+                'periodo_id' => $periodoActivo->id,
+                'estado' => $this->estado,
             ]
         );
     
@@ -107,131 +124,129 @@ class AsignaturaEstudiantes extends Component
 
     public function updatedInputSearchEstudiante()
     {
-        $this->searchEstudiante = Estudiante::where('nombre', 'like', '%' . $this->inputSearchEstudiante . '%')
-            ->whereHas('matricula', function($query) {
-                $query->whereNotNull('programaformacion_id');
-            })
-            ->whereHas('matricula', function($query) {
-                $query->where('estado', 1);
+        $this->searchEstudiante = Matricula::with('estudiante')
+            ->whereHas('estudiante', function ($q) {
+                $q->where('nombre', 'like', '%' . $this->inputSearchEstudiante . '%')
+                  ->orWhere('apellido', 'like', '%' . $this->inputSearchEstudiante . '%')
+                  ->orWhere('dni', 'like', '%' . $this->inputSearchEstudiante . '%')
+                  ->orWhere('codigo', 'like', '%' . $this->inputSearchEstudiante . '%');
             })
             ->where('estado', 1)
-            ->orWhere('nombre', 'like', '%' . $this->inputSearchEstudiante . '%')
-            ->orWhere('apellido', 'like', '%' . $this->inputSearchEstudiante . '%')
-            ->orWhere('dni', 'like', '%' . $this->inputSearchEstudiante . '%')
-            ->orWhere('codigo', 'like', '%' . $this->inputSearchEstudiante . '%')
             ->limit(10)
             ->get();
     }
 
     public function selectEstudiante($id)
     {
-        $this->estudiantes_id = $id;
-        $this->inputSearchEstudiante = Estudiante::find($id)->nombre . ' ' . Estudiante::find($id)->apellido;
+        $matricula = Matricula::with('estudiante')->find($id);
+        $this->matricula_id = $matricula->id;
+        $this->inputSearchEstudiante = $matricula->estudiante->nombre . ' ' . $matricula->estudiante->apellido;
         $this->searchEstudiante = [];
+    }
+
+    public function updatedInputSearchAsignatura()
+    {
+        if ($this->matricula_id) {
+            $matricula = Matricula::find($this->matricula_id);
+            
+            $this->searchAsignatura = AsignaturaDocente::with(['asignatura', 'docente'])
+                ->whereHas('asignatura', function($q) use ($matricula) {
+                    $q->where('programa_formacion_id', $matricula->programaformacion_id)
+                      ->where(function($query) {
+                          $query->where('nombre', 'like', '%' . $this->inputSearchAsignatura . '%')
+                                ->orWhere('codigo', 'like', '%' . $this->inputSearchAsignatura . '%');
+                      });
+                })
+                ->where('estado', 1)
+                ->limit(15)
+                ->get();
+        } else {
+            $this->searchAsignatura = [];
+            $this->error = 'Primero seleccione un estudiante';
+        }
+    }
+
+    public function selectAsignatura($id)
+    {
+        $asignatura = AsignaturaDocente::with('asignatura')->find($id);
+        $this->asignaturadocente_id = $asignatura->id;
+        $this->inputSearchAsignatura = $asignatura->asignatura->nombre;
+        $this->searchAsignatura = [];
     }
 
     public function edit($id)
     {
-        $asiganturaestudiante = AsignaturaEstudiante::findOrFail($id);
-        $this->asignaturaestudiante_id = $asiganturaestudiante->id;
-        $this->estudiantes_id = $asiganturaestudiante->estudiante->id;
-        $this->inputSearchEstudiante = $asiganturaestudiante->estudiante->nombre . ' ' . $asiganturaestudiante->estudiante->apellido;
-        $this->asignatura_id = $asiganturaestudiante->asignatura_id;
-        $this->estado = $asiganturaestudiante->estado;
+        $asignaturaEstudiante = AsignaturaEstudiante::with(['matricula.estudiante', 'asignaturaDocente.asignatura'])->findOrFail($id);
+        
+        $this->asignaturaestudiante_id = $asignaturaEstudiante->id;
+        $this->matricula_id = $asignaturaEstudiante->estudiantes_id;
+        $this->inputSearchEstudiante = $asignaturaEstudiante->matricula->estudiante->nombre . ' ' . $asignaturaEstudiante->matricula->estudiante->apellido;
+        $this->asignaturadocente_id = $asignaturaEstudiante->asignatura_id;
+        $this->inputSearchAsignatura = $asignaturaEstudiante->asignaturaDocente->asignatura->nombre;
+        $this->estado = $asignaturaEstudiante->estado;
+        
         $this->openModal();
-    }
-
-
-    public $inputSearchAsignatura = '';
-    public $searchAsignatura = [];
-    public $requisitos = [];
-
-    public function updatedinputSearchAsignatura()
-    {
-
-        if ($this->inputSearchAsignatura) {
-            $this->searchAsignatura = Asignatura::where('nombre', 'like', '%' . $this->inputSearchAsignatura . '%')
-                ->orWhere('codigo', 'like', '%' . $this->inputSearchAsignatura . '%')
-                ->limit(15)
-                ->get();
-
-
-        } else {
-            $this->searchAsignatura = [];
-        }
-    }
-
-    public function mount()
-    {
-        $this->searchAsignatura = Asignatura::all();
     }
 
     public function delete()
     {
         if ($this->confirmingDelete) {
-            $asiganturaestudiante = AsignaturaEstudiante::find($this->IdAEliminar);
+            $asignaturaEstudiante = AsignaturaEstudiante::find($this->IdAEliminar);
 
-            if (!$asiganturaestudiante) {
-                session()->flash('error', 'Docente no encontrado.');
+            if (!$asignaturaEstudiante) {
+                session()->flash('error', 'Registro no encontrado.');
                 $this->confirmingDelete = false;
                 return;
             }
 
-            $asiganturaestudiante->forceDelete();
-            session()->flash('message', 'Matricula de asignatura eliminada correctamente!');
+            $asignaturaEstudiante->delete();
+            session()->flash('message', 'Matrícula de asignatura eliminada correctamente!');
             $this->confirmingDelete = false;
         }
     }
 
     public function confirmDelete($id)
     {
-        $asiganturaestudiante = AsignaturaEstudiante::find($id);
+        $asignaturaEstudiante = AsignaturaEstudiante::find($id);
 
-        if (!$asiganturaestudiante) {
-            session()->flash('error', 'Docente no encontrado.');
+        if (!$asignaturaEstudiante) {
+            session()->flash('error', 'Registro no encontrado.');
             return;
         }
 
         $this->IdAEliminar = $id;
-        $this->nombreAEliminar = $asiganturaestudiante->asignatura->nombre;
+        $this->nombreAEliminar = $asignaturaEstudiante->asignaturaDocente->asignatura->nombre;
         $this->confirmingDelete = true;
     }
-    public function placeholder()
-    {
-        return view('livewire.Placeholder.loader')->layout('layouts.app');
-    }
-    public $perPage = 10;
+
     public function loadMore($suma)
     {
         $this->perPage = $suma;
     }
+
     public function render()
     {
-        $asignaturaestudiantes = AsignaturaEstudiante::with('estudiante', 'asignatura', 'periodo')
-            ->where(function ($query) {
-                $query->whereHas('estudiante', function ($q) {
+        $asignaturaEstudiantes = AsignaturaEstudiante::with([
+                'matricula.estudiante', 
+                'asignaturaDocente.asignatura', 
+                'asignaturaDocente.docente',
+                'periodo'
+            ])
+            ->where(function($query) {
+                $query->whereHas('matricula.estudiante', function($q) {
                     $q->where('nombre', 'like', '%' . $this->search . '%')
-                        ->orWhere('apellido', 'like', '%' . $this->search . '%');
-                })->orWhereHas('asignatura', function ($q) {
+                      ->orWhere('apellido', 'like', '%' . $this->search . '%');
+                })
+                ->orWhereHas('asignaturaDocente.asignatura', function($q) {
                     $q->where('nombre', 'like', '%' . $this->search . '%')
-                        ->orWhere('codigo', 'like', '%' . $this->search . '%');
+                      ->orWhere('codigo', 'like', '%' . $this->search . '%');
                 });
             })
             ->orderBy('id', 'DESC')
-            ->paginate(10);
-
-            $asignaturas = Asignatura::whereHas('asignaturaEstudiantesA', function ($q) {
-                $q->whereHas('periodo', function ($q2) {
-                    $q2->where('estado', 1);
-                });
-            })->where('estado', 1)->get();
-
-        $asignaturaestudianteCount = AsignaturaEstudiante::count();
-
+            ->paginate($this->perPage);
+    
         return view('livewire.asignatura-estudiante.asignatura-estudiantes', [
-            'asignaturaestudiantes' => $asignaturaestudiantes,
-            'asignaturaestudianteCount' => $asignaturaestudianteCount,
-            'asignaturas' => $asignaturas,
+            'asignaturaEstudiantes' => $asignaturaEstudiantes,
         ])->layout('layouts.app');
     }
 }

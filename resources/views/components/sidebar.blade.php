@@ -94,7 +94,7 @@
       aria-label="Sidebar">
       <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
          <ul class="space-y-2 font-medium">
-
+            @can('estudiante-admin-dashboard')
             <li>
                <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -108,6 +108,8 @@
                   <span class="ms-3">Inicio</span>
                </x-nav-link>
             </li>
+            @endcan
+            
             <li>
                <x-nav-link href="{{ route('principal') }}" :active="request()->routeIs('principal')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -121,6 +123,8 @@
                   <span class="ms-3">Principal</span>
                </x-nav-link>
             </li>
+            
+            @can('admin-admin-matricula')
             <li>
                <x-nav-link href="{{ route('matricula') }}" :active="request()->routeIs('matricula')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -136,6 +140,8 @@
 
                </x-nav-link>
             </li>
+            @endcan
+            @can('admin-admin-asignaturaestudiante')
             <li>
                <x-nav-link href="{{ route('asignaturaEstudiante') }}"
                   :active="request()->routeIs('asignaturaEstudiante')"
@@ -150,6 +156,8 @@
                   <span class="flex-1 ms-3 whitespace-nowrap">Matricular Asignatura</span>
                </x-nav-link>
             </li>
+            @endcan
+            @can('admin-admin-docente')
             <li>
                <x-nav-link href="{{ route('docente') }}" :active="request()->routeIs('docente')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -164,7 +172,8 @@
                   <span class="flex-1 ms-3 whitespace-nowrap">Docentes</span>
                </x-nav-link>
             </li>
-
+            @endcan
+            @can('admin-admin-estudiante')
             <li>
                <x-nav-link href="{{ route('estudiante') }}" :active="request()->routeIs('estudiante')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -179,6 +188,8 @@
                   <span class="flex-1 ms-3 whitespace-nowrap">Estudiantes</span>
                </x-nav-link>
             </li>
+            @endcan
+            @can('admin-admin-asignatura')
             <li>
                <x-nav-link href="{{ route('asignatura') }}" :active="request()->routeIs('asignatura')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -191,30 +202,33 @@
                   <span class="flex-1 ms-3 whitespace-nowrap">Asignaturas</span>
                </x-nav-link>
             </li>
+            @endcan
+            @can('docente-admin-notas')
             <li>
             <x-nav-link href="{{ route('notas') }}" :active="request()->routeIs('notas')"
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-green-500 dark:hover:bg-gray-700 group">
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                <x-activeIcons :active="request()->routeIs('notas')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                   width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                     d="M4 2h10l6 6v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm10 7h-4v2h4v-2zm0 4h-4v2h4v-2zm-6-4H6v2h2V9zm0 4H6v2h2v-2zm7-7.586L14.586 3H14v2a1 1 0 0 0 1 1h2v-.586z" />
+                   <path fill-rule="evenodd" d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9h5a2 2 0 0 0 2-2Zm-1 9a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2Zm2-5a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Zm4 4a1 1 0 1 0-2 0v3a1 1 0 1 0 2 0v-3Z" clip-rule="evenodd"/>
                </x-activeIcons>
                <span class="flex-1 ms-3 whitespace-nowrap">Notas</span>
             </x-nav-link>
          </li>
-
+         @endcan
+         @can('admin-admin-promocion')
          <li>
             <x-nav-link href="{{ route('promocion') }}" :active="request()->routeIs('promocion')"
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-green-500 dark:hover:bg-gray-700 group">
+               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                <x-activeIcons :active="request()->routeIs('promocion')" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                   width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                     d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-.55 0-1-.45-1-1v-5H9l3-3 3 3h-2v5c0 .55-.45 1-1 1z" />
+                  <path d="M12.4472 4.10557c-.2815-.14076-.6129-.14076-.8944 0L2.76981 8.49706l9.21949 4.39024L21 8.38195l-8.5528-4.27638Z"/>
+                  <path d="M5 17.2222v-5.448l6.5701 3.1286c.278.1325.6016.1293.8771-.0084L19 11.618v5.6042c0 .2857-.1229.5583-.3364.7481l-.0025.0022-.0041.0036-.0103.009-.0119.0101-.0181.0152c-.024.02-.0562.0462-.0965.0776-.0807.0627-.1942.1465-.3405.2441-.2926.195-.7171.4455-1.2736.6928C15.7905 19.5208 14.1527 20 12 20c-2.15265 0-3.79045-.4792-4.90614-.9751-.5565-.2473-.98098-.4978-1.27356-.6928-.14631-.0976-.2598-.1814-.34049-.2441-.04036-.0314-.07254-.0576-.09656-.0776-.01201-.01-.02198-.0185-.02991-.0253l-.01038-.009-.00404-.0036-.00174-.0015-.0008-.0007s-.00004 0 .00978-.0112l-.00009-.0012-.01043.0117C5.12215 17.7799 5 17.5079 5 17.2222Zm-3-6.8765 2 .9523V17c0 .5523-.44772 1-1 1s-1-.4477-1-1v-6.6543Z"/>
                </x-activeIcons>
                   <span class="flex-1 ms-3 whitespace-nowrap">Promoción</span>
             </x-nav-link>
          </li>
-
+         @endcan
+         @can('admin-admin-programas')
             <li>
                <x-nav-link href="{{ route('programas') }}" :active="request()->routeIs('programas')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -226,6 +240,8 @@
                   <span class="flex-1 ms-3 whitespace-nowrap">Programas Formación</span>
                </x-nav-link>
             </li>
+            @endcan
+            @can('admin-admin-mantenimiento')
             <li>
                <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
             </li>
@@ -247,13 +263,13 @@
                   </svg>
                </button>
                <ul id="dropdown-menu2" class="hidden py-2 space-y-2 dark:bg-gray-900 bg-gray-100 rounded-md">
-
                   <li>
+                     @can('admin-admin-asignaturaDocente')
                      <x-nav-link href="{{ route('asignaturaDocente') }}"
                         :active="request()->routeIs('asignaturaDocente')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                         <x-activeIcons :active="request()->routeIs('asignaturaDocente')"
-                           class="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
+                           class="flex-shrink-0 w-6 h-6 "
                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                            viewBox="0 0 20 20">
                            <path
@@ -261,31 +277,61 @@
                         </x-activeIcons>
                         <span class="flex-1 ms-3 whitespace-nowrap">Asignación Asignaturas</span>
                      </x-nav-link>
+                     @endcan
+                     @can('admin-admin-rol')
                      <x-nav-link href="{{ route('rol') }}" :active="request()->routeIs('rol')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                         <x-activeIcons :active="request()->routeIs('rol')"
-                           class="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
+                           class="flex-shrink-0 w-6 h-6"
                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                            viewBox="0 0 20 20">
-                           <path
-                              d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
+                           <path fill-rule="evenodd" d="M17 10v1.126c.367.095.714.24 1.032.428l.796-.797 1.415 1.415-.797.796c.188.318.333.665.428 1.032H21v2h-1.126c-.095.367-.24.714-.428 1.032l.797.796-1.415 1.415-.796-.797a3.979 3.979 0 0 1-1.032.428V20h-2v-1.126a3.977 3.977 0 0 1-1.032-.428l-.796.797-1.415-1.415.797-.796A3.975 3.975 0 0 1 12.126 16H11v-2h1.126c.095-.367.24-.714.428-1.032l-.797-.796 1.415-1.415.796.797A3.977 3.977 0 0 1 15 11.126V10h2Zm.406 3.578.016.016c.354.358.574.85.578 1.392v.028a2 2 0 0 1-3.409 1.406l-.01-.012a2 2 0 0 1 2.826-2.83ZM5 8a4 4 0 1 1 7.938.703 7.029 7.029 0 0 0-3.235 3.235A4 4 0 0 1 5 8Zm4.29 5H7a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h6.101A6.979 6.979 0 0 1 9 15c0-.695.101-1.366.29-2Z" clip-rule="evenodd"/>
                         </x-activeIcons>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Rol</span>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Roles</span>
                      </x-nav-link>
+                     @endcan
+                     @can('admin-admin-users')
+                     <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                        <x-activeIcons :active="request()->routeIs('users')"
+                           class="flex-shrink-0 w-6 h-6"
+                           aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                           viewBox="0 0 20 20">
+                           <path fill-rule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.5 8a4 4 0 0 0-4 4 2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-3Zm6.82-3.096a5.51 5.51 0 0 0-2.797-6.293 3.5 3.5 0 1 1 2.796 6.292ZM19.5 18h.5a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-1.1a5.503 5.503 0 0 1-.471.762A5.998 5.998 0 0 1 19.5 18ZM4 7.5a3.5 3.5 0 0 1 5.477-2.889 5.5 5.5 0 0 0-2.796 6.293A3.501 3.501 0 0 1 4 7.5ZM7.1 12H6a4 4 0 0 0-4 4 2 2 0 0 0 2 2h.5a5.998 5.998 0 0 1 3.071-5.238A5.505 5.505 0 0 1 7.1 12Z" clip-rule="evenodd"/>   
+                        </x-activeIcons>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Usuarios</span>
+                     </x-nav-link>
+                     @endcan
+                     @can('admin-admin-instituto')
                      <x-nav-link href="{{ route('instituto') }}" :active="request()->routeIs('instituto')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                         <x-activeIcons :active="request()->routeIs('instituto')"
-                           class="flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
+                           class="flex-shrink-0 w-6 h-6"
                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                            <path d="m6 10.5237-2.27075.6386C3.29797 11.2836 3 11.677 3 12.125V20c0 .5523.44772 1 1 1h2V10.5237Zm12 0 2.2707.6386c.4313.1213.7293.5147.7293.9627V20c0 .5523-.4477 1-1 1h-2V10.5237Z"/>
                               <path fill-rule="evenodd" d="M12.5547 3.16795c-.3359-.22393-.7735-.22393-1.1094 0l-6.00002 4c-.45952.30635-.5837.92722-.27735 1.38675.30636.45953.92723.5837 1.38675.27735L8 7.86853V21h8V7.86853l1.4453.96352c.0143.00957.0289.01873.0435.02746.1597.09514.3364.14076.5112.1406.3228-.0003.6395-.15664.832-.44541.3064-.45953.1822-1.0804-.2773-1.38675l-6-4ZM10 12c0-.5523.4477-1 1-1h2c.5523 0 1 .4477 1 1s-.4477 1-1 1h-2c-.5523 0-1-.4477-1-1Zm1-4c-.5523 0-1 .44772-1 1s.4477 1 1 1h2c.5523 0 1-.44772 1-1s-.4477-1-1-1h-2Z" clip-rule="evenodd"/>
                         </x-activeIcons>
                         <span class="flex-1 ms-3 whitespace-nowrap">Instituto</span>
                      </x-nav-link>
+                     @endcan
+                     @can('admin-admin-seccion')
+                     <x-nav-link href="{{ route('seccion') }}" :active="request()->routeIs('seccion')"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                        <x-activeIcons :active="request()->routeIs('seccion')"
+                           class="flex-shrink-0 w-6 h-6"
+                           aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                           <path d="M16 10c0-.55228-.4477-1-1-1h-3v2h3c.5523 0 1-.4477 1-1Z"/>
+                           <path d="M13 15v-2h2c1.6569 0 3-1.3431 3-3 0-1.65685-1.3431-3-3-3h-2.256c.1658-.46917.256-.97405.256-1.5 0-.51464-.0864-1.0091-.2454-1.46967C12.8331 4.01052 12.9153 4 13 4h7c.5523 0 1 .44772 1 1v9c0 .5523-.4477 1-1 1h-2.5l1.9231 4.6154c.2124.5098-.0287 1.0953-.5385 1.3077-.5098.2124-1.0953-.0287-1.3077-.5385L15.75 16l-1.827 4.3846c-.1825.438-.6403.6776-1.0889.6018.1075-.3089.1659-.6408.1659-.9864v-2.6002L14 15h-1ZM6 5.5C6 4.11929 7.11929 3 8.5 3S11 4.11929 11 5.5 9.88071 8 8.5 8 6 6.88071 6 5.5Z"/>
+                           <path d="M15 11h-4v9c0 .5523-.4477 1-1 1-.55228 0-1-.4477-1-1v-4H8v4c0 .5523-.44772 1-1 1s-1-.4477-1-1v-6.6973l-1.16797 1.752c-.30635.4595-.92722.5837-1.38675.2773-.45952-.3063-.5837-.9272-.27735-1.3867l2.99228-4.48843c.09402-.14507.2246-.26423.37869-.34445.11427-.05949.24148-.09755.3763-.10887.03364-.00289.06747-.00408.10134-.00355H15c.5523 0 1 .44772 1 1 0 .5523-.4477 1-1 1Z"/>
+                        </x-activeIcons>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Sección</span>
+                     </x-nav-link>
+                     @endcan
                   </li>
 
                </ul>
             </li>
+            @endcan
 
             {{-- <div id="dropdown-cta" class="p-4 mt-6 rounded-lg bg-yellow-50 dark:bg-blue-900" role="alert">
                <div class="flex items-center mb-3">

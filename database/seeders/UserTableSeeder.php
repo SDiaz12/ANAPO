@@ -15,12 +15,12 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::create([
+        $user = User::updateOrCreate([
             'name' => 'root', 
             'email' => 'admin@gmail.com',
             'password' => bcrypt('12345678')
         ]);
-        $role = Role::create(['name' => 'root']);
+        $role = Role::firstOrCreate(['name' => 'root', 'guard_name' => 'web']);
          
         $permissions = Permission::pluck('id','id')->all();
        

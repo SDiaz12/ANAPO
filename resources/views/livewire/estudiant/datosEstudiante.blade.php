@@ -42,7 +42,7 @@
                 <li><span class="font-bold">Código:</span> @if ($codigo == null)
                     <span class="text-red-500">No asignado</span>
                 @else
-                    {{ $estudiante->codigo }}
+                    {{ $codigo }}
                 @endif</li>
                 <li><span class="font-bold">DNI:</span> {{$dni}}</li>
                 <li><span class="font-bold">Género:</span> {{$sexo}}</li>

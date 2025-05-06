@@ -66,19 +66,34 @@ class AsignaturaDocentes extends Component
     }
 
     public $inputSearchdocente = '';  
-    public $searchdocente= []; 
+    public $searchdocente= [];
 
     public function updatedInputSearchdocente()
     {
         $this->searchdocente = Docente::where('nombre', 'like', '%' . $this->inputSearchdocente . '%')
+            ->where('estado', 1) // Solo docentes activos
             ->limit(10)
             ->get();
     }
 
     public function selectdocente($id)
     {
+        $docente = Docente::find($id);
+
+        if (!$docente) {
+            session()->flash('error', 'Docente no encontrado.');
+            $this->searchdocente = [];
+            return;
+        }
+
+        if ($docente->estado != 1) {
+            session()->flash('error', 'Este docente no está activo y no puede ser seleccionado.');
+            $this->searchdocente = [];
+            return;
+        }
+
         $this->docente_id = $id;
-        $this->inputSearchdocente = Docente::find($id)->nombre;
+        $this->inputSearchdocente = $docente->nombre;
         $this->searchdocente = [];
     }
 
@@ -120,7 +135,6 @@ class AsignaturaDocentes extends Component
     }
 
     public $cantidad_materias; 
-
     public function updatedCantidadMaterias()
     {
         $cantidad = intval($this->cantidad_materias);
@@ -207,10 +221,23 @@ class AsignaturaDocentes extends Component
             ->orderBy('id', 'DESC')
             ->paginate($this->perPage);
 
-        $this->docentes = Docente::all();
-        $this->asignaturas = Asignatura::all();
-        $this->periodos = Periodo::all();
-        $this->secciones = Seccion::all();
+        $this->docentes = Docente::where('estado', 1)
+            ->orderBy('nombre', 'asc')
+            ->get();
+
+        $this->asignaturas = Asignatura::whereHas('asignaturaEstudiantesA', function ($q) {
+            $q->whereHas('periodo', function ($q2) {
+                $q2->where('estado', 1);
+            });
+        })->where('estado', 1)->get();
+
+        $this->periodos = Periodo::where('estado', 1)
+            ->orderBy('nombre', 'asc')
+            ->get();
+
+        $this->secciones = Seccion::where('estado', 1)
+            ->orderBy('nombre', 'asc')
+            ->get();
 
         return view('livewire.asignatura-docente.asignatura-docentes', [
             'asignaturasDocentes' => $asignaturasDocentes,

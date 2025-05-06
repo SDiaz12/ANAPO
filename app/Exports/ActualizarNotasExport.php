@@ -48,7 +48,7 @@ class ActualizarNotasExport  implements FromCollection, WithHeadings, WithStyles
                 $query->where('codigo', $this->codigo_docente);
             });
         })
-        ->with(['estudiante', 'asignaturadocente.asignatura', 'notas'])
+        ->with(['matricula.estudiante', 'asignaturadocente.asignatura', 'notas'])
         ->get()
         ->map(function ($item) {
             
@@ -56,9 +56,9 @@ class ActualizarNotasExport  implements FromCollection, WithHeadings, WithStyles
 
             return [
                 'asignatura_estudiante_id' => $item->id ?? 'Sin código',
-                'codigo_estudiante' => $item->estudiante->codigo ?? 'Sin código',
-                'nombre_estudiante' => $item->estudiante->nombre ?? 'Sin nombre',
-                'apellido_estudiante' => $item->estudiante->apellido ?? 'Sin apellido',
+                'codigo_estudiante' => $item->matricula->estudiante->codigo ?? 'Sin código',
+                'nombre_estudiante' => $item->matricula->estudiante->nombre ?? 'Sin nombre',
+                'apellido_estudiante' => $item->matricula->estudiante->apellido ?? 'Sin apellido',
                 'nombre_asignatura' => $item->asignaturadocente->asignatura->nombre ?? 'Sin nombre',
                 'primer_parcial' => $nota->primerparcial ?? 0,
                 'segundo_parcial' => $nota->segundoparcial ?? 0,

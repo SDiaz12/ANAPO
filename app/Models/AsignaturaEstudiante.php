@@ -21,7 +21,11 @@ class AsignaturaEstudiante extends Model
         return $this->belongsTo(AsignaturaDocente::class, 'asignatura_id');
     }
   
-
+    public function matricula()
+    {
+        return $this->belongsTo(Matricula::class, 'estudiantes_id');
+    }
+    
     public function notas()
     {
         return $this->hasOne(\App\Models\Nota::class, 'asignatura_estudiante_id');
@@ -37,14 +41,11 @@ class AsignaturaEstudiante extends Model
         return $this->belongsTo(Asignatura::class, 'asignatura_id');
     }
 
-    public function matricula()
-    {
-        return $this->hasOne(\App\Models\Matricula::class, 'estudiante_id', 'estudiantes_id');
-    }
 
     public function estudiante()
     {
         return $this->belongsTo(Estudiante::class, 'estudiantes_id');
     }
+    
    
 }

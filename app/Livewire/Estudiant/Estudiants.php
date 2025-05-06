@@ -6,6 +6,8 @@ use App\Models\AsignaturaEstudiante;
 use App\Models\Estudiante;
 use App\Models\Nota;
 use App\Models\Periodo;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -18,7 +20,7 @@ class Estudiants extends Component
     use WithPagination;
 
     public $search, $estudiante_id, $created_at, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado = 1;
-
+    public $password, $name, $user_id;
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
     public $isOpen = false;
@@ -133,6 +135,16 @@ class Estudiants extends Component
     public function store()
     {
         $this->validate([
+            'name' => [
+                'nullable',
+                'string',
+                'max:255'
+            ],
+            'password' => [
+                'nullable',
+                'string',
+                'min:8',
+            ],
             'codigo' => [
                 'required',
                 'string',
@@ -152,45 +164,72 @@ class Estudiants extends Component
             'residencia' => 'required|string|max:255',
             'sexo' => 'required',
             'telefono' => 'required',
-            'correo' => 'required',
-
+            'correo' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user_id],
         ]);
+
+        // Forzar un valor predeterminado para estado si está vacío
+        if (empty($this->estado)) {
+            $this->estado = 1; // Valor predeterminado
+        }
+
         // Manejo de archivo foto
         if ($this->foto) {
-            // Guardamos el archivo en la carpeta dentro de storage/app/public
             $this->foto = $this->foto->store('estudiantesFotos', 'public');
         } elseif ($this->estudiante_id) {
             $estudiante = Estudiante::findOrFail($this->estudiante_id);
             $this->foto = $estudiante->foto;
         }
-           
-            Estudiante::updateOrCreate(['id' => $this->estudiante_id], [
-            'codigo' => $this->codigo,
-            'dni' => $this->dni,
-            'foto' => $this->foto ? str_replace('public/', 'storage/', $this->foto) : null,
-            'nombre' => $this->nombre,
-            'apellido' => $this->apellido,
-            'fecha_nacimiento' => $this->fecha_nacimiento,
-            'residencia' => $this->residencia,
-            'fecha_ingreso' => now(),
-            'sexo' => $this->sexo,
-            'telefono' => $this->telefono,
-            'correo' => $this->correo,
-            'estado'         => $this->estado,
-        ]);
 
+        // Guardar o actualizar el usuario
+        $user = User::updateOrCreate(
+            ['id' => $this->user_id],
+            [
+                'name' => $this->name,
+                'email' => $this->correo,
+                'password' => bcrypt($this->password)
+            ]
+        );
+
+        // Asignar el ID del usuario al estudiante
+        $this->user_id = $user->id;
+
+        // Guardar o actualizar el estudiante
+        Estudiante::updateOrCreate(
+            ['id' => $this->estudiante_id],
+            [
+                'codigo' => $this->codigo,
+                'dni' => $this->dni,
+                'foto' => $this->foto ? str_replace('public/', 'storage/', $this->foto) : null,
+                'nombre' => $this->nombre,
+                'apellido' => $this->apellido,
+                'fecha_nacimiento' => $this->fecha_nacimiento,
+                'residencia' => $this->residencia,
+                'fecha_ingreso' => now(),
+                'sexo' => $this->sexo,
+                'telefono' => $this->telefono,
+                'correo' => $this->correo,
+                'user_id' => $this->user_id,
+                'estado' => $this->estado, 
+            ]
+        );
+        $user->assignRole('Estudiante');
+
+        // Mensaje de éxito
         session()->flash(
             'message',
             $this->estudiante_id ? 'Estudiante actualizado correctamente!' : 'Estudiante creado correctamente!'
         );
 
+        // Cerrar el modal y resetear los campos
         $this->closeModal();
         $this->resetInputFields();
     }
 
     public function edit($id)
     {
-        $estudiante = Estudiante::findOrFail($id);
+        $estudiante = Estudiante::with('user')->findOrFail($id); // Cargar el estudiante con su usuario relacionado
+
+        // Cargar los datos del estudiante en las propiedades del componente
         $this->estudiante_id = $id;
         $this->codigo = $estudiante->codigo;
         $this->dni = $estudiante->dni;
@@ -205,6 +244,18 @@ class Estudiants extends Component
         $this->correo = $estudiante->correo;
         $this->estado = $estudiante->estado;
 
+        // Cargar los datos del usuario relacionado
+        if ($estudiante->user) {
+            $this->user_id = $estudiante->user->id;
+            $this->name = $estudiante->user->name;
+            $this->password = ''; // No cargamos la contraseña por seguridad
+        } else {
+            $this->user_id = null;
+            $this->name = '';
+            $this->password = '';
+        }
+
+        // Abrir el modal de edición
         $this->openModal();
     }
 

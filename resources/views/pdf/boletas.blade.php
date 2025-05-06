@@ -81,7 +81,7 @@
     @if ($registro->notas)
     @php
         $nota = $registro->notas;
-        $estudiante = $registro->estudiante;
+        $estudiante = $registro->matricula->estudiante;
 
         $seccion = $registro->asignaturadocente->seccion->nombre ?? '';
         $periodo = $registro->asignaturadocente->periodo->nombre ?? '';

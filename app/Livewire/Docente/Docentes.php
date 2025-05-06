@@ -165,6 +165,7 @@ class Docentes extends Component
             'nombre' => 'required',
             'apellido' => 'required',
             'fecha_nacimiento' => 'required|date',
+            'fecha_ingreso' => 'nullable|date',
             'residencia' => 'required|string|max:255',
             'sexo' => 'required',
             'telefono' => 'required',
@@ -203,12 +204,12 @@ class Docentes extends Component
     
                     // Asignar rol si no tiene ninguno
                     if ($user && !$user->roles()->exists()) {
-                        $user->assignRole('docente');
+                        $user->assignRole('Docente');
                     }
                 } else {
                     // Modo creación
                     $user = User::create($userData);
-                    $user->assignRole('docente'); // Asignar rol automáticamente
+                    $user->assignRole('Docente'); // Asignar rol automáticamente
                 }
     
                 // Preparar datos del docente
@@ -220,7 +221,7 @@ class Docentes extends Component
                     'apellido' => $this->apellido,
                     'fecha_nacimiento' => $this->fecha_nacimiento,
                     'residencia' => $this->residencia,
-                    'fecha_ingreso' => $this->fecha_ingreso ?? now(),
+                    'fecha_ingreso' => (!empty($this->fecha_ingreso)) ? $this->fecha_ingreso : now(),
                     'sexo' => $this->sexo,
                     'telefono' => $this->telefono,
                     'correo' => $this->correo,
@@ -229,7 +230,15 @@ class Docentes extends Component
                 ];
     
                 // Crear o actualizar docente
-                Docente::updateOrCreate(['id' => $this->docente_id], $docenteData);
+                $docente = Docente::updateOrCreate(['id' => $this->docente_id], $docenteData);
+
+                // Para usuarios existentes
+                if ($user && !$user->roles()->exists()) {
+                    $user->assignRole('Docente');
+                }
+
+                // Para nuevos usuarios
+                $user->assignRole('Docente'); // Asignar rol automáticamente
             });
     
             // Mensaje de éxito

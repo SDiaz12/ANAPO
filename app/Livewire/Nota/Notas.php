@@ -71,7 +71,7 @@ class Notas extends Component
                 $query->where('codigo', $codigo_docente);
             });
         })
-        ->with(['estudiante', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
+        ->with(['matricula.estudiante', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
         ->get();
         
 
@@ -94,10 +94,10 @@ class Notas extends Component
             
             return [
                 'asignatura_estudiante_id' => $asignaturaEstudiante->id,
-                'id' => $asignaturaEstudiante->estudiante->id,
-                'codigo' => $asignaturaEstudiante->estudiante->codigo,
-                'nombre' => $asignaturaEstudiante->estudiante->nombre,
-                'apellido' => $asignaturaEstudiante->estudiante->apellido,
+                'id' => $asignaturaEstudiante->matricula->estudiante->id,
+                'codigo' => $asignaturaEstudiante->matricula->estudiante->codigo,
+                'nombre' => $asignaturaEstudiante->matricula->estudiante->nombre,
+                'apellido' => $asignaturaEstudiante->matricula->estudiante->apellido,
                 'docente' => $asignaturaEstudiante->asignaturadocente->docente->nombre ?? 'Sin docente',
             ];
         });
@@ -282,7 +282,7 @@ class Notas extends Component
             ->whereHas('docente', function ($q) use ($codigo_docente) {
                 $q->where('codigo', $codigo_docente);
             });
-        })->with('asignaturaEstudiante.estudiante')->get();
+        })->with('asignaturaEstudiante.matricula.estudiante')->get();
    
         if ($notas->isEmpty()) {
             session()->flash('error', 'No hay notas registradas para esta asignatura y docente.');
@@ -292,10 +292,10 @@ class Notas extends Component
         $this->estudiantes = $notas->map(function ($nota) {
             return [
                 'asignatura_estudiante_id' => $nota->asignatura_estudiante_id,
-                'id' => $nota->asignaturaEstudiante->estudiante->id,
-                'codigo' => $nota->asignaturaEstudiante->estudiante->codigo,
-                'nombre' => $nota->asignaturaEstudiante->estudiante->nombre,
-                'apellido' => $nota->asignaturaEstudiante->estudiante->apellido,
+                'id' => $nota->asignaturaEstudiante->matricula->estudiante->id,
+                'codigo' => $nota->asignaturaEstudiante->matricula->estudiante->codigo,
+                'nombre' => $nota->asignaturaEstudiante->matricula->estudiante->nombre,
+                'apellido' => $nota->asignaturaEstudiante->matricula->estudiante->apellido,
                 'id_nota' => $nota->id,  
                 'primerparcial' => $nota->primerparcial,
                 'segundoparcial' => $nota->segundoparcial,

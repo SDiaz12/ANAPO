@@ -11,20 +11,18 @@ class RolSeeder extends Seeder
 {
     public function run()
     {
-        // 1. Crear o actualizar permisos necesarios
-        Permission::firstOrCreate(['name' => 'admin-Notas', 'guard_name' => 'web']);
-        Permission::firstOrCreate(['name' => 'admin-Matricula', 'guard_name' => 'web']);
-
-        // 2. Crear rol de Estudiantes (como ya tenías)
+       
         $roleEstudiantes = Role::firstOrCreate(
-            ['name' => 'Estudiantes', 'guard_name' => 'web'],
-            ['name' => 'Estudiantes', 'guard_name' => 'web']
+            ['name' => 'Estudiante', 'guard_name' => 'web'],
+            ['name' => 'Estudiante', 'guard_name' => 'web']
         );
 
         $permisosEstudiantes = Permission::whereIn('name', [
-            'admin-Participante', 
-            'admin-Estudiante',
-            'admin-Historial'
+            'estudiante-admin-userestudiante', 
+            'estudiante-admin-dashboard',
+            'ver-dashboard-estudiante',
+            'estudiante-admin-notasestudiante',
+
         ])->get();
 
         if ($permisosEstudiantes->isNotEmpty()) {
@@ -33,13 +31,18 @@ class RolSeeder extends Seeder
 
         // 3. Crear rol de Docentes con sus permisos
         $roleDocentes = Role::firstOrCreate(
-            ['name' => 'docente', 'guard_name' => 'web'],
-            ['name' => 'docente', 'guard_name' => 'web']
+            ['name' => 'Docente', 'guard_name' => 'web'],
+            ['name' => 'Docente', 'guard_name' => 'web']
         );
 
         $permisosDocentes = Permission::whereIn('name', [
-            'admin-Notas',
-            'admin-Matricula'
+            'docente-admin-editarnotas',
+            'docente-admin-notasestudiante',
+            'ver-dashboard-docente',
+            'docente-admin-notas',
+            'docente-admin-importarnotas',
+            'docente-admin-actualizarnotas'
+
         ])->get();
 
         if ($permisosDocentes->isNotEmpty()) {
