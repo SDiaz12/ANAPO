@@ -71,7 +71,7 @@ class AsignaturaDocentes extends Component
     public function updatedInputSearchdocente()
     {
         $this->searchdocente = Docente::where('nombre', 'like', '%' . $this->inputSearchdocente . '%')
-            ->where('estado', 1) // Solo docentes activos
+            ->where('estado', 1) 
             ->limit(10)
             ->get();
     }
@@ -228,7 +228,7 @@ class AsignaturaDocentes extends Component
             ->orderBy('id', 'DESC')
             ->paginate($this->perPage);
     
-        // Obtener todas las asignaturas activas sin filtros adicionales
+       
         $this->asignaturas = Asignatura::where('estado', 1)
             ->orderBy('nombre', 'asc')
             ->get();

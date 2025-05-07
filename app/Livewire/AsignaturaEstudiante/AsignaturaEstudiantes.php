@@ -82,7 +82,7 @@ class AsignaturaEstudiantes extends Component
         $matricula = Matricula::find($this->matricula_id);
         $asignaturaDocente = AsignaturaDocente::with(['asignatura.requisitos'])->find($this->asignaturadocente_id);
     
-        // Verificar que la asignatura pertenece al programa del estudiante
+        
         if ($asignaturaDocente->asignatura->programa_formacion_id != $matricula->programaformacion_id) {
             $this->error = 'La asignatura no pertenece al programa de formación del estudiante.';
             return;
@@ -98,7 +98,7 @@ class AsignaturaEstudiantes extends Component
                     ->whereHas('notas', function($query) {
                         $query->where('estado', 1)
                             ->where(function($q) {
-                                // Considera aprobado si el promedio es >= 6.0 o si aprobó recuperación
+                                
                                 $q->whereRaw('(primerparcial + segundoparcial + tercerparcial) / 3 >= 70.0')
                                   ->orWhere('recuperacion', '>=', 70.0);
                             });
@@ -111,8 +111,7 @@ class AsignaturaEstudiantes extends Component
                 }
             }
         }
-    
-        // Verificar si ya está matriculado
+
         if (!$this->asignaturaestudiante_id) {
             $existente = AsignaturaEstudiante::where('estudiantes_id', $this->matricula_id)
                 ->where('asignatura_id', $this->asignaturadocente_id)
