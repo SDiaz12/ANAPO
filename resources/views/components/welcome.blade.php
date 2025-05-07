@@ -6,7 +6,7 @@
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-yellow-600"> Bienvenid@ <br><span>{{Auth::user()->name}}</span> </span>
                 </h1>
                 <p class="mt-5 text-base dark:text-white text-gray-800 sm:text-xl">Estás en la plataforma oficial de la Academia Nacional de Policias, aquí puedrás revisar tu informacion.</p>
-
+                @can('estudiante-admin-userestudiante')
                 @if(Auth::user()->estudiante && Auth::user()->estudiante->asignaturaEstudiantes->isNotEmpty())
                     <a href="{{ route('notasEstudiante', ['asignaturaEstudianteId' => Auth::user()->estudiante->asignaturaEstudiantes->first()->id]) }}"
                         class="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-red-600 rounded-lg sm:mt-16 hover:bg-red-700 focus:bg-red-700">
@@ -38,7 +38,7 @@
                         </svg> -->
                     </button>
                 @endif
-
+                @endcan
             </div>
         </div>
     </section>
