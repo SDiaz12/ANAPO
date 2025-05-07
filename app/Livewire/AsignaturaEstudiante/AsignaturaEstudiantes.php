@@ -72,20 +72,44 @@ class AsignaturaEstudiantes extends Component
             'matricula_id' => 'required|integer|exists:matriculas,id',
             'asignaturadocente_id' => 'required|integer|exists:asignaturadocentes,id',
         ]);
-
+    
         $periodoActivo = Periodo::where('estado', 1)->first();
         if (!$periodoActivo) {
             $this->error = 'No hay período activo.';
             return;
         }
-
+    
         $matricula = Matricula::find($this->matricula_id);
-        $asignaturaDocente = AsignaturaDocente::with('asignatura')->find($this->asignaturadocente_id);
-
+        $asignaturaDocente = AsignaturaDocente::with(['asignatura.requisitos'])->find($this->asignaturadocente_id);
+    
         // Verificar que la asignatura pertenece al programa del estudiante
         if ($asignaturaDocente->asignatura->programa_formacion_id != $matricula->programaformacion_id) {
             $this->error = 'La asignatura no pertenece al programa de formación del estudiante.';
             return;
+        }
+    
+        // Verificar requisitos previos
+        if ($asignaturaDocente->asignatura->requisitos->isNotEmpty()) {
+            foreach ($asignaturaDocente->asignatura->requisitos as $requisito) {
+                $requisitoAprobado = AsignaturaEstudiante::where('estudiantes_id', $this->matricula_id)
+                    ->whereHas('asignaturaDocente.asignatura', function($query) use ($requisito) {
+                        $query->where('id', $requisito->id);
+                    })
+                    ->whereHas('notas', function($query) {
+                        $query->where('estado', 1)
+                            ->where(function($q) {
+                                // Considera aprobado si el promedio es >= 6.0 o si aprobó recuperación
+                                $q->whereRaw('(primerparcial + segundoparcial + tercerparcial) / 3 >= 70.0')
+                                  ->orWhere('recuperacion', '>=', 70.0);
+                            });
+                    })
+                    ->exists();
+    
+                if (!$requisitoAprobado) {
+                    $this->error = "El estudiante no ha aprobado el requisito previo: {$requisito->nombre}";
+                    return;
+                }
+            }
         }
     
         // Verificar si ya está matriculado

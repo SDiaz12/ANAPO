@@ -73,26 +73,12 @@
                     @endif
                 </div>
 
-                <!-- Estado -->
-                <div class="mb-4">
-                    <label for="estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Estado
-                    </label>
-                    <select wire:model="estado" id="estado"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                </div>
-
-                <!-- Mensaje de error -->
                 @if ($error)
                     <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                         {{ $error }}
                     </div>
                 @endif
 
-                <!-- Botón de Enviar -->
                 <div class="flex justify-center">
                     <x-button wire:click.prevent="store()">
                         {{ $asignaturaestudiante_id ? 'Actualizar matrícula' : 'Crear matrícula' }}

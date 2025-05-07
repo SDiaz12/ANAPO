@@ -216,29 +216,35 @@ class AsignaturaDocentes extends Component
     public function render()
     {
         $asignaturasDocentes = AsignaturaDocente::with('docente', 'asignatura', 'periodo', 'seccion')
-            ->where('docente_id', 'like', '%' . $this->search . '%')
-            ->orWhere('asignatura_id', 'like', '%' . $this->search . '%')
+            ->where(function($query) {
+                $query->whereHas('docente', function($q) {
+                    $q->where('nombre', 'like', '%' . $this->search . '%');
+                })
+                ->orWhereHas('asignatura', function($q) {
+                    $q->where('nombre', 'like', '%' . $this->search . '%')
+                      ->orWhere('codigo', 'like', '%' . $this->search . '%');
+                });
+            })
             ->orderBy('id', 'DESC')
             ->paginate($this->perPage);
-
+    
+        // Obtener todas las asignaturas activas sin filtros adicionales
+        $this->asignaturas = Asignatura::where('estado', 1)
+            ->orderBy('nombre', 'asc')
+            ->get();
+    
         $this->docentes = Docente::where('estado', 1)
             ->orderBy('nombre', 'asc')
             ->get();
-
-        $this->asignaturas = Asignatura::whereHas('asignaturaEstudiantesA', function ($q) {
-            $q->whereHas('periodo', function ($q2) {
-                $q2->where('estado', 1);
-            });
-        })->where('estado', 1)->get();
-
+    
         $this->periodos = Periodo::where('estado', 1)
             ->orderBy('nombre', 'asc')
             ->get();
-
+    
         $this->secciones = Seccion::where('estado', 1)
             ->orderBy('nombre', 'asc')
             ->get();
-
+    
         return view('livewire.asignatura-docente.asignatura-docentes', [
             'asignaturasDocentes' => $asignaturasDocentes,
         ])->layout('layouts.app');
