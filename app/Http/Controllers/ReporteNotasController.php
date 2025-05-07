@@ -10,7 +10,7 @@ class ReporteNotasController extends Controller
 {
     public function cuadro($codigo_asignatura, $codigo_docente)
     {
-        $datos = AsignaturaEstudiante::with(['estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
+        $datos = AsignaturaEstudiante::with(['matricula.estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
             ->whereHas('asignaturadocente.asignatura', function ($q) use ($codigo_asignatura) {
                 $q->where('codigo', $codigo_asignatura);
             })
@@ -26,7 +26,7 @@ class ReporteNotasController extends Controller
     
     public function boletas($codigo_asignatura, $codigo_docente)
     {
-        $datos = AsignaturaEstudiante::with(['estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
+        $datos = AsignaturaEstudiante::with(['matricula.estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
             ->whereHas('asignaturadocente.asignatura', function ($q) use ($codigo_asignatura) {
                 $q->where('codigo', $codigo_asignatura);
             })

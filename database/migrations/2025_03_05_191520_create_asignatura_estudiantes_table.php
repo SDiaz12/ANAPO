@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('asignatura_estudiantes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('asignatura_id')->constrained('asignaturadocentes')->onDelete('cascade');
-            $table->foreignId('estudiantes_id')->constrained('estudiantes')->onDelete('cascade'); 
+            $table->foreignId('estudiantes_id')->constrained('matriculas')->onDelete('cascade'); 
             $table->foreignId('periodo_id')->constrained('periodos')->onDelete('cascade');
-            $table->integer( 'estado');
+            $table->integer( 'estado')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

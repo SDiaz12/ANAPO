@@ -4,13 +4,14 @@
             <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
 
+        <!-- This element is to trick the browser into centering the modal contents. -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
 
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full dark:bg-gray-900"
             role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <div class="flex justify-between items-center p-4 md:p-5 mb-1 rounded-t border-b dark:border-gray-600">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {{ $asignaturaestudiante_id ? 'Editar matricula de asignatura' : 'Matricular Asignatura' }}
+                    {{ $asignaturaestudiante_id ? 'Editar matrícula' : 'Matricular estudiante' }}
                 </h3>
                 <button wire:click="closeModal()" type="button"
                     class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -25,55 +26,62 @@
             </div>
 
             <form class="p-4 md:p-5">
-                <div>
-                    <div class="mb-4">
-                        <label for="inputSearchEstudiante" class="mb-3 block text-base font-medium text-gray-700 dark:text-white">
-                            Estudiante:
-                        </label>
-                        <input wire:model.live="inputSearchEstudiante" type="text" id="inputSearchEstudiante"
-                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                            placeholder="Buscar estudiante por nombre, DNI o código" autocomplete="off">
-                        @error('inputSearchEstudiante') <span class="text-red-500">{{ $message }}</span> @enderror
-
-                        @if(!empty($searchEstudiante))
-                            <ul class="mt-2 bg-white border border-gray-700 rounded-lg shadow-lg dark:bg-gray-800">
-                                @forelse($searchEstudiante as $estudiante)
-                                    <li wire:click="selectEstudiante({{ $estudiante->id }})"
-                                        class="p-2 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white">
-                                        {{ $estudiante->nombre }} {{ $estudiante->apellido }}
-                                    </li>
-                                @empty
-                                    <li class="p-2 dark:text-white">No se encontró "{{ $inputSearchEstudiante }}". Tienes que matricular para poder asignar clases</li>
-                                @endforelse
-                            </ul>
-                        @endif
-                    </div>
-                    <div class="mb-4">
-                        <label for="asignatura_id" class="block text-gray-700 text-sm font-bold mb-2 dark:text-white">
-                            Asignatura:
-                        </label>
-                        <select id="asignatura_id"
-                            class="shadow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
-                            wire:model.live="asignatura_id">
-                            <option value="">Seleccione Asignatura</option>
-                            @forelse($asignaturas as $asignatura)
-                                <option value="{{ $asignatura->id }}">{{ $asignatura->nombre }}</option>
+                <!-- Buscador de Estudiante -->
+                <div class="mb-4">
+                    <label for="inputSearchEstudiante" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Buscar Estudiante
+                    </label>
+                    <input wire:model.live="inputSearchEstudiante" type="text" id="inputSearchEstudiante"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                        placeholder="Nombre, apellido o código del estudiante">
+                    
+                    @if(!empty($searchEstudiante))
+                        <ul class="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800">
+                            @forelse($searchEstudiante as $matricula)
+                                <li wire:click="selectEstudiante({{ $matricula->id }})"
+                                    class="p-2 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white">
+                                    {{ $matricula->estudiante->nombre }} {{ $matricula->estudiante->apellido }} - {{ $matricula->estudiante->dni }}- {{ $matricula->programaformacion->nombre }}
+                                </li>
                             @empty
-                                <option value="">No hay clases en este periodo</option>
+                                <li class="p-2 dark:text-white">No se encontraron estudiantes</li>
                             @endforelse
-                        </select>
-                        @error('asignatura_id')
-                            <span class="text-red-500">{{ $message }}</span>
-                        @enderror
-                        @if ($error)
-                            <p class="text-red-500 text-sm mt-2">{{ $error }}</p>
-                        @endif
-                    </div>
+                        </ul>
+                    @endif
                 </div>
+
+                <!-- Buscador de Asignatura -->
+                <div class="mb-4">
+                    <label for="inputSearchAsignatura" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Buscar Asignatura
+                    </label>
+                    <input wire:model.live="inputSearchAsignatura" type="text" id="inputSearchAsignatura"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                        placeholder="Nombre o código de la asignatura"
+                        {{ !$matricula_id ? 'disabled' : '' }}>
+                    
+                    @if(!empty($searchAsignatura))
+                        <ul class="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800">
+                            @forelse($searchAsignatura as $asignaturaDocente)
+                                <li wire:click="selectAsignatura({{ $asignaturaDocente->id }})"
+                                    class="p-2 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white">
+                                    {{ $asignaturaDocente->asignatura->nombre }} ({{ $asignaturaDocente->asignatura->codigo }}) - {{ $asignaturaDocente->docente->nombre }}- {{ $asignaturaDocente->asignatura->programaformacion->nombre }}
+                                </li>
+                            @empty
+                                <li class="p-2 dark:text-white">No se encontraron asignaturas</li>
+                            @endforelse
+                        </ul>
+                    @endif
+                </div>
+
+                @if ($error)
+                    <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                        {{ $error }}
+                    </div>
+                @endif
 
                 <div class="flex justify-center">
                     <x-button wire:click.prevent="store()">
-                        {{ $asignaturaestudiante_id ? 'Editar matricula de asignatura' : 'Matricular Asignatura' }}
+                        {{ $asignaturaestudiante_id ? 'Actualizar matrícula' : 'Crear matrícula' }}
                     </x-button>
                 </div>
             </form>
