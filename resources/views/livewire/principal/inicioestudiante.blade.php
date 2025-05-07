@@ -1,1 +1,1 @@
-<div>DASHBOARD DE ESTUDIANTES</div>
+<div class="text-xl font-semibold text-gray-900 dark:text-white">DASHBOARD DE ESTUDIANTES</div>

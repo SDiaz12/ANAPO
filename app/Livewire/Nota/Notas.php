@@ -82,7 +82,7 @@ class Notas extends Component
 
    
         $this->estudiantes = $asignaturaEstudiantes->map(function ($asignaturaEstudiante) {
-            $this->notas[$asignaturaEstudiante->estudiante->id] = [
+            $this->notas[$asignaturaEstudiante->matricula->estudiante->id] = [
                 'asignatura_estudiante_id' => $asignaturaEstudiante->id,
                 'primerparcial' => null,
                 'segundoparcial' => null,

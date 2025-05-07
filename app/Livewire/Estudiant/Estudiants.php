@@ -64,14 +64,12 @@ class Estudiants extends Component
 
     public function historialAsignaturasEstudiante($idEstudiante)
     {
-        // Clases con período activo usando la relación "periodo"
         $this->clasesEstudiante = AsignaturaEstudiante::where('estudiantes_id', $idEstudiante)
             ->whereHas('periodo', function ($query) {
                 $query->where('estado', true);
             })
             ->get();
 
-        // Clases con períodos históricos (inactivos)
         $this->clasesHistorial = AsignaturaEstudiante::where('estudiantes_id', $idEstudiante)
             ->whereHas('periodo', function ($query) {
                 $query->where('estado', false);
@@ -100,11 +98,8 @@ class Estudiants extends Component
 
     public function mostrarDatos($idEstudiante)
     {
-        // Obtenemos las asignaturas del estudiante
         $this->historialAsignaturasEstudiante($idEstudiante);
-        // Obtenemos los datos del estudiante
         $this->infoEstudiante($idEstudiante);
-        // Mostramos el modal
         $this->openDatos();
     }
 
@@ -167,9 +162,9 @@ class Estudiants extends Component
             'correo' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user_id],
         ]);
 
-        // Forzar un valor predeterminado para estado si está vacío
+      
         if (empty($this->estado)) {
-            $this->estado = 1; // Valor predeterminado
+            $this->estado = 1; 
         }
 
         // Manejo de archivo foto
@@ -180,7 +175,7 @@ class Estudiants extends Component
             $this->foto = $estudiante->foto;
         }
 
-        // Guardar o actualizar el usuario
+     
         $user = User::updateOrCreate(
             ['id' => $this->user_id],
             [
@@ -190,10 +185,9 @@ class Estudiants extends Component
             ]
         );
 
-        // Asignar el ID del usuario al estudiante
         $this->user_id = $user->id;
 
-        // Guardar o actualizar el estudiante
+        
         Estudiante::updateOrCreate(
             ['id' => $this->estudiante_id],
             [
@@ -214,26 +208,26 @@ class Estudiants extends Component
         );
         $user->assignRole('Estudiante');
 
-        // Mensaje de éxito
+      
         session()->flash(
             'message',
             $this->estudiante_id ? 'Estudiante actualizado correctamente!' : 'Estudiante creado correctamente!'
         );
 
-        // Cerrar el modal y resetear los campos
+        
         $this->closeModal();
         $this->resetInputFields();
     }
 
     public function edit($id)
     {
-        $estudiante = Estudiante::with('user')->findOrFail($id); // Cargar el estudiante con su usuario relacionado
+        $estudiante = Estudiante::with('user')->findOrFail($id);
 
-        // Cargar los datos del estudiante en las propiedades del componente
+       
         $this->estudiante_id = $id;
         $this->codigo = $estudiante->codigo;
         $this->dni = $estudiante->dni;
-        $this->foto = $estudiante->foto;
+        $this->foto = null;
         $this->nombre = $estudiante->nombre;
         $this->apellido = $estudiante->apellido;
         $this->fecha_nacimiento = $estudiante->fecha_nacimiento;
@@ -244,18 +238,18 @@ class Estudiants extends Component
         $this->correo = $estudiante->correo;
         $this->estado = $estudiante->estado;
 
-        // Cargar los datos del usuario relacionado
+     
         if ($estudiante->user) {
             $this->user_id = $estudiante->user->id;
-            $this->name = $estudiante->user->name;
-            $this->password = ''; // No cargamos la contraseña por seguridad
+            $this->name = null;
+            $this->password = ''; 
         } else {
             $this->user_id = null;
             $this->name = '';
             $this->password = '';
         }
 
-        // Abrir el modal de edición
+      
         $this->openModal();
     }
 

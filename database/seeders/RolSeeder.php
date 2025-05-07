@@ -41,7 +41,8 @@ class RolSeeder extends Seeder
             'ver-dashboard-docente',
             'docente-admin-notas',
             'docente-admin-importarnotas',
-            'docente-admin-actualizarnotas'
+            'docente-admin-actualizarnotas',
+            'estudiante-admin-dashboard'
 
         ])->get();
 

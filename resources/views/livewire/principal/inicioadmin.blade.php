@@ -126,7 +126,7 @@
                                             <img class="w-9 h-9 rounded-full object-cover"
                                                 alt="{{$matricula->estudiante->nombre}}"
                                                 src="{{ asset('storage/' . $matricula->estudiante->foto) }}">
-                                        @else 
+                                        @else
                                             <img class="w-9 h-9 rounded-full object-cover"
                                                 alt="{{$matricula->estudiante->nombre}}"
                                                 src="https://ui-avatars.com/api/?name={{ $matricula->estudiante->nombre }}&amp;color=000&amp;background=#dc2626">

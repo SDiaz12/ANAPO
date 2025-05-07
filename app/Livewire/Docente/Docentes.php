@@ -181,38 +181,31 @@ class Docentes extends Component
     
         try {
             DB::transaction(function () use ($fotoPath) {
-                // Preparar datos del usuario
                 $userData = [
                     'name' => $this->nombre . ' ' . $this->apellido,
                     'email' => $this->user_email,
                     'active' => $this->estado,
                 ];
     
-                // Solo actualizar password si se proporcionó
                 if ($this->user_password) {
                     $userData['password'] = Hash::make($this->user_password);
                 }
-    
-                // Gestionar usuario (crear o actualizar)
+
                 if ($this->docente_id) {
-                    // Modo edición
                     $docente = Docente::findOrFail($this->docente_id);
                     $user = User::updateOrCreate(
                         ['id' => $docente->user_id],
                         $userData
                     );
-    
-                    // Asignar rol si no tiene ninguno
                     if ($user && !$user->roles()->exists()) {
                         $user->assignRole('Docente');
                     }
                 } else {
-                    // Modo creación
+                   
                     $user = User::create($userData);
-                    $user->assignRole('Docente'); // Asignar rol automáticamente
+                    $user->assignRole('Docente'); 
                 }
     
-                // Preparar datos del docente
                 $docenteData = [
                     'codigo' => $this->codigo,
                     'dni' => $this->dni,
@@ -229,19 +222,18 @@ class Docentes extends Component
                     'user_id' => $user->id,
                 ];
     
-                // Crear o actualizar docente
+        
                 $docente = Docente::updateOrCreate(['id' => $this->docente_id], $docenteData);
 
-                // Para usuarios existentes
+             
                 if ($user && !$user->roles()->exists()) {
                     $user->assignRole('Docente');
                 }
 
-                // Para nuevos usuarios
-                $user->assignRole('Docente'); // Asignar rol automáticamente
+                $user->assignRole('Docente'); 
             });
     
-            // Mensaje de éxito
+      
             session()->flash(
                 'message',
                 $this->docente_id 
@@ -253,7 +245,7 @@ class Docentes extends Component
             $this->resetInputFields();
     
         } catch (\Exception $e) {
-            // Manejo de errores
+
             session()->flash('error', 'Error al guardar: ' . $e->getMessage());
             \Log::error('Error en Docentes@store', ['error' => $e->getMessage(), 'trace' => $e->getTrace()]);
         }
@@ -264,7 +256,7 @@ class Docentes extends Component
         $this->docente_id = $id;
         $this->codigo = $docente->codigo;
         $this->dni = $docente->dni;
-        $this->foto = $docente->foto;
+        $this->foto = null;
         $this->nombre = $docente->nombre;
         $this->apellido = $docente->apellido;
         $this->fecha_nacimiento = $docente->fecha_nacimiento;
@@ -275,7 +267,7 @@ class Docentes extends Component
         $this->correo = $docente->correo;
         $this->estado = $docente->estado;
         
-        // Datos del usuario
+
         if ($docente->user) {
             $this->user_email = $docente->user->email;
         }
@@ -294,7 +286,6 @@ class Docentes extends Component
                 return;
             }
 
-            // Eliminar el usuario asociado si existe
             if ($docente->user_id) {
                 User::find($docente->user_id)->delete();
             }
