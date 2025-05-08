@@ -86,7 +86,7 @@
         $seccion = $registro->asignaturadocente->seccion->nombre ?? '';
         $periodo = $registro->asignaturadocente->periodo->nombre ?? '';
         $promedio = round(($nota->primerparcial + $nota->segundoparcial + $nota->tercerparcial) / 3, 2);
-        $totalAsistencias = $nota->asistencia1 + $nota->asistencia2 + $nota->asistencia3;
+        $totalAsistencias = $nota->asistencia;
     @endphp
 
     <div class="boleta">
@@ -107,35 +107,48 @@
                 </td>
             </tr>
         </table>
-        <table>
+        <table class="w-full border border-gray-200 dark:border-gray-700">
             <thead>
                 <tr>
-                    <th>Parcial</th>
-                    <th>{{ $registro->asignaturadocente->asignatura->nombre ?? 'Materia' }}</th>
-                    <th>Asistencia</th>
+                    <th class="px-4 py-2 border">Parcial</th>
+                    <th class="px-4 py-2 border">{{ $registro->asignaturadocente->asignatura->nombre ?? 'Materia' }}</th>
+                    <th class="px-4 py-2 border">Asistencia</th>
                 </tr>
             </thead>
             <tbody>
+              
                 <tr>
-                    <td>I Parcial</td>
-                    <td>{{ $nota->primerparcial }}</td>
-                    <td>{{ $nota->asistencia1 }}</td>
+                    <td class="px-4 py-2 border">I Parcial</td>
+                    <td class="px-4 py-2 border">{{ $nota->primerparcial ?? 'N/A' }}</td>
+                    <td class="px-4 py-2 border" rowspan="4">
+                        {{ $nota->asistencia ?? 'N/A' }} %
+                        @if($nota && $nota->asistencia)
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1 dark:bg-gray-700">
+                                <div class="bg-blue-600 h-2.5 rounded-full" 
+                                    style="width: {{ $nota->asistencia }}%"></div>
+                            </div>
+                        @endif
+                    </td>
                 </tr>
+                
+             
                 <tr>
-                    <td>II Parcial</td>
-                    <td>{{ $nota->segundoparcial }}</td>
-                    <td>{{ $nota->asistencia2 }}</td>
+                    <td class="px-4 py-2 border">II Parcial</td>
+                    <td class="px-4 py-2 border">{{ $nota->segundoparcial ?? 'N/A' }}</td>
                 </tr>
+                
+
                 <tr>
-                    <td>III Parcial</td>
-                    <td>{{ $nota->tercerparcial }}</td>
-                    <td>{{ $nota->asistencia3 }}</td>
+                    <td class="px-4 py-2 border">III Parcial</td>
+                    <td class="px-4 py-2 border">{{ $nota->tercerparcial ?? 'N/A' }}</td>
                 </tr>
+                
+             
                 <tr>
-                    <th>Promedio</th>
-                    <td>{{ $promedio }}</td>
-                    <td>{{ $totalAsistencias }}</td>
+                    <td class="px-4 py-2 border">Promedio</td>
+                    <td class="px-4 py-2 border">{{ $promedio ?? 'N/A' }}</td>
                 </tr>
+                
             </tbody>
         </table>
 

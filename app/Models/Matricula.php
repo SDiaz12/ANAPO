@@ -52,5 +52,9 @@ class Matricula extends BaseModel
     {
         return $this->belongsTo(Instituto::class, 'instituto_id');
     }
+    public function instituto()
+    {
+        return $this->belongsTo(Instituto::class, 'instituto_id');
+    }
 
 }

@@ -7,37 +7,37 @@
                 </h1>
                 <p class="mt-5 text-base dark:text-white text-gray-800 sm:text-xl">Estás en la plataforma oficial de la Academia Nacional de Policias, aquí puedrás revisar tu informacion.</p>
                 @can('estudiante-admin-userestudiante')
-                @if(Auth::user()->estudiante && Auth::user()->estudiante->asignaturaEstudiantes->isNotEmpty())
-                    <a href="{{ route('notasEstudiante', ['asignaturaEstudianteId' => Auth::user()->estudiante->asignaturaEstudiantes->first()->id]) }}"
-                        class="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-red-600 rounded-lg sm:mt-16 hover:bg-red-700 focus:bg-red-700">
-                        Ver calificaciones
-                        <svg class="w-6 h-6 ml-8 -mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </a>
-                @elseif(Auth::user()->estudiante == null)
-                <a href="{{ route('userEstudiante') }}"
-                    class="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-red-600 rounded-lg sm:mt-16 hover:bg-red-700 focus:bg-red-700">
-                    Registrar tus datos de estudiante
-                    <svg class="w-6 h-6 ml-8 -mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </a>
-                @else
-                    <button
-                        class="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-red-600 rounded-lg sm:mt-16 hover:bg-red-700 focus:bg-red-700">
-                        Esperando matricula
-                       <!-- <svg class="w-6 h-6 ml-8 -mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg> -->
-                    </button>
-                @endif
+                    @php
+                        $tieneMatricula = Auth::user()->estudiante && 
+                                        Auth::user()->estudiante->matriculas()->exists();
+                    @endphp
+
+                    @if(Auth::user()->estudiante && $tieneMatricula)
+                        <a href="{{ route('notasEstudiante', ['asignaturaEstudianteId' => Auth::user()->estudiante->asignaturaEstudiantes->first()->id ?? 0]) }}"
+                            class="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-red-600 rounded-lg sm:mt-16 hover:bg-red-700 focus:bg-red-700">
+                            Ver calificaciones
+                            <svg class="w-6 h-6 ml-8 -mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </a>
+                    @elseif(Auth::user()->estudiante == null)
+                        <a href="{{ route('userEstudiante') }}"
+                            class="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-red-600 rounded-lg sm:mt-16 hover:bg-red-700 focus:bg-red-700">
+                            Registrar tus datos de estudiante
+                            <svg class="w-6 h-6 ml-8 -mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </a>
+                    @else
+                        <button
+                            class="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-red-600 rounded-lg sm:mt-16 hover:bg-red-700 focus:bg-red-700">
+                            Esperando matrícula
+                        </button>
+                    @endif
                 @endcan
             </div>
         </div>

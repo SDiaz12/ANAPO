@@ -54,7 +54,9 @@ Route::middleware([
     Route::get('/notasEstudiante/{asignaturaEstudianteId}', VistaNotaEstudiantes::class)
     ->name('notasEstudiante')
     ->middleware('can:estudiante-admin-notasestudiante');
-    
+    Route::get('/descargar-historial/{matriculaId}', [App\Http\Controllers\PDFController::class, 'generarHistorial'])
+     ->name('descargarHistorial')
+     ->middleware('auth');
     Route::get('/rol', Roles::class)
     ->name('rol')
     ->middleware('can:admin-admin-rol');
