@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <title>Historial Académico</title>
     <style>
-        body { font-family: Arial, sans-serif; }
+        body { font-family: Arial, sans-serif; font-size: 12px; }
         .header { text-align: center; margin-bottom: 20px; }
         .student-info { margin-bottom: 30px; }
-        table { width: 100%; border-collapse: collapse; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .signature { margin-top: 50px; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .signature { 
+            margin-top: 50px; 
+            text-align: center; 
+            width: 100%;
+        }
+        .indices { margin: 15px 0; }
+        .indices span { margin-right: 20px; }
     </style>
 </head>
 <body>
@@ -24,7 +30,11 @@
         <p><strong>Código:</strong> {{ $estudiante->codigo }}</p>
         <p><strong>Programa:</strong> {{ $matricula->programaFormacion->nombre }}</p>
         <p><strong>Fecha de Generación:</strong> {{ now()->format('d/m/Y') }}</p>
-        <p><strong>Índice Global:</strong> {{ number_format($globalIndice, 2) }}</p>
+    </div>
+
+    <div class="indices">
+        <span><strong>Índice Global:</strong> {{ number_format($globalIndice, 2) }}</span>
+       
     </div>
 
     <table>
@@ -33,9 +43,11 @@
                 <th>Código</th>
                 <th>Asignatura</th>
                 <th>UV</th>
+                <th>Sección</th>
                 <th>Periodo</th>
                 <th>Año</th>
                 <th>Nota Final</th>
+                <th>Observación</th>
             </tr>
         </thead>
         <tbody>
@@ -43,22 +55,26 @@
             @php
                 $nota = $asignatura->notas;
                 $promedio = $nota ? round(($nota->primerparcial + $nota->segundoparcial + $nota->tercerparcial) / 3, 2) : 0;
+                $observacion = $nota->observacion ?? ($promedio >= 70 ? 'Aprobado' : ($promedio > 0 ? 'Reprobado' : 'En curso'));
             @endphp
             <tr>
-                <td>{{ $asignatura->asignatura->codigo }}</td>
-                <td>{{ $asignatura->asignatura->nombre }}</td>
-                <td>{{ $asignatura->asignatura->creditos }}</td>
-                <td>{{ $asignatura->periodo->nombre ?? 'N/A' }}</td>
-                <td>{{ $asignatura->periodo ? \Carbon\Carbon::parse($asignatura->periodo->fecha_inicio)->format('Y') : 'N/A' }}</td>
-                <td>{{ $promedio }}</td>
+                <td>{{ $asignatura->asignaturaDocente->asignatura->codigo ?? '' }}</td>
+                <td>{{ $asignatura->asignaturaDocente->asignatura->nombre ?? '' }}</td>
+                <td>{{ $asignatura->asignaturaDocente->asignatura->creditos ?? 0 }}</td>
+                <td>{{ $asignatura->asignaturaDocente->seccion->nombre ?? '' }}</td>
+                <td>{{ $asignatura->asignaturaDocente->periodo->nombre ?? '' }}</td>
+                <td>{{ $asignatura->asignaturaDocente->periodo ? \Carbon\Carbon::parse($asignatura->asignaturaDocente->periodo->fecha_inicio)->format('Y') : '' }}</td>
+                <td>{{ $promedio > 0 ? $promedio : 'N/A' }}</td>
+                <td>{{ $observacion }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
-    <div class="signature">
+
+     <div class="signature">
         <p>_________________________</p>
-        <p>F/S Departamento Académico</p>
+        <p>Firma y Sello</p>
+        <p>Departamento Académico</p>
     </div>
-   
 </body>
 </html>

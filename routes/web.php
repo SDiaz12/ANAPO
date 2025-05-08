@@ -55,9 +55,11 @@ Route::middleware([
     Route::get('/notasEstudiante/{asignaturaEstudianteId}', VistaNotaEstudiantes::class)
     ->name('notasEstudiante')
     ->middleware('can:estudiante-admin-notasestudiante');
+    
     Route::get('/matricula-asignaturas', MatriculaAsignaturas::class)
     ->name('matricula-asignaturas')
-    ->middleware('can:estudiante-admin-notasestudiante');
+    ->middleware('can:estudiante-admin-matricularasignatura');
+
     Route::get('/descargar-historial/{matriculaId}', [App\Http\Controllers\PDFController::class, 'generarHistorial'])
      ->name('descargarHistorial')
      ->middleware('auth');
