@@ -45,10 +45,11 @@
         
             <div class="sm:ml-16 mt-4 sm:mt-0">
                 <ul class="space-y-1 text-gray-700 grid lg:grid-cols-1 grid-cols-2 dark:text-gray-300">
-                    <li><span class="font-bold">Indice Global:</span> {{ number_format($globalIndice, 2) }}</li>
-                    @if(isset($periodIndice) && is_array($periodIndice) && count($periodIndice) > 0)
-                        <li><span class="font-bold">Indice Periodo:</span> {{ number_format(array_values($periodIndice)[0], 2) }}</li>
-                    @endif
+                    <li>
+                        <span class="font-bold">Índice Global:</span> 
+                        {{ number_format($globalIndice, 2) }} <!-- 92.52 -->
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -81,15 +82,15 @@
                             @endphp
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-6 py-4">{{ $asignatura->asignatura->codigo ?? '' }}</td>
-                                <td class="px-6 py-4">{{ $asignatura->asignatura->nombre ?? '' }}</td>
-                                <td class="px-6 py-4">{{ $asignatura->asignatura->creditos ?? 0 }}</td>
+                                <td class="px-6 py-4">{{ $asignatura->asignaturaDocente->asignatura->nombre ?? '' }}</td>
+                                <td class="px-6 py-4">{{ $asignatura->asignaturaDocente->asignatura->creditos ?? 0 }}</td>
                                 <td class="px-6 py-4">{{ $asignatura->asignaturaDocente->seccion->nombre ?? '' }}</td>
                                 <td class="px-6 py-4">
                                     @if($asignatura->periodo)
-                                        {{ \Carbon\Carbon::parse($asignatura->periodo->fecha_inicio)->format('Y') }}
+                                        {{ \Carbon\Carbon::parse($asignatura->asignaturaDocente->periodo->fecha_inicio)->format('Y') }}
                                     @endif
                                 </td>
-                                <td class="px-6 py-4">{{ $asignatura->periodo->nombre ?? '' }}</td>
+                                <td class="px-6 py-4">{{ $asignatura->asignaturaDocente->periodo->nombre ?? '' }}</td>
                                 <td class="px-6 py-4">{{ $promedio }}</td>
                                 <td class="px-6 py-4">{{ $nota->observacion ?? '' }}</td>
                             </tr>
