@@ -22,6 +22,8 @@ class RolSeeder extends Seeder
             'estudiante-admin-dashboard',
             'ver-dashboard-estudiante',
             'estudiante-admin-notasestudiante',
+            'estudiante-admin-matricularasignatura',
+            'estudiante-admin-descargarhistorial',
 
         ])->get();
 

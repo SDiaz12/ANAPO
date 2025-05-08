@@ -41,7 +41,9 @@ class PermisoSeeder extends Seeder
             'ver-dashboard-admin',
             'ver-dashboard-docente',
             'ver-dashboard-estudiante',
-            'admin-admin-mantenimiento'
+            'admin-admin-mantenimiento',
+            'estudiante-admin-matricularasignatura',
+            'estudiante-admin-descargarhistorial',
 
          ];
          
