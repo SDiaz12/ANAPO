@@ -54,38 +54,43 @@ class Secciones extends Component
         $this->searchProgramasFormacion = [];
     }
 
-    public function store()
+   public function store()
     {
         $this->validate([
             'nombre' => 'required|string|max:255',
             'programa_formacion_id' => 'required|integer|exists:programaformaciones,id',
+        ], [
+            'programa_formacion_id.exists' => 'El programa de formación seleccionado no existe.'
         ]);
 
-        $seccion = Seccion::updateOrCreate(
-            ['id' => $this->seccion_id],
-            [
-                'nombre' => $this->nombre,
-                'programa_formacion_id' => $this->programa_formacion_id,
-                'estado'         => $this->estado,
-            ]
-        );
+        try {
+            $seccion = Seccion::updateOrCreate(
+                ['id' => $this->seccion_id],
+                [
+                    'nombre' => $this->nombre,
+                    'programaformacion_id' => $this->programa_formacion_id, 
+                    'estado' => $this->estado,
+                ]
+            );
 
-        session()->flash(
-            'message',
-            $this->seccion_id ? 'Seccion actualizada correctamente!' : 'Seccion creada correctamente!'
-        );
+            session()->flash(
+                'message',
+                $this->seccion_id ? '¡Sección actualizada correctamente!' : '¡Sección creada correctamente!'
+            );
 
-        $this->closeModal();
-        $this->resetInputFields();
+            $this->closeModal();
+            $this->resetPage(); 
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error al guardar: ' . $e->getMessage());
+        }
     }
-
    
     public function edit($id)
     {
         $seccion = Seccion::with('programaFormacion')->findOrFail($id); 
         $this->seccion_id = $id;
         $this->nombre = $seccion->nombre;
-        $this->programa_formacion_id = $seccion->programa_formacion_id;
+        $this->programa_formacion_id = $seccion->programaformacion_id;
         $this->inputSearchProgramaFormacion = $seccion->programaFormacion->nombre; 
         $this->estado = $seccion->estado;
         $this->openModal();

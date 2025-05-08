@@ -138,7 +138,7 @@ class Docentes extends Component
         $docente->estado = !$docente->estado;
         $docente->save();
         
-        // Si tiene usuario asociado, actualizar su estado también
+        
         if ($docente->user) {
             $docente->user->active = $docente->estado;
             $docente->user->save();
@@ -147,8 +147,7 @@ class Docentes extends Component
 
     public function store()
     {
-        // Validación de datos del docente
-        $this->validate([
+        $rules = [
             'codigo' => [
                 'required',
                 'string',
@@ -170,15 +169,24 @@ class Docentes extends Component
             'sexo' => 'required',
             'telefono' => 'required',
             'correo' => 'required|email',
-            'user_email' => 'required|email|unique:users,email,' . ($this->docente_id ? Docente::find($this->docente_id)->user_id : 'NULL'),
-            'user_password' => $this->docente_id ? 'nullable|min:8|same:user_password_confirmation' : 'required|min:8|same:user_password_confirmation',
-        ]);
-    
-        // Manejo de la foto
+        ];
+
+        if (!$this->docente_id || $this->user_email != Docente::find($this->docente_id)->user->email) {
+            $rules['user_email'] = 'required|email|unique:users,email,' . ($this->docente_id ? Docente::find($this->docente_id)->user_id : 'NULL');
+        }
+
+        if ($this->user_password) {
+            $rules['user_password'] = 'min:8|same:user_password_confirmation';
+        } elseif (!$this->docente_id) {
+            $rules['user_password'] = 'required|min:8|same:user_password_confirmation';
+        }
+
+        $this->validate($rules);
+        
         $fotoPath = $this->foto 
             ? $this->foto->store('docentesFotos', 'public')
             : ($this->docente_id ? Docente::find($this->docente_id)->foto : null);
-    
+
         try {
             DB::transaction(function () use ($fotoPath) {
                 $userData = [
@@ -186,7 +194,7 @@ class Docentes extends Component
                     'email' => $this->user_email,
                     'active' => $this->estado,
                 ];
-    
+
                 if ($this->user_password) {
                     $userData['password'] = Hash::make($this->user_password);
                 }
@@ -201,11 +209,10 @@ class Docentes extends Component
                         $user->assignRole('Docente');
                     }
                 } else {
-                   
                     $user = User::create($userData);
-                    $user->assignRole('Docente'); 
+                    $user->assignRole('Docente');
                 }
-    
+
                 $docenteData = [
                     'codigo' => $this->codigo,
                     'dni' => $this->dni,
@@ -221,35 +228,32 @@ class Docentes extends Component
                     'estado' => $this->estado,
                     'user_id' => $user->id,
                 ];
-    
-        
+
                 $docente = Docente::updateOrCreate(['id' => $this->docente_id], $docenteData);
 
-             
                 if ($user && !$user->roles()->exists()) {
                     $user->assignRole('Docente');
                 }
 
-                $user->assignRole('Docente'); 
+                $user->assignRole('Docente');
             });
-    
-      
+
             session()->flash(
                 'message',
                 $this->docente_id 
                     ? 'Docente actualizado correctamente!' 
                     : 'Docente creado correctamente!'
             );
-    
+
             $this->closeModal();
             $this->resetInputFields();
-    
-        } catch (\Exception $e) {
 
+        } catch (\Exception $e) {
             session()->flash('error', 'Error al guardar: ' . $e->getMessage());
             \Log::error('Error en Docentes@store', ['error' => $e->getMessage(), 'trace' => $e->getTrace()]);
         }
     }
+    public $showPasswordFields = false;
     public function edit($id)
     {
         $docente = Docente::with('user')->findOrFail($id);
@@ -266,15 +270,15 @@ class Docentes extends Component
         $this->telefono = $docente->telefono;
         $this->correo = $docente->correo;
         $this->estado = $docente->estado;
+        $this->showPasswordFields = false; 
         
-
+       
         if ($docente->user) {
             $this->user_email = $docente->user->email;
         }
 
         $this->openModal();
     }
-
     public function delete()
     {
         if ($this->confirmingDelete) {
