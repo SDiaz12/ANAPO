@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Rol\Roles;
 use App\Livewire\AsignaturaDocente\AsignaturaDocentes;
 use App\Livewire\Promocion\Promociones;
+use App\Livewire\Estudiante\MatriculaAsignaturas;
 
 Route::get('/', function () {
     return view('welcome');
@@ -54,6 +55,9 @@ Route::middleware([
     Route::get('/notasEstudiante/{asignaturaEstudianteId}', VistaNotaEstudiantes::class)
     ->name('notasEstudiante')
     ->middleware('can:estudiante-admin-notasestudiante');
+    Route::get('/matricula-asignaturas', MatriculaAsignaturas::class)
+    ->name('matricula-asignaturas')
+    ->middleware('can:estudiante-admin-notasestudiante');
     Route::get('/descargar-historial/{matriculaId}', [App\Http\Controllers\PDFController::class, 'generarHistorial'])
      ->name('descargarHistorial')
      ->middleware('auth');
@@ -84,7 +88,7 @@ Route::middleware([
     Route::get('/userEstudiante', EstudiantePorUsuario::class)
     ->name('userEstudiante')
     ->middleware('can:estudiante-admin-userestudiante');
-    
+   
     Route::get('/asignatura', Asignaturas::class)
     ->name('asignatura')
     ->middleware('can:admin-admin-asignatura');

@@ -52,14 +52,14 @@ class VistaNotaEstudiantes extends Component
         ->where('estudiantes_id', $matricula->id) 
         ->get();
 
-        // Calcular índices académicos
+       
         $indices = $this->calcularIndices($matricula->id);
 
         return view('livewire.VistaNotasEstudiantes.vista-nota-estudiantes', [
             'matricula' => $matricula,
             'historialCompleto' => $historialCompleto,
             'globalIndice' => $indices['global'],
-            'periodIndice' => $indices['periodo'],
+           
             'estudiante' => $estudiante,
             'programaformacion' => $matricula->programaFormacion,
             'instituto' => $matricula->instituto
@@ -72,7 +72,7 @@ class VistaNotaEstudiantes extends Component
             'matricula' => null,
             'historialCompleto' => collect(),
             'globalIndice' => 0,
-            'periodIndice' => 0,
+          
             'estudiante' => null,
             'programaformacion' => null,
             'instituto' => null
@@ -81,53 +81,36 @@ class VistaNotaEstudiantes extends Component
 
     protected function calcularIndices($matriculaId)
     {
-        $asignaturas = AsignaturaEstudiante::with(['notas', 'asignatura', 'periodo'])
-            ->where('estudiantes_id', $matriculaId) 
+        
+        $asignaturas = AsignaturaEstudiante::with(['notas', 'asignaturaDocente.asignatura', 'periodo'])
+            ->where('estudiantes_id', $matriculaId)
+            ->orderBy('periodo_id', 'desc')
             ->get();
-
-        $sumaPonderadaGlobal = 0;
-        $sumaCreditosGlobal = 0;
-        
-        $sumaPonderadaPeriodo = [];
-        $sumaCreditosPeriodo = [];
-
-        foreach ($asignaturas as $asignatura) {
-            $nota = $asignatura->notas;
-            $creditos = $asignatura->asignatura->creditos ?? 0;
-            $periodoId = $asignatura->periodo->id ?? null;
-
-            if ($nota && $creditos > 0) {
-                $promedio = ($nota->primerparcial + $nota->segundoparcial + $nota->tercerparcial) / 3;
-                
-              
-                $sumaPonderadaGlobal += $promedio * $creditos;
-                $sumaCreditosGlobal += $creditos;
-                
-                
-                if ($periodoId) {
-                    if (!isset($sumaPonderadaPeriodo[$periodoId])) {
-                        $sumaPonderadaPeriodo[$periodoId] = 0;
-                        $sumaCreditosPeriodo[$periodoId] = 0;
-                    }
-                    $sumaPonderadaPeriodo[$periodoId] += $promedio * $creditos;
-                    $sumaCreditosPeriodo[$periodoId] += $creditos;
-                }
-            }
-        }
-
-      
-        $indiceGlobal = $sumaCreditosGlobal > 0 ? 
-            round($sumaPonderadaGlobal / $sumaCreditosGlobal, 2) : 0;
-        
+    
+        $sumaGlobal = ['ponderada' => 0, 'creditos' => 0];
        
-        $indicesPeriodo = [];
-        foreach ($sumaPonderadaPeriodo as $periodoId => $suma) {
-            $indicesPeriodo[$periodoId] = round($suma / $sumaCreditosPeriodo[$periodoId], 2);
+    
+        foreach ($asignaturas as $asignatura) {
+            if (!$asignatura->notas || !$asignatura->asignaturaDocente->asignatura) continue;
+    
+            $creditos = $asignatura->asignaturaDocente->asignatura->creditos;
+            $notaFinal = ($asignatura->notas->primerparcial + 
+                         $asignatura->notas->segundoparcial + 
+                         $asignatura->notas->tercerparcial) / 3;
+            $ponderacion = $notaFinal * $creditos;
+    
+           
+            $sumaGlobal['ponderada'] += $ponderacion;
+            $sumaGlobal['creditos'] += $creditos;
+    
+            
+           
         }
-
+    
         return [
-            'global' => $indiceGlobal,
-            'periodo' => $indicesPeriodo
+            'global' => $sumaGlobal['creditos'] > 0 ? 
+                       round($sumaGlobal['ponderada'] / $sumaGlobal['creditos'], 2) : 0,
+           
         ];
     }
 }
