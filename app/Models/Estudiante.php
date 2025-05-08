@@ -29,7 +29,7 @@ class Estudiante extends BaseModel
     ];
     protected $table = 'estudiantes';
 
-    //asignaturas a las que esta enlazado
+   
     public function asignaturas()
     {
         return $this->belongsToMany(Asignatura::class, 'asignatura_estudiantes', 'estudiantes_id', 'asignatura_id')
@@ -37,7 +37,7 @@ class Estudiante extends BaseModel
             ->withTimestamps();
     }
 
-    //secciones a las que esta enlazado
+   
     public function secciones()
     {
         return $this->belongsToMany(Seccion::class, 'asignaturaestudiantes', 'estudiante_id', 'seccion_id')
@@ -45,7 +45,7 @@ class Estudiante extends BaseModel
             ->withTimestamps();
     }
 
-    //periodos a los que esta enlazado
+   
     public function periodos()
     {
         return $this->belongsToMany(Periodo::class, 'asignaturaestudiantes', 'estudiante_id', 'periodo_id')
@@ -61,12 +61,15 @@ class Estudiante extends BaseModel
     {
         return $this->hasOne(Matricula::class, 'estudiante_id', 'id');
     }
-
+    public function matriculas()
+    {
+        return $this->hasOne(Matricula::class, 'estudiante_id', 'id');
+    }
     public function asignaturaEstudiantes()
     {
         return $this->hasMany(\App\Models\AsignaturaEstudiante::class, 'estudiantes_id', 'id');
     }
-    // En App\Models\AsignaturaEstudiante.php
+    
     public function notas()
     {
         return $this->hasOne(\App\Models\Nota::class, 'asignatura_estudiante_id');
