@@ -167,7 +167,7 @@ class Estudiants extends Component
             $this->estado = 1; 
         }
 
-        // Manejo de archivo foto
+      
         if ($this->foto) {
             $this->foto = $this->foto->store('estudiantesFotos', 'public');
         } elseif ($this->estudiante_id) {

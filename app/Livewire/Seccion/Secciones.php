@@ -7,7 +7,7 @@ use App\Models\Seccion;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
-//#[Lazy()]
+
 class Secciones extends Component
 {
     use WithPagination;
@@ -113,7 +113,7 @@ class Secciones extends Component
         }
     }
 
-    // Método para alternar el estado de la seccion (activo o inactivo)
+    
     public function toggleEstado($id)
     {
         $seccion = Seccion::findOrFail($id);
@@ -121,7 +121,7 @@ class Secciones extends Component
         $seccion->save();
     }
 
-    // Método para cargar más seccions
+    
     public $perPage = 9;
     public function loadMore($suma)
     {
