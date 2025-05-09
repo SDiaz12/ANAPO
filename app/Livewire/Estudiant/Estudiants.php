@@ -129,7 +129,17 @@ class Estudiants extends Component
 
     public function store()
     {
-        $rules = [
+        $this->validate([
+            'name' => [
+                'nullable',
+                'string',
+                'max:255'
+            ],
+            'password' => [
+                'nullable',
+                'string',
+                'min:8',
+            ],
             'codigo' => [
                 'required',
                 'string',
@@ -150,24 +160,14 @@ class Estudiants extends Component
             'sexo' => 'required',
             'telefono' => 'required',
             'correo' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user_id],
-        ];
+        ]);
 
       
-        if (!$this->estudiante_id) {
-            $rules['name'] = 'required|string|max:255';
-            $rules['password'] = 'required|string|min:8';
-        } else {
-            $rules['name'] = 'nullable|string|max:255';
-            $rules['password'] = 'nullable|string|min:8';
-        }
-
-        $this->validate($rules);
-
         if (empty($this->estado)) {
             $this->estado = 1; 
         }
 
-      
+        // Manejo de archivo foto
         if ($this->foto) {
             $this->foto = $this->foto->store('estudiantesFotos', 'public');
         } elseif ($this->estudiante_id) {
@@ -175,30 +175,19 @@ class Estudiants extends Component
             $this->foto = $estudiante->foto;
         }
 
-      
-        $userData = [
-            'email' => $this->correo,
-        ];
-
-       
-        if ($this->name) {
-            $userData['name'] = $this->name;
-        }
-
-       
-        if ($this->password) {
-            $userData['password'] = bcrypt($this->password);
-        }
-
-      
+     
         $user = User::updateOrCreate(
             ['id' => $this->user_id],
-            $userData
+            [
+                'name' => $this->name,
+                'email' => $this->correo,
+                'password' => bcrypt($this->password)
+            ]
         );
 
         $this->user_id = $user->id;
 
-     
+        
         Estudiante::updateOrCreate(
             ['id' => $this->estudiante_id],
             [
@@ -217,14 +206,15 @@ class Estudiants extends Component
                 'estado' => $this->estado, 
             ]
         );
-        
         $user->assignRole('Estudiante');
 
+      
         session()->flash(
             'message',
             $this->estudiante_id ? 'Estudiante actualizado correctamente!' : 'Estudiante creado correctamente!'
         );
 
+        
         $this->closeModal();
         $this->resetInputFields();
     }
@@ -233,6 +223,7 @@ class Estudiants extends Component
     {
         $estudiante = Estudiante::with('user')->findOrFail($id);
 
+       
         $this->estudiante_id = $id;
         $this->codigo = $estudiante->codigo;
         $this->dni = $estudiante->dni;
@@ -247,18 +238,21 @@ class Estudiants extends Component
         $this->correo = $estudiante->correo;
         $this->estado = $estudiante->estado;
 
+     
         if ($estudiante->user) {
             $this->user_id = $estudiante->user->id;
-            $this->name = $estudiante->user->name;
-            $this->password = null; 
+            $this->name = null;
+            $this->password = ''; 
         } else {
             $this->user_id = null;
             $this->name = '';
             $this->password = '';
         }
 
+      
         $this->openModal();
     }
+
     public function delete()
     {
         if ($this->confirmingDelete) {

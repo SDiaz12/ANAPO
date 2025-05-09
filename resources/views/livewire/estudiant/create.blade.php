@@ -29,21 +29,15 @@
                 <div>
                     <x-label for="name" value="Nombre de usuario" class="text-base font-medium text-gray-900" />
                     <div class="mt-2">
-                        <input id="name" wire:model="name" 
-                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md"
-                            type="text" name="name" 
-                            @if($estudiante_id) placeholder="En caso de querer actualizar, ingrese nuevo nombre" 
-                            @else placeholder="Ingresa el nombre de usuario" required @endif />
+                        <input id="name" wire:model="name" class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md"
+                            type="text" name="name" :value="old('name')" required autofocus placeholder="Ingresa el nombre de usuario" />
                     </div>
                 </div>
                 <div class="mt-4">
                     <x-label for="password" value="Contraseña" class="text-base font-medium text-gray-900" />
                     <div class="mt-2">
-                        <input id="password" wire:model="password" 
-                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md"
-                            type="password" name="password" 
-                            @if($estudiante_id) placeholder="En caso de querer actualizar, ingrese nueva" 
-                            @else placeholder="Ingresa tu contraseña" required @endif />
+                        <input id="password" wire:model="password" class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md"
+                            type="password" name="password" required placeholder="Ingresa tu contraseña" />
                     </div>
                 </div>
                 <h2 class="text-xl font-bold my-3 block text-gray-700 dark:text-gray-300">Datos de estudiante</h2>
