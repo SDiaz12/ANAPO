@@ -15,7 +15,7 @@ use Livewire\WithPagination;
 class MatriculaAsignaturas extends Component
 {
     use WithPagination;
-
+    public $matriculadas = [];
     public $search = '';
     public $perPage = 12;
     public $confirmingMatricula = false;
@@ -39,7 +39,7 @@ class MatriculaAsignaturas extends Component
     {
         $this->asignaturaSeleccionada = AsignaturaDocente::with(['asignatura', 'docente', 'periodo', 'seccion'])
             ->find($asignaturaId);
-        
+
         $this->confirmingMatricula = true;
         $this->errorMessage = '';
     }
@@ -47,7 +47,7 @@ class MatriculaAsignaturas extends Component
     public function matricular()
     {
         $this->resetMessages();
-        
+
         $estudiante = Auth::user()->estudiante;
         $matricula = Matricula::where('estudiante_id', $estudiante->id)
             ->where('estado', 1)
@@ -59,7 +59,7 @@ class MatriculaAsignaturas extends Component
             return;
         }
 
-     
+
         $yaMatriculado = AsignaturaEstudiante::where('estudiantes_id', $matricula->id)
             ->where('asignatura_id', $this->asignaturaSeleccionada->id)
             ->where('periodo_id', $this->asignaturaSeleccionada->periodo_id)
@@ -71,14 +71,14 @@ class MatriculaAsignaturas extends Component
             return;
         }
 
-        
+
         $asignaturaAprobada = AsignaturaEstudiante::where('estudiantes_id', $matricula->id)
-            ->whereHas('asignaturaDocente.asignatura', function($query) {
+            ->whereHas('asignaturaDocente.asignatura', function ($query) {
                 $query->where('codigo', $this->asignaturaSeleccionada->asignatura->codigo);
             })
-            ->whereHas('notas', function($query) {
+            ->whereHas('notas', function ($query) {
                 $query->where('observacion', 'Aprobado')
-                      ->where('estado', 1);
+                    ->where('estado', 1);
             })
             ->exists();
 
@@ -88,19 +88,19 @@ class MatriculaAsignaturas extends Component
             return;
         }
 
-       
+
         $requisitos = AsignaturaRequisito::where('asignatura_id', $this->asignaturaSeleccionada->asignatura->id)
             ->with('requisito')
             ->get();
 
         foreach ($requisitos as $requisito) {
             $requisitoAprobado = AsignaturaEstudiante::where('estudiantes_id', $matricula->id)
-                ->whereHas('asignaturaDocente.asignatura', function($query) use ($requisito) {
+                ->whereHas('asignaturaDocente.asignatura', function ($query) use ($requisito) {
                     $query->where('codigo', $requisito->requisito->codigo);
                 })
-                ->whereHas('notas', function($query) {
+                ->whereHas('notas', function ($query) {
                     $query->where('observacion', 'Aprobado')
-                          ->where('estado', 1);
+                        ->where('estado', 1);
                 })
                 ->exists();
 
@@ -121,6 +121,62 @@ class MatriculaAsignaturas extends Component
 
         $this->successMessage = '¡Matriculado exitosamente en ' . $this->asignaturaSeleccionada->asignatura->nombre . '!';
         $this->confirmingMatricula = false;
+
+        // Recargar asignaturas matriculadas
+        $this->cargarMatriculadas();
+    }
+
+    public function cargarMatriculadas()
+    {
+        // Verificar si hay un período activo
+        $periodoActivo = Periodo::where('estado', 1)->first();
+
+        if (!$periodoActivo) {
+            // Si no hay período activo, limpiar la lista de matriculadas
+            $this->matriculadas = collect(); // colección vacía
+            return;
+        }
+
+        // Cargar asignaturas matriculadas solo en el período activo
+        $this->matriculadas = AsignaturaEstudiante::with([
+            'matricula.estudiante',
+            'asignaturaDocente.asignatura',
+            'asignaturaDocente.docente',
+            'periodo'
+        ])
+            ->whereHas('matricula', function ($query) {
+                $query->where('estudiante_id', Auth::user()->estudiante->id);
+            })
+            ->where('periodo_id', $periodoActivo->id) // Filtrar por el período activo
+            ->orderBy('id', 'DESC')
+            ->get();
+    }
+
+    public function quitarAsignatura($id)
+    {
+        $this->resetMessages();
+
+        // Buscar la asignatura matriculada
+        $matriculada = AsignaturaEstudiante::with('notas')->find($id);
+
+        if (!$matriculada) {
+            $this->errorMessage = 'La asignatura no existe o no está matriculada.';
+            return;
+        }
+
+        // Verificar si tiene una nota asignada
+        if ($matriculada->notas !== null) {
+            $this->errorMessage = 'No se puede quitar la asignatura porque tiene una nota asignada.';
+            return;
+        }
+
+        // Eliminar la asignatura matriculada
+        $matriculada->delete();
+
+        $this->successMessage = 'La asignatura ha sido quitada exitosamente.';
+
+        // Recargar asignaturas matriculadas
+        $this->cargarMatriculadas();
     }
 
     public function resetMessages()
@@ -131,6 +187,7 @@ class MatriculaAsignaturas extends Component
 
     public function render()
     {
+        $this->cargarMatriculadas();
         $estudiante = Auth::user()->estudiante;
         $matricula = Matricula::where('estudiante_id', $estudiante->id)
             ->where('estado', 1)
@@ -148,7 +205,8 @@ class MatriculaAsignaturas extends Component
         if (!$periodoActivo) {
             return view('livewire.estudiante.matricula-asignaturas', [
                 'asignaturas' => [],
-                'matricula' => $matricula
+                'matricula' => $matricula,
+                'matriculadas' => $this->matriculadas,
             ])->layout('layouts.app');
         }
 
@@ -156,23 +214,24 @@ class MatriculaAsignaturas extends Component
         $asignaturas = AsignaturaDocente::with(['asignatura', 'docente', 'periodo', 'seccion'])
             ->where('periodo_id', $periodoActivo->id)
             ->where('estado', 1)
-            ->whereHas('asignatura', function($query) use ($matricula) {
+            ->whereHas('asignatura', function ($query) use ($matricula) {
                 $query->where('programa_formacion_id', $matricula->programaformacion_id)
-                      ->where(function($q) {
-                          $q->where('nombre', 'like', '%' . $this->search . '%')
+                    ->where(function ($q) {
+                        $q->where('nombre', 'like', '%' . $this->search . '%')
                             ->orWhere('codigo', 'like', '%' . $this->search . '%');
-                      });
+                    });
             })
-            ->whereDoesntHave('asignaturaEstudiantes', function($query) use ($matricula, $periodoActivo) {
+            ->whereDoesntHave('asignaturaEstudiantes', function ($query) use ($matricula, $periodoActivo) {
                 $query->where('estudiantes_id', $matricula->id)
-                      ->where('periodo_id', $periodoActivo->id);
+                    ->where('periodo_id', $periodoActivo->id);
             })
             ->paginate($this->perPage);
 
         return view('livewire.estudiante.matricula-asignaturas', [
             'asignaturas' => $asignaturas,
             'matricula' => $matricula,
-            'periodoActivo' => $periodoActivo
+            'periodoActivo' => $periodoActivo,
+            'matriculadas' => $this->matriculadas,
         ])->layout('layouts.app');
     }
 }

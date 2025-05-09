@@ -49,9 +49,14 @@ class Asignatura extends BaseModel
         return $this->belongsToMany(Seccion::class, 'seccion_asignatura', 'asignatura_id', 'seccion_id');
     }
 
-    public function periodos()
+    public function seccion()
     {
-        return $this->belongsToMany(Periodo::class, 'asignatura_periodos', 'asignatura_id', 'periodo_id');
+        return $this->belongsTo(Seccion::class);
+    }
+
+    public function periodo()
+    {
+        return $this->belongsTo(Periodo::class);
     }
 
     public function asignaturaDocentes()
