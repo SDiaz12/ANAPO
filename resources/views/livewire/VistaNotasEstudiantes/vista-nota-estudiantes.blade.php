@@ -90,7 +90,7 @@
                                 $promedio = $nota ? round(($nota->primerparcial + $nota->segundoparcial + $nota->tercerparcial) / 3, 2) : 0;
                             @endphp
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td class="px-6 py-4">{{ $asignatura->asignatura->codigo ?? '' }}</td>
+                                <td class="px-6 py-4">{{ $asignatura->asignaturaDocente->asignatura->codigo ?? '' }}</td>
                                 <td class="px-6 py-4">{{ $asignatura->asignaturaDocente->asignatura->nombre ?? '' }}</td>
                                 <td class="px-6 py-4">{{ $asignatura->asignaturaDocente->asignatura->creditos ?? 0 }}</td>
                                 <td class="px-6 py-4">{{ $asignatura->asignaturaDocente->seccion->nombre ?? '' }}</td>
