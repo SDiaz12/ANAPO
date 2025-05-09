@@ -72,7 +72,7 @@ class ProgramaFormaciones extends Component
             'instituto' => $this->instituto,
             'tipo_programa' => $this->tipo_programa,
             'procentaje_aprobacion' => $this->procentaje_aprobacion,
-            'estado'         => $this->estado,
+            'estado'         => 1,
         ]);
         session()->flash(
             'message',

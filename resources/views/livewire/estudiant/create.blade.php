@@ -120,7 +120,7 @@
                                 id="sexo" name="sexo" wire:model.live="sexo" required>
                                 <option value="">Seleccione el sexo</option>
                                 <option value="Femenino">Femenino</option>
-                                <option value="Maculino">Masculino</option>
+                                <option value="Masculino">Masculino</option>
                             </select>
                             @error('sexo') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>

@@ -13,9 +13,7 @@ class Seccion extends BaseModel
     protected $fillable = [
         'nombre',
         'programaformacion_id',
-        'created_by',
-        'deleted_by',
-        'updated_by'
+        'estado'
     ];
     protected $table = 'secciones';
 

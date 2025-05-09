@@ -38,30 +38,29 @@
                         </div>
                     </div>
                     <div class="w-full px-3 sm:w-1/2">
-                        <!-- Campo: Programa de Formación -->
-                        <div class="mb-5">
-                            <label for="programaformacion_id"
-                                class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
-                                Programa de Formación:
-                            </label>
-                            <input wire:model.live="inputSearchProgramaFormacion" type="text" id="programaformacion_id"
-                                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                                placeholder="Buscar programa...">
-                            @error('programaformacion_id') <span class="text-red-500">{{ $message }}</span> @enderror
+    <div class="mb-5">
+        <label for="programaformacion_id" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
+            Programa de Formación:
+        </label>
+        <input wire:model.live="inputSearchProgramaFormacion" type="text" id="programaformacion_id"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+            placeholder="Buscar programa...">
+        @error('programa_formacion_id') 
+            <span class="text-red-500">{{ $message }}</span> 
+        @enderror
 
-                            <!-- Desplegable de resultados de búsqueda -->
-                            @if(!empty($searchProgramasFormacion))
-                                <ul class="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800">
-                                    @foreach($searchProgramasFormacion as $programa)
-                                        <li wire:click="selectProgramaFormacion({{ $programa->id }})"
-                                            class="p-2 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white">
-                                            {{ $programa->nombre }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </div>
-                    </div>
+        @if(!empty($searchProgramasFormacion))
+            <ul class="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800">
+                @foreach($searchProgramasFormacion as $programa)
+                    <li wire:click="selectProgramaFormacion({{ $programa->id }})"
+                        class="p-2 hover:bg-gray-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white">
+                        {{ $programa->nombre }}
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </div>
+</div>
                 </div>
                 <div>
                     <x-button wire:click.prevent="store()" wire:loading.attr="disabled" wire:target="foto" type="button"
