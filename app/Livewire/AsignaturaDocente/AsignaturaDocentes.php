@@ -152,7 +152,7 @@ class AsignaturaDocentes extends Component
     }
     
 
-    public function store()
+  public function store()
     {
         $this->validate([
             'docente_id' => 'required|integer|exists:docentes,id',
@@ -164,25 +164,73 @@ class AsignaturaDocentes extends Component
             'selectedPeriodos.*' => 'integer|exists:periodos,id',
         ]);
 
-      
+        
+        $combinaciones = [];
         foreach ($this->selectedAsignaturas as $key => $asignaturaId) {
-            AsignaturaDocente::updateOrCreate(
-                [
-                    'docente_id' => $this->docente_id,
-                    'asignatura_id' => $asignaturaId,
-                ],
-                [
-                    'periodo_id' => $this->selectedPeriodos[$key],
-                    'seccion_id' => $this->selectedSecciones[$key],
-                    'estado' => 1,
-                ]
-            );
+            $periodoId = $this->selectedPeriodos[$key];
+            $seccionId = $this->selectedSecciones[$key];
+            
+            $clave = "$periodoId-$seccionId";
+            if (in_array($clave, $combinaciones)) {
+                session()->flash('error', 'No puedes asignar al docente a la misma sección y período más de una vez.');
+                return;
+            }
+            $combinaciones[] = $clave;
+        }
+
+        foreach ($this->selectedAsignaturas as $key => $asignaturaId) {
+            $periodoId = $this->selectedPeriodos[$key];
+            $seccionId = $this->selectedSecciones[$key];
+
+            $existeAsignacion = AsignaturaDocente::where('docente_id', $this->docente_id)
+                ->where('periodo_id', $periodoId)
+                ->where('seccion_id', $seccionId)
+                ->exists();
+                
+            if ($existeAsignacion) {
+                $periodo = Periodo::find($periodoId)->nombre;
+                $seccion = Seccion::find($seccionId)->nombre;
+                
+                session()->flash('error', "El docente ya tiene una asignación en la sección $seccion del período $periodo.");
+                return;
+            }
+            $existeCombinacionExacta = AsignaturaDocente::where('docente_id', $this->docente_id)
+                ->where('asignatura_id', $asignaturaId)
+                ->where('periodo_id', $periodoId)
+                ->where('seccion_id', $seccionId)
+                ->exists();
+                
+            if ($existeCombinacionExacta) {
+                $asignatura = Asignatura::find($asignaturaId)->nombre;
+                session()->flash('error', "El docente ya tiene asignada la materia $asignatura en esta sección y período.");
+                return;
+            }
+        }
+
+        foreach ($this->selectedAsignaturas as $key => $asignaturaId) {
+            AsignaturaDocente::create([
+                'docente_id' => $this->docente_id,
+                'asignatura_id' => $asignaturaId,
+                'periodo_id' => $this->selectedPeriodos[$key],
+                'seccion_id' => $this->selectedSecciones[$key],
+                'estado' => 1,
+            ]);
         }
 
         session()->flash('message', 'Asignaturas asignadas correctamente!');
         $this->resetInputFields();
+        $this->closeModal();
     }
+    public function syncEstadoConPeriodo()
+    {
+      
+        $periodos = Periodo::select('id', 'estado')->get();
 
+        foreach ($periodos as $periodo) {
+            AsignaturaDocente::where('periodo_id', $periodo->id)
+            ->update(['estado' => $periodo->estado]);
+        }
+    }
     public function confirmDelete($id)
     {
         $asignaturaDocente = AsignaturaDocente::find($id);
@@ -212,9 +260,14 @@ class AsignaturaDocentes extends Component
     {
         $this->perPage = $suma;
     }
-
+    public function mount()
+    {
+        $this->syncEstadoConPeriodo();
+    }
     public function render()
     {
+        $this->syncEstadoConPeriodo(); 
+
         $asignaturasDocentes = AsignaturaDocente::with('docente', 'asignatura', 'periodo', 'seccion')
             ->where(function($query) {
                 $query->whereHas('docente', function($q) {
@@ -222,7 +275,7 @@ class AsignaturaDocentes extends Component
                 })
                 ->orWhereHas('asignatura', function($q) {
                     $q->where('nombre', 'like', '%' . $this->search . '%')
-                      ->orWhere('codigo', 'like', '%' . $this->search . '%');
+                    ->orWhere('codigo', 'like', '%' . $this->search . '%');
                 });
             })
             ->orderBy('id', 'DESC')

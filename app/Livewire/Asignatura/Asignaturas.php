@@ -74,18 +74,27 @@ class Asignaturas extends Component
     public $searchRequisitos = [];      
     public $requisitos = [];          
 
-    public function updatedInputSearchRequisito()
+  public function updatedInputSearchRequisito()
     {
-        
         if ($this->inputSearchRequisito) {
-            $this->searchRequisitos = Asignatura::where('nombre', 'like', '%' . $this->inputSearchRequisito . '%')
-                ->orWhere('codigo', 'like', '%' . $this->inputSearchRequisito . '%')
-                ->limit(15)
-                ->get();
-
+            $query = Asignatura::where(function($q) {
+                    $q->where('nombre', 'like', '%' . $this->inputSearchRequisito . '%')
+                    ->orWhere('codigo', 'like', '%' . $this->inputSearchRequisito . '%');
+                });
             
+            
+            if ($this->programa_formacion_id) {
+                $query->where('programa_formacion_id', $this->programa_formacion_id);
+            }
+            
+        
+            if ($this->asignatura_id) {
+                $query->where('id', '!=', $this->asignatura_id);
+            }
+            
+            $this->searchRequisitos = $query->limit(15)->get();
         } else {
-            $this->searchRequisitos = []; 
+            $this->searchRequisitos = [];
         }
     }
     public function mount()
@@ -100,25 +109,29 @@ class Asignaturas extends Component
         }
     }
 
-    public function selectRequisito($id, $index)
+   public function selectRequisito($id, $index)
     {
+       
+        $asignaturaSeleccionada = Asignatura::find($id);
         
+        if ($asignaturaSeleccionada && $this->programa_formacion_id && 
+            $asignaturaSeleccionada->programa_formacion_id != $this->programa_formacion_id) {
+            session()->flash('error', 'La asignatura seleccionada no pertenece al mismo programa de formación');
+            return;
+        }
+
         if (!isset($this->requisitos[$index])) {
             $this->requisitos[$index] = null;  
         }
 
-      
         if (!in_array($id, $this->requisitos)) {
             $this->requisitos[$index] = $id;  
         }
 
-       
         $this->inputSearchRequisito = '';
         $this->searchRequisitos = [];
     }
 
-
-    
     public function store()
     {
         $this->validate([
@@ -129,6 +142,22 @@ class Asignaturas extends Component
             'horas' => 'required|integer|min:1',
             'programa_formacion_id' => 'required|integer|exists:programaformaciones,id',
         ]);
+
+        if (!empty($this->requisitos)) {
+            $requisitosInvalidos = Asignatura::whereIn('id', $this->requisitos)
+                ->where('programa_formacion_id', '!=', $this->programa_formacion_id)
+                ->exists();
+                
+            if ($requisitosInvalidos) {
+                session()->flash('error', 'Todos los requisitos deben pertenecer al mismo programa de formación.');
+                return;
+            }
+            
+            if (count($this->requisitos) > 3) {
+                session()->flash('error', 'Una asignatura no puede tener más de 3 requisitos.');
+                return;
+            }
+        }
 
         $asignatura = Asignatura::updateOrCreate(
             ['id' => $this->asignatura_id],
@@ -143,12 +172,7 @@ class Asignaturas extends Component
             ]
         );
 
-       
         if (!empty($this->requisitos)) {
-            if (count($this->requisitos) > 3) {
-                session()->flash('error', 'Una asignatura no puede tener más de 3 requisitos.');
-                return;
-            }
             $asignatura->requisitos()->sync($this->requisitos);
         }
 
@@ -162,9 +186,9 @@ class Asignaturas extends Component
     }
 
    
-    public function edit($id)
+   public function edit($id)
     {
-        $asignatura = Asignatura::with('requisitos', 'programaFormacion')->findOrFail($id); 
+        $asignatura = Asignatura::with(['requisitos', 'programaFormacion'])->findOrFail($id); 
         $this->asignatura_id = $id;
         $this->nombre = $asignatura->nombre;
         $this->codigo = $asignatura->codigo;
@@ -174,11 +198,20 @@ class Asignaturas extends Component
         $this->programa_formacion_id = $asignatura->programa_formacion_id;
         $this->inputSearchProgramaFormacion = $asignatura->programaFormacion->nombre; 
         $this->estado = $asignatura->estado;
-        $this->requisitos = $asignatura->requisitos->pluck('id')->toArray();
-    
+        
+     
+        $this->requisitos = array_filter($asignatura->requisitos->pluck('id')->toArray(), 
+            fn($reqId) => $reqId != $id);
+        
+        $this->cantidad_requisitos = count($this->requisitos);
+        $this->tiene_requisitos = $this->cantidad_requisitos > 0;
+        
+        if ($this->cantidad_requisitos > 0) {
+            $this->searchRequisitos = Asignatura::whereIn('id', $this->requisitos)->get();
+        }
+
         $this->openModal();
     }
-    
     public function delete()
     {
         if ($this->confirmingDelete) {

@@ -12,15 +12,11 @@ class Seccion extends BaseModel
     use SoftDeletes;
     protected $fillable = [
         'nombre',
-        'programaformacion_id',
         'estado'
     ];
     protected $table = 'secciones';
 
-    public function programaformacion()
-    {
-        return $this->belongsTo(ProgramaFormacion::class);
-    }
+   
 
     public function asignaturadocentes()
     {

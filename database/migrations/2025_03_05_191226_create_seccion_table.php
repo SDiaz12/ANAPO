@@ -14,15 +14,13 @@ return new class extends Migration
         Schema::create('secciones', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->unsignedBigInteger('programaformacion_id');
-
             $table->integer( 'estado');
             $table->softDeletes();
             $table->timestamps();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();
-            $table->foreign('programaformacion_id')->references('id')->on('programaformaciones');
+            
         });
     }
 

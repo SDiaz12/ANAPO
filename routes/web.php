@@ -5,6 +5,7 @@ use App\Livewire\Asignatura\Asignaturas;
 use App\Livewire\Estudiant\EstudiantePorUsuario;
 use App\Livewire\Instituto\Instituto;
 use App\Livewire\Seccion\Secciones;
+use App\Livewire\Periodo\Periodos;
 use App\Livewire\AsignaturaEstudiante\AsignaturaEstudiantes;
 use App\Livewire\Docente\Docentes;
 use App\Livewire\Estudiant\Estudiants;
@@ -98,6 +99,9 @@ Route::middleware([
     Route::get('/seccion', Secciones::class)
     ->name('seccion')
     ->middleware('can:admin-admin-seccion');
+    Route::get('/periodo', Periodos::class)
+    ->name('periodo')
+    ->middleware('can:admin-admin-periodo');
     
     Route::get('/asignaturaDocente', AsignaturaDocentes::class)
     ->name('asignaturaDocente')

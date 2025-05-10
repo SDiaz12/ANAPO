@@ -48,109 +48,109 @@
                     <p>No puedes matricularte en asignaturas sin una matrícula activa en el sistema.</p>
                 </div>
             @else
-                <div class="mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    @forelse($asignaturas as $asignatura)
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-red-700 rounded-md p-3">
-                                        <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                        </svg>
+              
+                @if(!$mostrarAsignaturas)
+                    <div class="col-span-3 bg-white overflow-hidden shadow rounded-lg mt-4">
+                        <div class="px-4 py-5 sm:p-6 text-center">
+                            <p class="text-gray-500">
+                                @if($FechaActual >= $periodoActivo->fecha_inicio)
+                                    El período de adición de asignaturas ha finalizado 
+                                @else
+                                    El período de matrícula aún no está disponible.
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                @else
+                    <div class="mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        @forelse($asignaturas as $asignatura)
+                            <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 bg-red-700 rounded-md p-3">
+                                            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-5 w-0 flex-1">
+                                            <dl>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                                    {{ $asignatura->asignatura->codigo }}
+                                                </dt>
+                                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                                    {{ $asignatura->seccion->nombre }}
+                                                </dt>
+                                                <dd class="flex items-baseline">
+                                                    <div class="text-lg font-semibold text-gray-900">
+                                                        {{ $asignatura->asignatura->nombre }}
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                        </div>
                                     </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                                {{ $asignatura->asignatura->codigo }}
-                                            </dt>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                                {{ $asignatura->seccion->nombre }}
-                                            </dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-lg font-semibold text-gray-900">
-                                                    {{ $asignatura->asignatura->nombre }}
-                                                </div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                                <div class="mt-4">
-                                    <div class="border-t border-gray-200 pt-4">
-                                        <div class="text-sm text-gray-500">
-                                            <p class="font-medium">Docente:</p>
-                                            <p>{{ $asignatura->docente->nombre }} {{ $asignatura->docente->apellido }}</p>
-                                        </div>
-                                        <div class="mt-2 text-sm text-gray-500">
-                                            <p class="font-medium">Créditos:</p>
-                                            <p>{{ $asignatura->asignatura->creditos }}</p>
-                                        </div>
-                                        <div class="mt-2 text-sm text-gray-500">
-                                            <p class="font-medium">Horas:</p>
-                                            <p>{{ $asignatura->asignatura->horas }}</p>
-                                        </div>
-                                        <div class="mt-2 text-sm text-gray-500">
-                                            <p class="font-medium">Periodo:</p>
-                                            <p>{{ $asignatura->periodo->nombre }}</p>
-                                        </div>
-                                        @if($asignatura->asignatura->requisitos->count() > 0)
-                                            <div class="mt-2 text-sm text-gray-500">
-                                                <p class="font-medium">Requisitos:</p>
-                                                <ul class="list-disc pl-5">
-                                                    @foreach($asignatura->asignatura->requisitos as $requisito)
-                                                        <li>{{ $requisito->codigo }} - {{ $requisito->nombre }}</li>
-                                                    @endforeach
-                                                </ul>
+                                    <div class="mt-4">
+                                        <div class="border-t border-gray-200 pt-4">
+                                            <div class="text-sm text-gray-500">
+                                                <p class="font-medium">Docente:</p>
+                                                <p>{{ $asignatura->docente->nombre }} {{ $asignatura->docente->apellido }}</p>
                                             </div>
-                                        @endif
+                                            <div class="mt-2 text-sm text-gray-500">
+                                                <p class="font-medium">Créditos:</p>
+                                                <p>{{ $asignatura->asignatura->creditos }}</p>
+                                            </div>
+                                            <div class="mt-2 text-sm text-gray-500">
+                                                <p class="font-medium">Horas:</p>
+                                                <p>{{ $asignatura->asignatura->horas }}</p>
+                                            </div>
+                                            <div class="mt-2 text-sm text-gray-500">
+                                                <p class="font-medium">Periodo:</p>
+                                                <p>{{ $asignatura->periodo->nombre }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5">
+                                        <button wire:click="confirmMatricula('{{ $asignatura->id }}')"
+                                            class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                            Matricular
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="mt-5">
-                                    <button wire:click="confirmMatricula('{{ $asignatura->id }}')"
-                                        class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                        Matricular
-                                    </button>
+                            </div>
+                        @empty
+                            <div class="col-span-3 bg-white overflow-hidden shadow rounded-lg">
+                                <div class="px-4 py-5 sm:p-6 text-center">
+                                    <p class="text-gray-500">No hay asignaturas disponibles para matricular en este período.</p>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="col-span-3 bg-white overflow-hidden shadow rounded-lg">
-                            <div class="px-4 py-5 sm:p-6 text-center">
-                                <p class="text-gray-500">No hay asignaturas disponibles para matricular en este período.</p>
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
+                        @endforelse
+                    </div>
+                @endif
             @endif
         </div>
+        
         @if($matriculadas->isNotEmpty())
             <div class="mt-8">
                 <h3 class="text-lg font-medium text-gray-900">Asignaturas Matriculadas</h3>
                 <table class="min-w-full divide-y divide-gray-200 mt-4">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Código
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Asignatura
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Docente
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Período
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Sección
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Acciones
                             </th>
                         </tr>
@@ -176,15 +176,20 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     @if($matriculada->notas)
-                                        <a href="{{ route('notasEstudiante', ['asignaturaEstudianteId' => Auth::user()->estudiante->asignaturaEstudiantes->first()->id ?? 0]) }}">
-                                        <button class="inline-flex items-center px-4 py-2 border border-yellow-300 text-sm font-medium rounded-md text-yellow-500 bg-yellow-100">
-                                            <span> Calificada</span>
-                                        </button>
-                                    </a>
+                                        <a href="{{ route('notasEstudiante', ['asignaturaEstudianteId' => $matriculada->id]) }}">
+                                            <button class="inline-flex items-center px-4 py-2 border border-yellow-300 text-sm font-medium rounded-md text-yellow-500 bg-yellow-100">
+                                                <span> Calificada</span>
+                                            </button>
+                                        </a>
                                     @else
-                                        <button wire:click="quitarAsignatura('{{ $matriculada->id }}')" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                            Quitar
-                                        </button>
+                                        @if($mostrarAsignaturas)
+                                            <button wire:click="quitarAsignatura('{{ $matriculada->id }}')" 
+                                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                Quitar
+                                            </button>
+                                        @else
+                                            <span class="text-gray-400">No disponible</span>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>
@@ -203,8 +208,7 @@
                     <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
                 </div>
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div
-                    class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                     <div>
                         <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
                             <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

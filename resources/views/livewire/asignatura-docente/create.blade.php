@@ -73,7 +73,7 @@
                                     class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 py-3 px-4 text-gray-900 dark:text-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="">Seleccione sección</option>
                                     @foreach($secciones as $seccion)
-                                        <option value="{{ $seccion->id }}">{{ $seccion->nombre }} ({{ $seccion->programaformacion->nombre }})</option>
+                                        <option value="{{ $seccion->id }}">{{ $seccion->nombre }} </option>
                                     @endforeach
                                 </select>
                             </div>
