@@ -14,7 +14,7 @@ class Secciones extends Component
 
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar;
-    public $search, $seccion_id, $nombre, $programa_formacion_id, $estado = 1;
+    public $search, $seccion_id, $nombre, $estado = 1;
     public $isOpen = false;
     public $viewMode = 'table';  
 
@@ -49,18 +49,13 @@ class Secciones extends Component
     {
         $this->seccion_id = null;
         $this->nombre = '';
-        $this->programa_formacion_id = null;
-        $this->inputSearchProgramaFormacion = '';
-        $this->searchProgramasFormacion = [];
+       
     }
 
    public function store()
     {
         $this->validate([
             'nombre' => 'required|string|max:255',
-            'programa_formacion_id' => 'required|integer|exists:programaformaciones,id',
-        ], [
-            'programa_formacion_id.exists' => 'El programa de formación seleccionado no existe.'
         ]);
 
         try {
@@ -68,7 +63,6 @@ class Secciones extends Component
                 ['id' => $this->seccion_id],
                 [
                     'nombre' => $this->nombre,
-                    'programaformacion_id' => $this->programa_formacion_id, 
                     'estado' => $this->estado,
                 ]
             );
@@ -87,11 +81,9 @@ class Secciones extends Component
    
     public function edit($id)
     {
-        $seccion = Seccion::with('programaFormacion')->findOrFail($id); 
+        $seccion = Seccion::findOrFail($id);
         $this->seccion_id = $id;
         $this->nombre = $seccion->nombre;
-        $this->programa_formacion_id = $seccion->programaformacion_id;
-        $this->inputSearchProgramaFormacion = $seccion->programaFormacion->nombre; 
         $this->estado = $seccion->estado;
         $this->openModal();
     }
@@ -128,22 +120,6 @@ class Secciones extends Component
         $this->perPage = $suma;
     }
 
-   
-    public function updatedInputSearchProgramaFormacion()
-    {
-        
-        $this->searchProgramasFormacion = ProgramaFormacion::where('nombre', 'like', '%' . $this->inputSearchProgramaFormacion . '%')
-            ->limit(10)
-            ->get();
-    }
-
-    public function selectProgramaFormacion($id)
-    {
-        $this->programa_formacion_id = $id;
-        $this->inputSearchProgramaFormacion = ProgramaFormacion::find($id)->nombre;
-        $this->searchProgramasFormacion = [];
-    }
-
     
     public function confirmDelete($id)
     {
@@ -154,10 +130,7 @@ class Secciones extends Component
             return;
         }
     
-        if ($seccion->programaFormacion()->exists()) {
-            session()->flash('error', 'No se puede eliminar la seccion: ' . $seccion->nombre . ', porque enlazada a programas de formacion.');
-            return;
-        }
+      
     
     
         $this->IdAEliminar = $id;
@@ -168,9 +141,6 @@ class Secciones extends Component
     {
         $seccionesCount = Seccion::count();
         $secciones = Seccion::where('nombre', 'like', '%' . $this->search . '%')
-        ->orWhereHas('programaFormacion', function ($q) {
-            $q->where('nombre', 'like', '%' . $this->search . '%');
-        })
         ->orderBy('id', 'DESC')
         ->paginate($this->perPage);
         return view('livewire.seccion.secciones', [

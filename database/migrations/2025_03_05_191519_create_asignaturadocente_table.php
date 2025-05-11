@@ -18,7 +18,10 @@ return new class extends Migration
             $table->unsignedBigInteger('periodo_id');
             $table->unsignedBigInteger('seccion_id');
             $table->integer('estado');
-            $table->unique(['asignatura_id', 'docente_id']);
+           $table->unique(
+                            ['asignatura_id', 'docente_id', 'periodo_id', 'seccion_id'],
+                            'asig_doc_per_sec_unique'
+                         );
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();

@@ -31,7 +31,7 @@
                             <label for="date" class="mb-3 block text-base font-medium text-gray-700 dark:text-gray-300">
                                 Código:
                             </label>
-                            <input type="text" name="codigo" id="codigo" placeholder="Código de docente"
+                            <input type="text" name="codigo" id="codigo" placeholder="Código de programa de formación"
                                 wire:model="codigo"
                                 class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-600 focus:shadow-md" />
                             @error('codigo') <span class="text-red-500">{{ $message }}</span> @enderror

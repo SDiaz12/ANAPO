@@ -143,9 +143,6 @@
 
                     @endif
                 </div>
-
-
-
                 <div>
                     <x-button wire:click.prevent="store()" wire:loading.attr="disabled" wire:target="foto" type="button" class="w-full">
                         {{ $asignatura_id ? 'Editar asignatura' : 'Crear asignatura' }}

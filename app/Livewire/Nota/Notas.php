@@ -42,8 +42,6 @@ class Notas extends Component
         return view('livewire.Placeholder.loader')->layout('layouts.app');
     }
 
-    
-
     public $confirmingDelete = false;
     public $IdAEliminar, $nombreAEliminar, $search, $estudiantes, $nota_id;
     public $promedio, $asignatura_estudiante_id, $primerparcial, $segundoparcial, $tercerparcial;
@@ -353,27 +351,33 @@ class Notas extends Component
         $user = auth()->user();
         
         $query = AsignaturaEstudiante::query()
-            ->with(['asignaturadocente.asignatura', 'asignaturadocente.docente', 'estudiante'])
+            ->with([
+                'asignaturadocente.asignatura', 
+                'asignaturadocente.docente', 
+                'asignaturadocente.periodo', 
+                'matricula.estudiante'
+            ])
             ->whereHas('asignaturadocente.asignatura', function($query) {
-                $query->where('estado', 1);
+                $query->where('estado', 1); 
+            })
+            ->whereHas('asignaturadocente.periodo', function($query) {
+                $query->where('estado', 1); 
             });
-    
-       
+
         if ($user && !$user->hasRole('root')) { 
             $query->whereHas('asignaturadocente.docente', function($q) use ($user) {
                 $q->where('user_id', $user->id); 
             });
         }
-    
+
         $asignaturas = $query->selectRaw('asignatura_id, COUNT(id) as estudiantes_count')
             ->groupBy('asignatura_id')
             ->paginate($this->perPage);
-    
-        
+
         if ($user && !$user->hasRole('root') && $asignaturas->isEmpty()) {
-            session()->flash('info', 'No tiene asignaturas asignadas activas.');
+            session()->flash('info', 'No tiene asignaturas asignadas activas en el periodo actual.');
         }
-    
+
         return view('livewire.nota.notas', [
             'asignaturas' => $asignaturas,
         ])->layout('layouts.app');

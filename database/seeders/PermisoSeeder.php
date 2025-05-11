@@ -26,6 +26,7 @@ class PermisoSeeder extends Seeder
             'estudiante-admin-userestudiante',
             'admin-admin-asignatura',
             'admin-admin-seccion',
+            'admin-admin-periodo',
             'admin-admin-asignaturaDocente',
             'admin-admin-asignaturaestudiante',
             'admin-admin-matricula',

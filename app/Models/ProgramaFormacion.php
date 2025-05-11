@@ -29,11 +29,6 @@ class ProgramaFormacion extends BaseModel
         return $this->hasMany(Asignatura::class, 'programa_formacion_id');
     }
 
-    public function secciones()
-    {
-        return $this->hasMany(Seccion::class, 'programa_formacion_id');
-    }
-
     public function periodos()
     {
         return $this->hasMany(Periodo::class, 'programa_formacion_id');

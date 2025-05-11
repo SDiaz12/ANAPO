@@ -21,8 +21,7 @@ class DatabaseSeeder extends Seeder
          
             PermisoSeeder::class,
             RolSeeder::class,
-            UserTableSeeder::class,
-            PeriodoTableSeeder::class,       
+            UserTableSeeder::class, 
             
             
         ]);

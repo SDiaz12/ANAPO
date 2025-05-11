@@ -26,20 +26,49 @@
             </div>
             <form class="p-4 md:p-5">
                 <h2 class="text-xl font-bold mb-2 block text-gray-700 dark:text-gray-300">Datos de usuario</h2>
-                <div>
-                    <x-label for="name" value="Nombre de usuario" class="text-base font-medium text-gray-900" />
-                    <div class="mt-2">
-                        <input id="name" wire:model="name" class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md"
-                            type="text" name="name" :value="old('name')" required autofocus placeholder="Ingresa el nombre de usuario" />
+                @if(!$estudiante_id)
+                    <div class="mb-4">
+                        <label for="user_email" class="block text-gray-700 text-sm font-bold mb-2">Email del usuario:</label>
+                        <input type="email" wire:model="user_email" id="user_email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        @error('user_email') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
-                </div>
-                <div class="mt-4">
-                    <x-label for="password" value="Contraseña" class="text-base font-medium text-gray-900" />
-                    <div class="mt-2">
-                        <input id="password" wire:model="password" class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-3 px-6 text-base font-medium text-gray-700 dark:text-gray-300 outline-none focus:border-red-500 focus:shadow-md"
-                            type="password" name="password" required placeholder="Ingresa tu contraseña" />
+
+                    <div class="mb-4">
+                        <label for="user_password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+                        <input type="password" wire:model="user_password" id="user_password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        @error('user_password') <span class="text-red-500 text-xs"></span> @enderror
                     </div>
-                </div>
+
+                    <div class="mb-4">
+                        <label for="user_password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Confirmar contraseña:</label>
+                        <input type="password" wire:model="user_password_confirmation" id="user_password_confirmation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    </div>
+                @else
+                    <div class="mb-4 p-4 bg-gray-100 rounded-lg">
+                        <p class="text-sm font-medium text-gray-700">Información de usuario</p>
+                        <p class="text-sm text-gray-600 mt-1">Email: {{ $user_email }}</p>
+                        
+                        <div class="mt-3">
+                            <button type="button" wire:click="$toggle('showPasswordFields')" class="text-sm text-blue-600 hover:text-blue-800">
+                                {{ $showPasswordFields ? 'Cancelar' : 'Cambiar contraseña' }}
+                            </button>
+                            
+                            @if($showPasswordFields)
+                                <div class="mt-2 space-y-2">
+                                    <div>
+                                        <label for="user_password" class="block text-sm font-medium text-gray-700">Nueva contraseña:</label>
+                                        <input type="password" wire:model="user_password" id="user_password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                        @error('user_password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div>
+                                        <label for="user_password_confirmation" class="block text-sm font-medium text-gray-700">Confirmar nueva contraseña:</label>
+                                        <input type="password" wire:model="user_password_confirmation" id="user_password_confirmation" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
                 <h2 class="text-xl font-bold my-3 block text-gray-700 dark:text-gray-300">Datos de estudiante</h2>
                 <div class="mb-5">
                     <div class="flex">
