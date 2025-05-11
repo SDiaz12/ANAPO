@@ -45,6 +45,7 @@ class PermisoSeeder extends Seeder
             'admin-admin-mantenimiento',
             'estudiante-admin-matricularasignatura',
             'estudiante-admin-descargarhistorial',
+            'admin-admin-periodo'
 
          ];
          

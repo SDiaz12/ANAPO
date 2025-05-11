@@ -64,6 +64,7 @@ Route::middleware([
     Route::get('/descargar-historial/{matriculaId}', [App\Http\Controllers\PDFController::class, 'generarHistorial'])
      ->name('descargarHistorial')
      ->middleware('auth');
+     
     Route::get('/rol', Roles::class)
     ->name('rol')
     ->middleware('can:admin-admin-rol');
