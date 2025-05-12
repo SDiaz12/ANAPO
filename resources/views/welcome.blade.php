@@ -47,8 +47,8 @@
                                 </svg>
                             </a>
 
-                            <p class="mt-5 text-gray-600">¿Ya estás registrado? <a href="{{ route('login') }}" title=""
-                                    class="text-red-500 font-semibold transition-all duration-200 hover:underline">Iniciar</a>
+                            <p class="mt-5 text-gray-600">¿Ya tienes cuenta de estudiante? <a href="{{ route('login') }}" title=""
+                                    class="text-red-500 font-semibold transition-all duration-200 hover:underline">Acceder</a>
                             </p>
                         </div>
 
