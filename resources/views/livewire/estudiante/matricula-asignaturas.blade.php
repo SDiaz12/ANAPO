@@ -18,12 +18,12 @@
         <div class="max-w-7xl mx-auto">
             <div class="sm:flex sm:items-center sm:justify-between">
                 <div class="flex-1 min-w-0">
-                    <h3 class="text-lg font-medium text-gray-900">Asignaturas disponibles</h3>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-300">Asignaturas disponibles</h3>
                 </div>
                 <div class="mt-1 sm:mt-0 sm:ml-16 sm:flex-none">
                     <div class="relative rounded-md shadow-sm">
                         <input wire:model.live="search" type="text"
-                            class="block w-full pr-10 sm:text-sm border-gray-300 rounded-md p-2 border"
+                            class="block w-full pr-10 sm:text-sm dark:border-gray-600 border-gray-300 dark:text-gray-300 dark:bg-gray-700 rounded-md p-2 border"
                             placeholder="Buscar asignaturas...">
                     </div>
                 </div>
@@ -43,16 +43,16 @@
             @endif
 
             @if(!$matricula)
-                <div class="mt-8 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+                <div class="mt-8 bg-white dark:bg-gray-800 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
                     <p class="font-bold">No tienes una matrícula activa</p>
                     <p>No puedes matricularte en asignaturas sin una matrícula activa en el sistema.</p>
                 </div>
             @else
               
                 @if(!$mostrarAsignaturas)
-                    <div class="col-span-3 bg-white overflow-hidden shadow rounded-lg mt-4">
+                    <div class="col-span-3 bg-white dark:bg-gray-800 dark:border-gray-300 overflow-hidden shadow rounded-lg mt-4">
                         <div class="px-4 py-5 sm:p-6 text-center">
-                            <p class="text-gray-500">
+                            <p class="text-gray-600 dark:text-gray-400">
                                 @if($FechaActual >= $periodoActivo->fecha_inicio)
                                     El período de adición de asignaturas ha finalizado 
                                 @else
@@ -131,9 +131,9 @@
         
         @if($matriculadas->isNotEmpty())
             <div class="mt-8">
-                <h3 class="text-lg font-medium text-gray-900">Asignaturas Matriculadas</h3>
-                <table class="min-w-full divide-y divide-gray-200 mt-4">
-                    <thead class="bg-gray-50">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-300">Asignaturas Matriculadas</h3>
+                <table class="min-w-full mt-4 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Código
@@ -155,9 +155,9 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody>
                         @foreach($matriculadas as $matriculada)
-                            <tr>
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $matriculada->asignaturadocente->asignatura->codigo ?? 'N/A' }}
                                 </td>
@@ -188,7 +188,12 @@
                                                 Quitar
                                             </button>
                                         @else
-                                            <span class="text-gray-400">No disponible</span>
+                                            <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 10V7a4 4 0 1 1 8 0v3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2-3a2 2 0 1 1 4 0v3h-4V7Zm2 6a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
                                         @endif
                                     @endif
                                 </td>
