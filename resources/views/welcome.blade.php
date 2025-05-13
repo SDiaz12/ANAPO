@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Plataforma Académica ANAPO</title>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('Logo/LOGO.png') }}" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -24,7 +25,7 @@
             <section id="inicio" class="bg-[#FCF8F1] bg-opacity-30 py-8 sm:py-12 lg:py-10">
                 <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div class="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
-                        <div>
+                        <div data-aos="fade-up">
                             <p class="text-base font-semibold tracking-wider text-yellow-600 uppercase">Gestión de estudiantes y docentes</p>
                             <h1 class="mt-4 text-4xl font-bold text-black lg:mt-8 sm:text-6xl xl:text-8xl">Plataforma
                                 académica <div class="relative inline-flex">
@@ -52,7 +53,7 @@
                             </p>
                         </div>
 
-                        <div>
+                        <div data-aos="fade-up">
                             <img class="w-full" src="{{ asset('Logo/LOGO.png') }}" alt="ANAPO" />
                         </div>
                     </div>
@@ -62,7 +63,7 @@
 
         <section id="valores" class="py-10 bg-[#FCF8F1] bg-opacity-30 sm:py-16 lg:py-24">
             <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="max-w-2xl mb-12 mx-auto text-center">
+                <div data-aos="fade-up" class="max-w-2xl mb-12 mx-auto text-center">
                     <h2 class="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">Valores
                         Institucionales</h2>
                         <p class="mt-6 text-base text-gray-900">La Academia Nacional de Policía (ANAPO) de
@@ -70,7 +71,7 @@
                             valores fundamentales que guían la conducta y el desempeño de sus cadetes y egresados.</p>
                 </div>
                 <div class="grid grid-cols-1 gap-12 text-center sm:grid-cols-2 md:grid-cols-3 lg:gap-y-16">
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-red-100" width="72" height="75" viewBox="0 0 72 75" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +90,7 @@
                             ciudadanía.</p>
                     </div>
 
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-orange-100" width="62" height="64" viewBox="0 0 62 64" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -108,7 +109,7 @@
                             hay orden ni eficacia operativa.</p>
                     </div>
 
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-green-100" width="66" height="68" viewBox="0 0 66 68" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -127,7 +128,7 @@
                             el bienestar público.</p>
                     </div>
 
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-purple-100" width="66" height="68" viewBox="0 0 66 68" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -144,7 +145,7 @@
                         <p class="mt-4 text-base text-gray-600"> Orientar las acciones hacia la protección y asistencia de la población, priorizando el bien común y la atención a las necesidades ciudadanas.</p>
                     </div>
 
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-gray-100" width="65" height="70" viewBox="0 0 65 70" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -163,7 +164,7 @@
                             legalidad y justicia.</p>
                     </div>
 
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-yellow-100" width="78" height="78" viewBox="0 0 78 78" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -182,7 +183,7 @@
                             competente.</p>
                     </div>
 
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-gray-100" width="62" height="64" viewBox="0 0 62 64" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -201,7 +202,7 @@
                             los demás, lo que facilita una interacción más humana y efectiva con la comunidad.</p>
                     </div>
 
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-rose-100" width="72" height="75" viewBox="0 0 72 75" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -219,7 +220,7 @@
                             beneficio de la paz y el desarrollo de Honduras.</p>
                     </div>
 
-                    <div>
+                    <div data-aos="fade-up">
                         <div class="relative flex items-center justify-center mx-auto">
                             <svg class="text-lime-100" width="62" height="65" viewBox="0 0 62 65" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -243,14 +244,14 @@
 
         <section id="preguntas" class="py-8 bg-[#FCF8F1] bg-opacity-30 sm:py-10 lg:py-12">
             <div class="max-w-5xl px-4 mx-auto sm:px-6 lg:px-8">
-                <div class="max-w-2xl mx-auto text-center">
+                <div data-aos="fade-up" class="max-w-2xl mx-auto text-center">
                     <h2 class="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">Preguntas y
                         respuestas</h2>
                     <p class="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-800">Explora las preguntas y resuelve tus dudas</p>
                 </div>
 
                 <div class="grid grid-cols-1 mt-12 md:mt-20 md:grid-cols-2 gap-y-16 gap-x-20">
-                    <div class="flex items-start">
+                    <div data-aos="fade-up" class="flex items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full">
                             <span class="text-lg font-semibold text-white">?</span>
                         </div>
@@ -264,7 +265,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-start">
+                    <div data-aos="fade-up" class="flex items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full">
                             <span class="text-lg font-semibold text-white">?</span>
                         </div>
@@ -276,7 +277,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-start">
+                    <div data-aos="fade-up" class="flex items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full">
                             <span class="text-lg font-semibold text-white">?</span>
                         </div>
@@ -288,7 +289,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-start">
+                    <div data-aos="fade-up" class="flex items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full">
                             <span class="text-lg font-semibold text-white">?</span>
                         </div>
@@ -300,7 +301,7 @@
                                 estudios universitarios complementarios en áreas de seguridad pública.</p>
                         </div>
                     </div>
-                    <div class="flex items-start">
+                    <div data-aos="fade-up" class="flex items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full">
                             <span class="text-lg font-semibold text-white">?</span>
                         </div>
@@ -310,7 +311,7 @@
                                 centro oficial de formación de la Policía Nacional.</p>
                         </div>
                     </div>
-                    <div class="flex items-start">
+                    <div data-aos="fade-up" class="flex items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full">
                             <span class="text-lg font-semibold text-white">?</span>
                         </div>
@@ -322,7 +323,7 @@
                                 institucional. Cada caso se evalúa según las normas vigentes.</p>
                         </div>
                     </div>
-                    <div class="flex items-start">
+                    <div data-aos="fade-up" class="flex items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full">
                             <span class="text-lg font-semibold text-white">?</span>
                         </div>
@@ -334,7 +335,7 @@
                                 durante la formación.</p>
                         </div>
                     </div>
-                    <div class="flex items-start">
+                    <div data-aos="fade-up" class="flex items-start">
                         <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-gray-700 rounded-full">
                             <span class="text-lg font-semibold text-white">?</span>
                         </div>
@@ -351,11 +352,11 @@
         </section>
 
         <section id="contactos" class="py-8 bg-[#FCF8F1] bg-opacity-30 sm:py-10 lg:py-12">
-            <div class="max-w-2xl mx-auto text-center ">
+            <div data-aos="fade-up" class="max-w-2xl mx-auto text-center ">
                 <h2 class="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">¿No encontraste respuesta a tus preguntas?</h2>
                 <p class="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-800">Contáctanos de las siguientes maneras</p>
             </div>
-            <div class="px-4 mt-12 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+            <div data-aos="fade-up" class="px-4 mt-12 mx-auto sm:px-6 lg:px-8 max-w-7xl">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-y-12 lg:gap-x-8 xl:gap-x-20">
                     <div class="flex items-start">
                         <svg class="flex-shrink-0 w-10 h-10 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -399,7 +400,7 @@
         </section>
         
         <section class="py-10 bg-[#FCF8F1] bg-opacity-30 sm:pt-16 lg:pt-24">
-            <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+            <div data-aos="fade-up" class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
                 <div class="grid grid-cols-2 md:col-span-3 lg:grid-cols-6 gap-y-16 gap-x-12">
                     <div class="col-span-2 md:col-span-3 lg:col-span-2 lg:pr-8">
                         <div class="flex items-center space-x-2 rtl:space-x-reverse">
@@ -517,6 +518,14 @@
         
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000, // Duración de la animación en milisegundos
+            offset: 200,    // Desplazamiento antes de activar la animación
+            once: false,     // Si la animación debe ejecutarse solo una vez
+        });
+    </script>
 </body>
 
 </html>
