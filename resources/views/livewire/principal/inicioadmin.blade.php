@@ -204,14 +204,12 @@
             <div class="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)]">
                 <div class="px-8 pt-8 sm:px-10 sm:pt-10">
                     <p class="mt-2 text-lg font-medium tracking-tight text-gray-900 dark:text-white max-lg:text-center">
-                        Security</p>
-                    <p class="mt-2 max-w-lg text-sm/6 text-gray-700 dark:text-gray-400 max-lg:text-center">Morbi viverra
-                        dui mi arcu sed.
-                        Tellus semper adipiscing suspendisse semper morbi.</p>
+                        Plataforma Académica ANAPO</p>
+                    <p class="mt-2 max-w-lg text-sm/6 text-gray-700 dark:text-gray-400 max-lg:text-center">Dónde la
+                        excelencia es una obligación</p>
                 </div>
-                <div class="container flex flex-1 items-center max-lg:py-6 lg:pb-2">
-                    <img class="h-[min(152px,40cqw)] object-cover"
-                        src="https://tailwindcss.com/plus-assets/img/component-images/bento-03-security.png" alt="">
+                <div>
+                    <img class="w-full" src="{{ asset('Logo/LOGO.png') }}" alt="ANAPO" />
                 </div>
             </div>
             <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-black/5"></div>
@@ -222,13 +220,11 @@
             </div>
             <div
                 class="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] max-lg:rounded-b-[calc(2rem+1px)] lg:rounded-r-[calc(2rem+1px)]">
-                <div class="px-8 pt-8 pb-3 sm:px-10 sm:pt-10 sm:pb-0">
-                    <p class="mt-2 text-lg font-medium tracking-tight text-gray-900 dark:text-white max-lg:text-center">
-                        Powerful APIs
+                <div class="px-8 pt-8 pb-3 sm:px-10 sm:pt-8 sm:pb-0">
+                    <p class="text-lg font-medium tracking-tight text-gray-900 dark:text-white max-lg:text-center">
+                        QQQQQQQQ
                     </p>
-                    <p class="mt-2 max-w-lg text-sm/6 text-gray-700 dark:text-gray-400 max-lg:text-center">Sit quis amet
-                        rutrum tellus
-                        ullamcorper ultricies libero dolor eget sem sodales gravida.</p>
+                    <p class="mt-2 max-w-lg text-sm/6 text-gray-700 dark:text-gray-400 max-lg:text-center">QQQQ</p>
                 </div>
             </div>
             <div
