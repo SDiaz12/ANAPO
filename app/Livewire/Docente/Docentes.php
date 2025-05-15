@@ -20,7 +20,6 @@ class Docentes extends Component
 
     public $search, $docente_id, $codigo, $fecha_ingreso, $dni, $foto, $nombre, $apellido, $fecha_nacimiento, $residencia, $sexo, $telefono, $correo, $estado = 1, $created_at;
     
-    // Campos para el usuario
     public $user_email, $user_password, $user_password_confirmation;
 
     public $confirmingDelete = false;
