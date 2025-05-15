@@ -39,6 +39,11 @@ class ProgramaFormacion extends BaseModel
         return $this->hasMany(Estudiante::class, 'programa_formacion_id');
     }
 
+    public function matriculaprograma()
+    {
+        return $this->hasMany(Matricula::class, 'programaformacion_id');
+    }
+
     public function docentes()
     {
         return $this->hasMany(Docente::class, 'programa_formacion_id');

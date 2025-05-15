@@ -1,5 +1,45 @@
 <div>
-    <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-gray-100 dark:bg-gray-900 p-1">
+    <style>
+        /* Estilo para navegadores modernos */
+        .barra::-webkit-scrollbar {
+            width: 8px;
+            /* Ancho de la barra de desplazamiento */
+        }
+
+        .barra::-webkit-scrollbar-thumb {
+            background-color: #d4d3d3;
+            /* Color rojo */
+            border-radius: 10px;
+            /* Bordes redondeados */
+        }
+
+        .barra::-webkit-scrollbar-thumb:hover {
+            background-color: #c5c3c3;
+            /* Color gris más oscuro al pasar el mouse */
+        }
+
+        .barra::-webkit-scrollbar-track {
+            background-color: #ffffff;
+            /* Color del fondo de la barra */
+            border-radius: 10px;
+        }
+
+        /* Para navegadores que soportan scrollbar-color */
+        .barra {
+            scrollbar-color: #d4d3d3 #ffffff;
+            /* Color del pulgar y del fondo */
+            scrollbar-width: thin;
+            /* Barra más delgada */
+        }
+
+        .dark\:barra:is(.dark *) {
+            scrollbar-color: #707070 #1f2937;
+        }
+    </style>
+    @if($isOpenDatos)
+        @include('livewire.estudiant.datosEstudiante')
+    @endif
+    <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-gray-100 dark:bg-gray-900 pb-1">
         <!-- Tarjeta -->
         <div
             class="relative flex items-center p-6 rounded-xl border border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800">
@@ -104,190 +144,534 @@
                 <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{$matriculasCount}}</h4>
             </div>
         </div>
-
     </div>
-    <div class="mt-2 grid gap-4 sm:mt-2 lg:grid-cols-3 lg:grid-rows-2 p-1">
-        <div class="relative lg:row-span-2">
-            <div
-                class="absolute inset-px rounded-lg border border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800 lg:rounded-l-[2rem]">
-            </div>
-            <div
-                class="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] lg:rounded-l-[calc(2rem+1px)]">
-                <div class="px-8 pt-4 pb-3 sm:px-10 sm:pt-8 sm:pb-0">
-                    <!-- Lista de últimas matrículas -->
-                    <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">Últimas Matrículas
-                    </h5>
-                    <ul class="max-w-md mt-6 divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse($recentMatriculas as $matricula)
-                            <li class="pb-3 pt-3 sm:pb-4">
-                                <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                                    <div class="shrink-0">
-                                        @if ($matricula->estudiante->foto)
-                                            <img class="w-9 h-9 rounded-full object-cover"
-                                                alt="{{$matricula->estudiante->nombre}}"
-                                                src="{{ asset('storage/' . $matricula->estudiante->foto) }}">
-                                        @else
-                                            <img class="w-9 h-9 rounded-full object-cover"
-                                                alt="{{$matricula->estudiante->nombre}}"
-                                                src="https://ui-avatars.com/api/?name={{ $matricula->estudiante->nombre }}&amp;color=000&amp;background=#dc2626">
-                                        @endif
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            {{ $matricula->estudiante->nombre ?? '' }}
-                                            {{ $matricula->estudiante->apellido ?? '' }}
-                                        </p>
-                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                            {{ $matricula->programaFormacion->nombre ?? 'N/A' }}
-                                        </p>
-                                    </div>
-                                    <div
-                                        class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                        {{ \Carbon\Carbon::parse($matricula->created_at)->format('d-m-Y') }}
-                                    </div>
+
+    <!-- otra seccion -->
+    <main>
+        <div class="mx-auto pt-3 md:pt-3">
+            <div class="grid grid-cols-12 gap-4 md:gap-4">
+                <div class="col-span-12 space-y-4 xl:col-span-8">
+                    <!-- ====== Chart Fourteen Start -->
+                    <div
+                        class="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-700 dark:bg-gray-800 sm:px-6 sm:pt-5">
+                        <div class="flex flex-col gap-5 mb-6 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+                                    Estudiantes por programa
+                                </h3>
+                                <p class="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
+                                    Aquí prodrás ver la demanda de cada programa
+                                </p>
+                            </div>
+
+                           
+                        </div>
+                        <div class="max-w-full overflow-x-auto custom-scrollbar">
+                            <div id="chart-programas" class="w-full" style="min-height: 320px;"></div>
+                        </div>
+                    </div>
+                    <!-- ====== Chart Fourteen End -->
+                    <div class="col-span-12">
+                        <!-- Table Five -->
+                        <div
+                            class="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-700 dark:bg-gray-800">
+                            <div
+                                class="mb-4 flex flex-col gap-2 px-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+                                        Últimas matrículas
+                                    </h3>
                                 </div>
-                            </li>
-                        @empty
-                            <li class="text-gray-500 dark:text-gray-400">No se encontraron matrículas recientes.</li>
-                        @endforelse
-                    </ul>
+
+                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                                    <form>
+                                        <div class="relative">
+                                            <span class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2">
+                                                <svg class="fill-gray-500 dark:fill-gray-400" width="20" height="20"
+                                                    viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M3.04199 9.37381C3.04199 5.87712 5.87735 3.04218 9.37533 3.04218C12.8733 3.04218 15.7087 5.87712 15.7087 9.37381C15.7087 12.8705 12.8733 15.7055 9.37533 15.7055C5.87735 15.7055 3.04199 12.8705 3.04199 9.37381ZM9.37533 1.54218C5.04926 1.54218 1.54199 5.04835 1.54199 9.37381C1.54199 13.6993 5.04926 17.2055 9.37533 17.2055C11.2676 17.2055 13.0032 16.5346 14.3572 15.4178L17.1773 18.2381C17.4702 18.531 17.945 18.5311 18.2379 18.2382C18.5308 17.9453 18.5309 17.4704 18.238 17.1775L15.4182 14.3575C16.5367 13.0035 17.2087 11.2671 17.2087 9.37381C17.2087 5.04835 13.7014 1.54218 9.37533 1.54218Z"
+                                                        fill=""></path>
+                                                </svg>
+                                            </span>
+                                            <input wire:model.live="search" type="text" id="table-search"
+                                                class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
+                                                placeholder="Buscar matricula">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="custom-scrollbar max-w-full overflow-x-auto px-5 sm:px-6">
+                                <table class="min-w-full">
+                                    <thead class="border-y border-gray-100 py-3 dark:border-gray-700">
+                                        <tr>
+                                            <th class="py-3 font-normal whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <p class="text-theme-sm text-gray-500 dark:text-gray-400">Nombre</p>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 font-normal whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <p class="text-theme-sm text-gray-500 dark:text-gray-400">Programa
+                                                    </p>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 font-normal whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <p class="text-theme-sm text-gray-500 dark:text-gray-400">Fecha</p>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 font-normal whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <p class="text-theme-sm text-gray-500 dark:text-gray-400">Estado</p>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                        @forelse($recentMatriculas as $matricula)
+                                            <tr>
+                                                <td class="py-3 whitespace-nowrap">
+                                                    <div class="col-span-3 flex items-center">
+                                                        <div class="flex items-center gap-3">
+                                                            <div class="h-8 w-8">
+                                                                @if ($matricula->estudiante->foto)
+                                                                    <img class="w-9 h-9 rounded-full object-cover"
+                                                                        alt="{{$matricula->estudiante->nombre}}"
+                                                                        src="{{ asset('storage/' . $matricula->estudiante->foto) }}">
+                                                                @else
+                                                                    <img class="w-9 h-9 rounded-full object-cover"
+                                                                        alt="{{$matricula->estudiante->nombre}}"
+                                                                        src="https://ui-avatars.com/api/?name={{ $matricula->estudiante->nombre }}&amp;color=000&amp;background=#dc2626">
+                                                                @endif
+                                                            </div>
+
+                                                            <div>
+                                                                <span
+                                                                    class="text-theme-sm block font-medium text-gray-700 dark:text-gray-400">
+                                                                    {{ $matricula->estudiante->nombre ?? '' }}
+                                                                    {{ $matricula->estudiante->apellido ?? '' }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <p class="text-theme-sm text-gray-700 dark:text-gray-400">
+                                                            {{ $matricula->programaFormacion->nombre ?? 'N/A' }}
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <p class="text-theme-sm text-gray-700 dark:text-gray-400">
+                                                            {{ \Carbon\Carbon::parse($matricula->created_at)->format('d-m-Y') }}
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 whitespace-nowrap">
+                                                    @if ($matricula->estado == 1)
+                                                        <div class="flex items-center">
+                                                            <p
+                                                                class="bg-green-50 text-theme-xs text-green-600 dark:bg-green-500/15 dark:text-green-500 rounded-full px-2 py-0.5 font-medium">
+                                                                activo
+                                                            </p>
+                                                        </div>
+                                                    @else
+                                                        <div class="flex items-center">
+                                                            <p
+                                                                class="bg-red-50 text-theme-xs text-red-600 dark:bg-green-500/15 dark:text-red-500 rounded-full px-2 py-0.5 font-medium">
+                                                                Inactivo
+                                                            </p>
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                                <td class="py-3 whitespace-nowrap">
+                                                    <div class="flex items-center justify-center">
+                                                        <div x-data="{openDropDown: false}" class="relative">
+                                                            <button @click="openDropDown = !openDropDown"
+                                                                class="text-gray-500 dark:text-gray-400">
+                                                                <svg class="fill-current" width="24" height="24"
+                                                                    viewBox="0 0 24 24" fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                        d="M5.99902 10.245C6.96552 10.245 7.74902 11.0285 7.74902 11.995V12.005C7.74902 12.9715 6.96552 13.755 5.99902 13.755C5.03253 13.755 4.24902 12.9715 4.24902 12.005V11.995C4.24902 11.0285 5.03253 10.245 5.99902 10.245ZM17.999 10.245C18.9655 10.245 19.749 11.0285 19.749 11.995V12.005C19.749 12.9715 18.9655 13.755 17.999 13.755C17.0325 13.755 16.249 12.9715 16.249 12.005V11.995C16.249 11.0285 17.0325 10.245 17.999 10.245ZM13.749 11.995C13.749 11.0285 12.9655 10.245 11.999 10.245C11.0325 10.245 10.249 11.0285 10.249 11.995V12.005C10.249 12.9715 11.0325 13.755 11.999 13.755C12.9655 13.755 13.749 12.9715 13.749 12.005V11.995Z"
+                                                                        fill=""></path>
+                                                                </svg>
+                                                            </button>
+                                                            <div x-show="openDropDown" @click.outside="openDropDown = false"
+                                                                class="shadow-theme-lg dark:bg-gray-dark absolute top-full right-0 z-40 w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-700"
+                                                                style="display: none;">
+                                                                <button
+                                                                    wire:click="mostrarDatos({{ $matricula->estudiante->id }})"
+                                                                    class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                                                                    Ver más
+                                                                </button>
+                                                                <button
+                                                                    class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                                                                    Eliminar
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 text-gray-700"
+                                                    colspan="5">No
+                                                    hay matriculas recientes</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="border-t border-gray-200 px-6 py-4 dark:border-gray-700">
+                                <div class="flex items-center justify-between">
+                                    {{$recentMatriculas->links()}}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Table Five -->
+                    </div>
 
                 </div>
-            </div>
-            <div
-                class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-black/5 lg:rounded-l-[2rem]">
-            </div>
-        </div>
-        <div class="relative max-lg:row-start-1">
-            <div
-                class="absolute inset-px rounded-lg border border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800 max-lg:rounded-t-[2rem]">
-            </div>
-            <div
-                class="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] max-lg:rounded-t-[calc(2rem+1px)]">
 
-                <div class="max-w-sm w-full bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 md:p-6">
+                <div class="col-span-12 space-y-4 xl:col-span-4">
+                    <!-- ====== Chart donut -->
+                    <div
+                        class="rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-700 dark:bg-gray-800 sm:px-6 sm:pt-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+                                Estudiantes
+                            </h3>
 
-                    <div class="flex justify-between mb-3">
-                        <div class="flex justify-center items-center">
-                            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1">Estudiantes
-                            </h5>
+                            <div x-data="{openDropDown: false}" class="relative">
+                                <button @click="openDropDown = !openDropDown" :class="openDropDown ? 'text-gray-700 dark:text-white' : 'text-gray-400 hover:text-gray-700 dark:hover:text-white'"
+                                    class="text-gray-400 hover:text-gray-700 dark:hover:text-white">
+                                    <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M10.2441 6C10.2441 5.0335 11.0276 4.25 11.9941 4.25H12.0041C12.9706 4.25 13.7541 5.0335 13.7541 6C13.7541 6.9665 12.9706 7.75 12.0041 7.75H11.9941C11.0276 7.75 10.2441 6.9665 10.2441 6ZM10.2441 18C10.2441 17.0335 11.0276 16.25 11.9941 16.25H12.0041C12.9706 16.25 13.7541 17.0335 13.7541 18C13.7541 18.9665 12.9706 19.75 12.0041 19.75H11.9941C11.0276 19.75 10.2441 18.9665 10.2441 18ZM11.9941 10.25C11.0276 10.25 10.2441 11.0335 10.2441 12C10.2441 12.9665 11.0276 13.75 11.9941 13.75H12.0041C12.9706 13.75 13.7541 12.9665 13.7541 12C13.7541 11.0335 12.9706 10.25 12.0041 10.25H11.9941Z"
+                                            fill=""></path>
+                                    </svg>
+                                </button>
+                                <div x-show="openDropDown" @click.outside="openDropDown = false"
+                                    class="absolute right-0 top-full z-40 w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 shadow-theme-lg dark:border-gray-700 dark:bg-gray-dark"
+                                    style="display: none;">
+                                    <a href=""><button
+                                            class="flex w-full rounded-lg px-3 py-2 text-left text-theme-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                                            Ver más
+                                        </button>
+                                    </a>
+                                    <button
+                                        class="flex w-full rounded-lg px-3 py-2 text-left text-theme-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div>
-                            <button type="button" data-tooltip-target="data-tooltip" data-tooltip-placement="bottom"
-                                class="hidden sm:inline-flex items-center justify-center text-gray-500 w-8 h-8 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm"><svg
-                                    class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 16 18">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
-                                </svg><span class="sr-only">Download data</span>
-                            </button>
-                            <div id="data-tooltip" role="tooltip"
-                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
-                                Download CSV
-                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            <div id="chartFifteen" class="-ml-5" style="min-height: 215px;">
+                                <!-- Donut Chart -->
+                                <div class="py-6 text-white dark:text-gray-300" id="donut-chart"></div>
                             </div>
                         </div>
                     </div>
-                    <!-- Donut Chart -->
-                    <div class="py-6 text-white dark:text-gray-300" id="donut-chart"></div>
-                </div>
-            </div>
-            <div
-                class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-black/5 max-lg:rounded-t-[2rem]">
-            </div>
-        </div>
-        <div class="relative max-lg:row-start-3 lg:col-start-2 lg:row-start-2">
-            <div
-                class="absolute inset-px rounded-lg border border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800">
-            </div>
-            <div class="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)]">
-                <div class="px-8 pt-8 sm:px-10 sm:pt-10">
-                    <p class="mt-2 text-lg font-medium tracking-tight text-gray-900 dark:text-white max-lg:text-center">
-                        Plataforma Académica ANAPO</p>
-                    <p class="mt-2 max-w-lg text-sm/6 text-gray-700 dark:text-gray-400 max-lg:text-center">Dónde la
-                        excelencia es una obligación</p>
-                </div>
-                <div>
-                    <img class="w-full" src="{{ asset('Logo/LOGO.png') }}" alt="ANAPO" />
-                </div>
-            </div>
-            <div class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-black/5"></div>
-        </div>
-        <div class="relative lg:row-span-2">
-            <div
-                class="absolute inset-px rounded-lg border border-gray-200 bg-white  dark:border-gray-700 dark:bg-gray-800 max-lg:rounded-b-[2rem] lg:rounded-r-[2rem]">
-            </div>
-            <div
-                class="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] max-lg:rounded-b-[calc(2rem+1px)] lg:rounded-r-[calc(2rem+1px)]">
-                <div class="px-8 pt-8 pb-3 sm:px-10 sm:pt-8 sm:pb-0">
-                    <p class="text-lg font-medium tracking-tight text-gray-900 dark:text-white max-lg:text-center">
-                        QQQQQQQQ
-                    </p>
-                    <p class="mt-2 max-w-lg text-sm/6 text-gray-700 dark:text-gray-400 max-lg:text-center">QQQQ</p>
-                </div>
-            </div>
-            <div
-                class="pointer-events-none absolute inset-px rounded-lg ring-1 shadow-sm ring-black/5 max-lg:rounded-b-[2rem] lg:rounded-r-[2rem]">
-            </div>
-        </div>
-    </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Obtener los datos de Livewire
-            let femenino = @json($data['femenino']);
-            let masculino = @json($data['masculino']);
+                    <!-- ====== Chart Fifteen End -->
 
-            // Configuración del gráfico con datos dinámicos
-            const getChartOptions = () => {
-                return {
-                    series: [femenino, masculino], // 🔹 Datos dinámicos desde Livewire
-                    colors: ["#E74694", "#16BDCA"],
-                    chart: {
-                        height: 320,
-                        width: "100%",
-                        type: "donut",
-                    },
-                    stroke: {
-                        colors: ["transparent"],
-                    },
-                    plotOptions: {
-                        pie: {
-                            donut: {
-                                labels: {
+                    <!-- ====== Chart Fifteen Start -->
+                    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
+                        <div class="mb-6 flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
+                                Estudiantes destacados
+                            </h3>
+
+                            <div x-data="{openDropDown: false}" class="relative">
+                                <button @click="openDropDown = !openDropDown" :class="openDropDown ? 'text-gray-700 dark:text-white' : 'text-gray-400 hover:text-gray-700 dark:hover:text-white'"
+                                    class="text-gray-400 hover:text-gray-700 dark:hover:text-white">
+                                    <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M10.2441 6C10.2441 5.0335 11.0276 4.25 11.9941 4.25H12.0041C12.9706 4.25 13.7541 5.0335 13.7541 6C13.7541 6.9665 12.9706 7.75 12.0041 7.75H11.9941C11.0276 7.75 10.2441 6.9665 10.2441 6ZM10.2441 18C10.2441 17.0335 11.0276 16.25 11.9941 16.25H12.0041C12.9706 16.25 13.7541 17.0335 13.7541 18C13.7541 18.9665 12.9706 19.75 12.0041 19.75H11.9941C11.0276 19.75 10.2441 18.9665 10.2441 18ZM11.9941 10.25C11.0276 10.25 10.2441 11.0335 10.2441 12C10.2441 12.9665 11.0276 13.75 11.9941 13.75H12.0041C12.9706 13.75 13.7541 12.9665 13.7541 12C13.7541 11.0335 12.9706 10.25 12.0041 10.25H11.9941Z"
+                                            fill=""></path>
+                                    </svg>
+                                </button>
+                                <div x-show="openDropDown" @click.outside="openDropDown = false"
+                                    class="absolute right-0 top-full z-40 w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 shadow-theme-lg dark:border-gray-700 dark:bg-gray-dark"
+                                    style="display: none;">
+                                    <button
+                                        class="flex w-full rounded-lg px-3 py-2 text-left text-theme-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                                        Ver más
+                                    </button>
+                                    <button
+                                        class="flex w-full rounded-lg px-3 py-2 text-left text-theme-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex h-[372px] flex-col">
+                            <div class="barra dark:barra flex h-auto flex-col overflow-y-auto pr-3">
+                                <!-- item -->
+                                @forelse($destacados as $item)
+                                    <div
+                                        class="flex items-center justify-between border-b border-gray-200 pb-4 pt-4 first:pt-0 last:border-b-0 last:pb-0 dark:border-gray-700">
+                                        <div class="flex items-center gap-3">
+                                            <div class="h-10 w-10">
+                                                @if ($item['estudiante']->foto)
+                                                    <img class="w-10 h-10 rounded-full object-cover"
+                                                        alt="{{ $item['estudiante']->nombre }}"
+                                                        src="{{ asset('storage/' . $item['estudiante']->foto) }}">
+                                                @else
+                                                    <img class="w-10 h-10 rounded-full object-cover"
+                                                        alt="{{ $item['estudiante']->nombre }}"
+                                                        src="https://ui-avatars.com/api/?name={{ urlencode($item['estudiante']->nombre . ' ' . $item['estudiante']->apellido) }}&color=fff&background=dc2626">
+                                                @endif
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <h3
+                                                    class="text-base font-semibold text-gray-800 dark:text-white/90 truncate">
+                                                    {{ $item['estudiante']->nombre }} {{ $item['estudiante']->apellido }}
+                                                </h3>
+                                                <span class="block text-gray-500 dark:text-gray-400 truncate">
+                                                    {{ $item['estudiante']->matricula->programaFormacion->nombre ?? 'N/A' }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <span
+                                                class="flex items-center justify-end gap-1 text-theme-xs font-medium text-green-600 dark:text-green-500">
+                                                <svg class="fill-current" width="12" height="12" viewBox="0 0 12 12"
+                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                        d="M5.56462 1.62394C5.70193 1.47073 5.90135 1.37433 6.12329 1.37433C6.1236 1.37433 6.12391 1.37433 6.12422 1.37433C6.31631 1.37416 6.50845 1.44732 6.65505 1.59381L9.65514 4.59181C9.94814 4.8846 9.94831 5.35947 9.65552 5.65247C9.36273 5.94546 8.88785 5.94563 8.59486 5.65284L6.87329 3.93248L6.87329 10.125C6.87329 10.5392 6.53751 10.875 6.12329 10.875C5.70908 10.875 5.37329 10.5392 5.37329 10.125L5.37329 3.93579L3.65516 5.65282C3.36218 5.94562 2.8873 5.94547 2.5945 5.65249C2.3017 5.3595 2.30185 4.88463 2.59484 4.59183L5.56462 1.62394Z"
+                                                        fill=""></path>
+                                                </svg>
+                                                {{ $item['indice'] }}%
+                                            </span>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="py-2 text-gray-500">No hay estudiantes destacados.</div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ====== Chart Fifteen End -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let femenino = @json($data['femenino']);
+        let masculino = @json($data['masculino']);
+
+        // Detectar modo oscuro
+        function isDarkMode() {
+            return document.documentElement.classList.contains('dark');
+        }
+
+        function getChartOptions(dark) {
+            return {
+                series: [femenino, masculino],
+                colors: ["#E74694", "#16BDCA"],
+                chart: {
+                    height: 320,
+                    width: "100%",
+                    type: "donut",
+                    background: "transparent",
+                     toolbar: {
+                        show: true,
+                        tools: {
+                            download: true, // Activa el botón de descarga (PNG, SVG)
+                            selection: false,
+                            zoom: false,
+                            zoomin: false,
+                            zoomout: false,
+                            pan: false,
+                            reset: false,
+                            customIcons: []
+                        }
+                    }
+                },
+                stroke: {
+                    colors: ["transparent"],
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            labels: {
+                                show: true,
+                                total: {
                                     show: true,
-                                    total: {
-                                        show: true,
-                                        label: "Total",
-                                        formatter: function (w) {
-                                            return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                                        },
+                                    label: "Total",
+                                    color: dark ? '#d1d5db' : '#374151',
+                                    formatter: function (w) {
+                                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
                                     },
                                 },
-                                size: "80%",
                             },
+                            size: "80%",
                         },
                     },
-                    labels: ["Femenino", "Masculino"],
-                    dataLabels: {
-                        enabled: false,
+                },
+                labels: ["Femenino", "Masculino"],
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        colors: [dark ? '#d1d5db' : '#d1d5db']
+                    }
+                },
+                legend: {
+                    position: "bottom",
+                    labels: {
+                        colors: dark ? '#d1d5db' : '#6B7280',
+                        useSeriesColors: false,
                     },
-                    legend: {
-                        position: "bottom",
-                    },
-                };
+                },
+                theme: {
+                    mode: dark ? 'dark' : 'light'
+                }
             };
+        }
 
-            // Renderizar el gráfico
-            if (document.getElementById("donut-chart")) {
-                const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions());
-                chart.render();
+        // Renderizar el gráfico
+        if (document.getElementById("donut-chart")) {
+            let chart = new ApexCharts(
+                document.getElementById("donut-chart"),
+                getChartOptions(isDarkMode())
+            );
+            chart.render();
 
-                // Escuchar cambios en Livewire y actualizar el gráfico
-                Livewire.on('chartUpdated', (newData) => {
-                    chart.updateSeries([newData.femenino, newData.masculino]);
-                });
-            }
-        });
-    </script>
+            // Actualizar datos desde Livewire
+            Livewire.on('chartUpdated', (newData) => {
+                chart.updateSeries([newData.femenino, newData.masculino]);
+            });
+
+            // Escuchar cambios de modo oscuro (Tailwind)
+            const observer = new MutationObserver(() => {
+                chart.updateOptions(getChartOptions(isDarkMode()));
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        }
+    });
+</script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let labelsProgramas = @json($labelsProgramas);
+        let dataActivos = @json($dataActivos);
+        let dataBajas = @json($dataBajas);
+
+        // Detectar modo oscuro
+        function isDarkMode() {
+            return document.documentElement.classList.contains('dark');
+        }
+
+        function getChartOptions(dark) {
+            return {
+                series: [
+                    {
+                        name: 'Activos',
+                        data: dataActivos
+                    },
+                    {
+                        name: 'Bajas',
+                        data: dataBajas,
+                    }
+                ],
+                chart: {
+                    type: 'bar',
+                    height: 320,
+                    stacked: false,
+                    background: 'transparent',
+                     toolbar: {
+                        show: true,
+                        tools: {
+                            download: true, // Activa el botón de descarga (PNG, SVG)
+                            selection: false,
+                            zoom: false,
+                            zoomin: false,
+                            zoomout: false,
+                            pan: false,
+                            reset: false,
+                            customIcons: []
+                        }
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    categories: labelsProgramas,
+                    labels: {
+                        rotate: -45,
+                        style: {
+                            fontSize: '12px',
+                            colors: dark ? '#d1d5db' : '#374151'
+                        }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: dark ? '#d1d5db' : '#374151'
+                        }
+                    }
+                },
+                grid: {
+                    borderColor: dark ? '#374151' : '#e5e7eb'
+                },
+                colors: ['#22c55e', '#dc2626'],
+                legend: {
+                    position: 'top',
+                    labels: {
+                        colors: dark ? '#d1d5db' : '#374151'
+                    }
+                },
+                theme: {
+                    mode: dark ? 'dark' : 'light'
+                },
+                title: {
+                    text: 'Activos vs Bajas',
+                    align: 'center',
+                    style: {
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        color: dark ? '#d1d5db' : '#000000'
+                    }
+                }
+            };
+        }
+
+        // Renderizar gráfico
+        if (document.getElementById("chart-programas")) {
+            let chartProgramas = new ApexCharts(
+                document.getElementById("chart-programas"),
+                getChartOptions(isDarkMode())
+            );
+            chartProgramas.render();
+
+            // Escuchar cambios de modo oscuro (Tailwind)
+            const observer = new MutationObserver(() => {
+                chartProgramas.updateOptions(getChartOptions(isDarkMode()));
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        }
+    });
+</script>
 </div>
