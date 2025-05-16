@@ -7,9 +7,9 @@
                 <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
                     <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Regístrate</h2>
                     <p class="mt-2 text-base text-gray-600">
-                        ¿Ya tienes una cuenta?
+                        ¿Ya tienes cuenta de estudiante?
                         <a href="{{ route('login') }}" class="font-medium text-red-600 transition-all duration-200 hover:text-red-700 hover:underline focus:text-red-700">
-                            Iniciar
+                            Acceder
                         </a>
                     </p>
     

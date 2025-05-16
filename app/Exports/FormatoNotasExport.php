@@ -14,11 +14,12 @@ class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, Sh
 {
     protected $codigo_asignatura;
     protected $codigo_docente;
-
-    public function __construct($codigo_asignatura, $codigo_docente)
+    protected $seccion_id;
+    public function __construct($codigo_asignatura, $codigo_docente, $seccion_id)
     {
         $this->codigo_asignatura = $codigo_asignatura;
         $this->codigo_docente = $codigo_docente;
+        $this->seccion_id = $seccion_id;
     }
 
     public function headings(): array
@@ -47,6 +48,9 @@ class FormatoNotasExport implements FromCollection, WithHeadings, WithStyles, Sh
             })
             ->whereHas('docente', function ($query) {
                 $query->where('codigo', $this->codigo_docente);
+            })
+            ->whereHas('seccion', function ($query) {
+                $query->where('id', $this->seccion_id);
             });
         })
         ->with(['matricula.estudiante', 'asignaturadocente.asignatura', 'notas'])

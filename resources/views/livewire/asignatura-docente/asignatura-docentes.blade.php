@@ -127,6 +127,8 @@
                         <th scope="col" class="px-6 py-3">DNI</th>
                         <th scope="col" class="px-6 py-3">Nombre Docente</th>
                         <th scope="col" class="px-6 py-3">Asignatura</th>
+                        <th scope="col" class="px-6 py-3">Periodo</th>
+                        <th scope="col" class="px-6 py-3">Sección</th>
                         <th scope="col" class="px-6 py-3">Estado</th>
                         <th scope="col" class="px-6 py-3">Acciones</th>
                     </tr>
@@ -138,6 +140,8 @@
                         <td class="px-6 py-4">{{ $asignaturaDocente->docente->dni }}</td>
                         <td class="px-6 py-4">{{ $asignaturaDocente->docente->nombre }}</td>
                         <td class="px-6 py-4">{{ $asignaturaDocente->asignatura->nombre }}</td>
+                        <td class="px-6 py-4">{{ $asignaturaDocente->periodo->nombre }}</td>
+                        <td class="px-6 py-4">{{ $asignaturaDocente->seccion->nombre }}</td>
                         <td class="px-6 py-4">
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer"

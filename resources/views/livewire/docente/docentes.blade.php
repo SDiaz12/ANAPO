@@ -125,126 +125,130 @@
     </div>
     <div class="relative overflow-x-auto scrollbar-hidden">
         @if($viewMode === 'table')
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Código
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        DNI
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Foto
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Nombre
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Nacimiento
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Sexo
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Residencia
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Teléfono
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Correo
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Estado
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Acciones
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($docentes as $docente)
-                <tr
-                    class=" overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        {{ $docente->codigo }}
-                    </td>
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        {{ $docente->dni }}
-                    </td>
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        @if($docente->foto)
-                            <img src="{{ asset('storage/' . $docente->foto) }}"
-                            alt="foto docente" class="w-12 h-12 rounded-full object-cover">
-                        @else
-                        <img class="w-12 h-12 object-cover rounded-full"
-                            src="https://ui-avatars.com/api/?name={{ $docente->nombre }}&amp;color=000&amp;background=facc15">
-                        @endif
-                    </td>
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        {{ $docente->nombre }} {{ $docente->apellido }}
-                    </td>
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        {{ $docente->fecha_nacimiento }}
-                    </td>
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        {{ $docente->sexo }}
-                    </td>
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        {{ $docente->residencia }}
-                    </td>
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        {{ $docente->telefono }}
-                    </td>
-                    <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
-                        {{ $docente->correo }}
-                    </td>
-                    <td class="px-6 py-4">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" class="sr-only peer"
-                                wire:click="toggleEstado({{ $docente->id }})"
-                                {{ $docente->estado ? 'checked' : '' }}>
-                            <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 
-                                peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-700 
-                                peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full 
-                                peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 
-                                after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full 
-                                after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600">
-                            </div>
-                            <span class="ml-3 text-gray-700 dark:text-gray-400">
-                                {{ $docente->estado ? 'Activo' : 'Inactivo' }}
-                        </label>
-                    </td>
-                    <td class="px-6 py-4">
-                        <button wire:click="edit({{ $docente->id }})"
-                            class="mb-1 px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                            <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                            </svg>
-                            Editar
-                        </button>
-                        <button wire:click="confirmDelete({{ $docente->id }})"
-                            class="px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-center dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-800">
-                            <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                            </svg>
-                            Borrar
-                        </button>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-    
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Código
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            DNI
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Foto
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Nombre
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Nacimiento
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Sexo
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Residencia
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Teléfono
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Correo
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Estado
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($docentes as $docente)
+                    <tr
+                        class=" overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            {{ $docente->codigo }}
+                        </td>
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            {{ $docente->dni }}
+                        </td>
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            @if($docente->foto)
+                                <img src="{{ asset('storage/' . $docente->foto) }}"
+                                alt="foto docente" class="w-12 h-12 rounded-full object-cover">
+                            @else
+                            <img class="w-12 h-12 object-cover rounded-full"
+                                src="https://ui-avatars.com/api/?name={{ $docente->nombre }}&amp;color=000&amp;background=facc15">
+                            @endif
+                        </td>
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            {{ $docente->nombre }} {{ $docente->apellido }}
+                        </td>
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            {{ $docente->fecha_nacimiento }}
+                        </td>
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            {{ $docente->sexo }}
+                        </td>
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            {{ $docente->residencia }}
+                        </td>
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            {{ $docente->telefono }}
+                        </td>
+                        <td wire:click="mostrarDatos({{ $docente->id }})" class="px-6 py-4">
+                            {{ $docente->correo }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer"
+                                    wire:click="toggleEstado({{ $docente->id }})"
+                                    {{ $docente->estado ? 'checked' : '' }}>
+                                <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 
+                                    peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-700 
+                                    peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full 
+                                    peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 
+                                    after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full 
+                                    after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600">
+                                </div>
+                                <span class="ml-3 text-gray-700 dark:text-gray-400">
+                                    {{ $docente->estado ? 'Activo' : 'Inactivo' }}
+                            </label>
+                        </td>
+                        <td class="px-6 py-4">
+                            <button wire:click="edit({{ $docente->id }})"
+                                class="mb-1 px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                </svg>
+                                Editar
+                            </button>
+                            <button wire:click="confirmDelete({{ $docente->id }})"
+                                class="px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-center dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-800">
+                                <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                </svg>
+                                Borrar
+                            </button>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 text-gray-700" colspan="5">No hay docentes registrados</td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+
         @endif
     
     

@@ -246,9 +246,23 @@ class AsignaturaEstudiantes extends Component
     {
         $this->perPage = $suma;
     }
+    public function syncEstadoConPeriodo()
+    {
+      
+        $periodos = Periodo::select('id', 'estado')->get();
 
+        foreach ($periodos as $periodo) {
+            AsignaturaEstudiante::where('periodo_id', $periodo->id)
+            ->update(['estado' => $periodo->estado]);
+        }
+    }
+    public function mount()
+    {
+        $this->syncEstadoConPeriodo();
+    }
     public function render()
     {
+        $this->syncEstadoConPeriodo(); 
         $asignaturaEstudiantes = AsignaturaEstudiante::with([
                 'matricula.estudiante', 
                 'asignaturaDocente.asignatura', 

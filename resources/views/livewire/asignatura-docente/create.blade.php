@@ -30,7 +30,7 @@
                             @foreach($searchdocente as $docente)
                                 <li wire:click="selectdocente({{ $docente->id }})"
                                     class="px-4 py-2 cursor-pointer hover:bg-indigo-100 dark:hover:bg-gray-600">
-                                    {{ $docente->nombre }}
+                                    {{ $docente->nombre }} {{ $docente->apellido }}
                                 </li>
                             @endforeach
                         </ul>
