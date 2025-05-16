@@ -27,17 +27,17 @@ class Matriculas extends Component
         return view('livewire.Placeholder.loader')->layout('layouts.app');
     }
 
-    // Este método se ejecuta automáticamente cuando $dniBusqueda cambia
+
     public function updatedDniBusqueda($value)
     {
-        // Limpia los campos y el mensaje de error cada vez que el DNI cambia
+       
         $this->codigoEstudiante = '';
         $this->nombreCompleto = '';
         $this->estudiante_id = '';
         $this->error = '';
 
-        // Solo busca si el DNI tiene la longitud esperada (por ejemplo, 8 caracteres)
-        if (strlen($this->dniBusqueda) === strlen($this->dniBusqueda)) { // Ajusta la longitud si es necesario
+       
+        if (strlen($this->dniBusqueda) === strlen($this->dniBusqueda)) { 
             $this->buscarEstudiantePorDNI();
         }
     }
@@ -45,15 +45,15 @@ class Matriculas extends Component
     public function buscarEstudiantePorDNI()
     {
         $estudiante = Estudiante::where('dni', $this->dniBusqueda)
-            ->where('estado', 1) // Asegúrate de que el estudiante esté activo
+            ->where('estado', 1) 
             ->first();
         if ($estudiante) {
-            // Si se encuentra, actualiza los campos
+            
             $this->codigoEstudiante = $estudiante->codigo;
             $this->nombreCompleto = $estudiante->nombre . ' ' . $estudiante->apellido;
             $this->estudiante_id = $estudiante->id;
         } else {
-            // Si no se encuentra, muestra un mensaje de error
+            
             $this->error = 'No se encontró ningún estudiante con ese DNI.';
         }
     }

@@ -215,69 +215,71 @@ class MatriculaAsignaturas extends Component
     }
 
     public function render()
-{
-    $this->cargarMatriculadas();
-    $estudiante = Auth::user()->estudiante;
-    $matricula = Matricula::where('estudiante_id', $estudiante->id)
-        ->where('estado', 1)
-        ->first();
+    {
+        $this->cargarMatriculadas();
+        $estudiante = Auth::user()->estudiante;
 
-    if (!$matricula) {
-        return view('livewire.estudiante.matricula-asignaturas', [
-            'asignaturas' => [],
-            'matricula' => null
-        ])->layout('layouts.app');
-    }
+        $matricula = null;
+        $periodoActivo = null;
+        $asignaturas = collect();
+        $hoy = now();
+        $mostrarAsignaturas = false;
+        $enPeriodoMatricula = false;
+        $enPeriodoAdicion = false;
 
-    $periodoActivo = Periodo::where('estado', 1)->first();
+        
+        $matricula = Matricula::where('estudiante_id', $estudiante->id)
+            ->where('estado', 1)
+            ->first();
 
-    if (!$periodoActivo) {
-        return view('livewire.estudiante.matricula-asignaturas', [
-            'asignaturas' => [],
-            'matricula' => $matricula,
-            'matriculadas' => $this->matriculadas,
-        ])->layout('layouts.app');
-    }
 
-    $hoy = now();
-    $fechaInicioPeriodo = Carbon::parse($periodoActivo->fecha_inicio);
-    $fechaLimiteAdicion = $fechaInicioPeriodo->copy()->addWeeks(2);
+        $periodoActivo = Periodo::where('estado', 1)->first();
+
     
-    $mostrarAsignaturas = $hoy < $fechaLimiteAdicion; 
+        if ($periodoActivo) {
+            $fechaInicioPeriodo = Carbon::parse($periodoActivo->fecha_inicio);
+            $fechaLimiteAdicion = $fechaInicioPeriodo->copy()->addWeeks(2);
+            $mostrarAsignaturas = $hoy < $fechaLimiteAdicion;
+            $enPeriodoMatricula = $hoy < $fechaInicioPeriodo;
+            $enPeriodoAdicion = $hoy >= $fechaInicioPeriodo && $hoy < $fechaLimiteAdicion;
+        }
 
-    $asignaturasMatriculadasIds = collect($this->matriculadas)
-        ->pluck('asignaturaDocente.id')
-        ->filter()
-        ->toArray();
+       
+        if ($matricula && $periodoActivo) {
+            $asignaturasMatriculadasIds = collect($this->matriculadas)
+                ->pluck('asignaturaDocente.id')
+                ->filter()
+                ->toArray();
 
-    $asignaturasQuery = AsignaturaDocente::with(['asignatura', 'docente', 'periodo', 'seccion'])
-        ->where('periodo_id', $periodoActivo->id)
-        ->where('estado', 1)
-        ->whereHas('asignatura', function ($query) use ($matricula) {
-            $query->where('programa_formacion_id', $matricula->programaformacion_id)
-                ->where(function ($q) {
-                    $q->where('nombre', 'like', '%' . $this->search . '%')
-                        ->orWhere('codigo', 'like', '%' . $this->search . '%');
+            $asignaturasQuery = AsignaturaDocente::with(['asignatura', 'docente', 'periodo', 'seccion'])
+                ->where('periodo_id', $periodoActivo->id)
+                ->where('estado', 1)
+                ->whereHas('asignatura', function ($query) use ($matricula) {
+                    $query->where('programa_formacion_id', $matricula->programaformacion_id)
+                        ->where(function ($q) {
+                            $q->where('nombre', 'like', '%' . $this->search . '%')
+                            ->orWhere('codigo', 'like', '%' . $this->search . '%');
+                        });
                 });
-        });
 
-    if ($mostrarAsignaturas) {
-        $asignaturasQuery->whereNotIn('id', $asignaturasMatriculadasIds);
-    } else {
-        $asignaturasQuery->where('id', '<', 0); 
+            if ($mostrarAsignaturas) {
+                $asignaturasQuery->whereNotIn('id', $asignaturasMatriculadasIds);
+            } else {
+                $asignaturasQuery->where('id', '<', 0);
+            }
+
+            $asignaturas = $asignaturasQuery->paginate($this->perPage);
+        }
+
+        return view('livewire.estudiante.matricula-asignaturas', [
+            'asignaturas' => $asignaturas,
+            'matricula' => $matricula,
+            'periodoActivo' => $periodoActivo,
+            'matriculadas' => $this->matriculadas,
+            'mostrarAsignaturas' => $mostrarAsignaturas,
+            'FechaActual' => $hoy,
+            'enPeriodoMatricula' => $enPeriodoMatricula,
+            'enPeriodoAdicion' => $enPeriodoAdicion,
+        ])->layout('layouts.app');
     }
-
-    $asignaturas = $asignaturasQuery->paginate($this->perPage);
-
-    return view('livewire.estudiante.matricula-asignaturas', [
-        'asignaturas' => $asignaturas,
-        'matricula' => $matricula,
-        'periodoActivo' => $periodoActivo,
-        'matriculadas' => $this->matriculadas,
-        'mostrarAsignaturas' => $mostrarAsignaturas,
-        'FechaActual' => $hoy,
-        'enPeriodoMatricula' => $hoy < $fechaInicioPeriodo, 
-        'enPeriodoAdicion' => $hoy >= $fechaInicioPeriodo && $hoy < $fechaLimiteAdicion, 
-    ])->layout('layouts.app');
-}
 }
