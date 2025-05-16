@@ -9,6 +9,8 @@ use App\Models\Estudiante;
 use App\Models\Matricula;
 use App\Models\ProgramaFormacion;
 use App\Models\Promocion;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class InicioAdmin extends Component
@@ -160,18 +162,32 @@ class InicioAdmin extends Component
         return ProgramaFormacion::withCount('matriculaprograma')->get();
     }
 
+    public function getUsuariosActivos()
+    {
+        $minutos = 5; // Considera activo si tuvo actividad en los últimos 5 minutos
+        $limite = Carbon::now()->subMinutes($minutos)->timestamp;
+
+        return DB::table('sessions')
+            ->where('last_activity', '>=', $limite)
+            ->distinct('user_id')
+            ->whereNotNull('user_id')
+            ->count('user_id');
+    }
+
+
     public function render()
     {
         $programas = ProgramaFormacion::all();
-$labelsProgramas = [];
-$dataActivos = [];
-$dataBajas = [];
+        $labelsProgramas = [];
+        $dataActivos = [];
+        $dataBajas = [];
+        $usuariosActivos = $this->getUsuariosActivos();
 
-foreach ($programas as $programa) {
-    $labelsProgramas[] = $programa->nombre;
-    $dataActivos[] = $programa->matriculaprograma()->where('estado', 1)->count();
-    $dataBajas[] = $programa->matriculaprograma()->where('estado', 0)->count();
-}
+        foreach ($programas as $programa) {
+            $labelsProgramas[] = $programa->nombre;
+            $dataActivos[] = $programa->matriculaprograma()->where('estado', 1)->count();
+            $dataBajas[] = $programa->matriculaprograma()->where('estado', 0)->count();
+        }
         $destacados = $this->DestacadosMayor85();
         $estudiantesPorPrograma = $this->getEstudiantesPorPrograma();
         //contadores
@@ -197,6 +213,48 @@ foreach ($programas as $programa) {
             ->orderBy('created_at', 'DESC')
             ->paginate(10);
 
+        // Lista de departamentos de Honduras
+        $departamentos = [
+            'Atlántida',
+            'Colón',
+            'Comayagua',
+            'Copán',
+            'Cortés',
+            'Choluteca',
+            'El Paraíso',
+            'Francisco Morazán',
+            'Gracias a Dios',
+            'Intibucá',
+            'Islas de la Bahía',
+            'La Paz',
+            'Lempira',
+            'Ocotepeque',
+            'Olancho',
+            'Santa Bárbara',
+            'Valle',
+            'Yoro'
+        ];
+
+        // Inicializar conteo
+        $conteo = array_fill_keys($departamentos, 0);
+
+        // Obtener todas las residencias
+        $residencias = Estudiante::pluck('residencia');
+
+        foreach ($residencias as $texto) {
+            foreach ($departamentos as $dep) {
+                // Buscar el nombre del departamento como palabra completa, sin importar mayúsculas/minúsculas
+                if (preg_match('/\b' . preg_quote($dep, '/') . '\b/i', $texto)) {
+                    $conteo[$dep]++;
+                    break; // Solo contar una vez por estudiante
+                }
+            }
+        }
+
+        // Preparar para el gráfico
+        $departamentosGrafico = array_keys($conteo);
+        $cantidadPorDepartamento = array_values($conteo);
+
         return view('livewire.principal.inicioadmin', [
             'docentesCount' => $docentesCount,
             'estudiantesCount' => $estudiantesCount,
@@ -207,9 +265,12 @@ foreach ($programas as $programa) {
             'recentMatriculas' => $recentMatriculas,
             'destacados' => $destacados,
             'labelsProgramas' => $labelsProgramas,
-    'dataActivos' => $dataActivos,
-    'dataBajas' => $dataBajas,
+            'dataActivos' => $dataActivos,
+            'dataBajas' => $dataBajas,
+            'usuariosActivos' => $usuariosActivos,
             'estudiantesPorPrograma' => $estudiantesPorPrograma,
+            'departamentos' => $departamentosGrafico,
+            'cantidadPorDepartamento' => $cantidadPorDepartamento,
             'data' => $this->data,
         ])->layout('layouts.app');
     }

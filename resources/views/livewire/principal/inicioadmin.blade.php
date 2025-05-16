@@ -163,10 +163,28 @@
                                     Aquí prodrás ver la demanda de cada programa
                                 </p>
                             </div>
+                            <div x-data="{selected: 'optionOne'}"
+                                class="inline-flex w-fit items-center gap-0.5 rounded-lg bg-gray-100 p-0.5 dark:bg-gray-900">
+                                <button @click="selected = 'optionOne'" :class="selected === 'optionOne' ? 'shadow-theme-xs text-gray-900 dark:text-white bg-white dark:bg-gray-800' : 'text-gray-500 dark:text-gray-400'"
+                                    class="px-3 py-2 font-medium transition-colors rounded-md text-theme-sm hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white shadow-theme-xs text-gray-900 dark:text-white bg-white dark:bg-gray-800">
+                                    Gráfico
+                                </button>
+                                <a href="{{route('estudiante')}}">
+                                    <button @click="selected = 'optionTwo'" :class="selected === 'optionTwo' ? 'shadow-theme-xs text-gray-900 dark:text-white bg-white dark:bg-gray-800' : 'text-gray-500 dark:text-gray-400'"
+                                        class="px-3 py-2 font-medium transition-colors rounded-md text-theme-sm hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white text-gray-500 dark:text-gray-400">
+                                        Estudiantes
+                                    </button>
+                                </a>
+                                <a href="{{route('programas')}}">
+                                    <button @click="selected = 'optionThree'" :class="selected === 'optionThree' ? 'shadow-theme-xs text-gray-900 dark:text-white bg-white dark:bg-gray-800' : 'text-gray-500 dark:text-gray-400'"
+                                        class="px-3 py-2 font-medium transition-colors rounded-md text-theme-sm hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white text-gray-500 dark:text-gray-400">
+                                        Programas
+                                    </button>
+                                </a>
+                            </div>
 
-                           
                         </div>
-                        <div class="max-w-full overflow-x-auto custom-scrollbar">
+                        <div class="max-w-full overflow-x-auto barra dark:barra">
                             <div id="chart-programas" class="w-full" style="min-height: 320px;"></div>
                         </div>
                     </div>
@@ -202,7 +220,7 @@
                                 </div>
                             </div>
 
-                            <div class="custom-scrollbar max-w-full overflow-x-auto px-5 sm:px-6">
+                            <div class="barra dark:barra max-w-full overflow-x-auto px-5 sm:px-6">
                                 <table class="min-w-full">
                                     <thead class="border-y border-gray-100 py-3 dark:border-gray-700">
                                         <tr>
@@ -302,16 +320,12 @@
                                                                 </svg>
                                                             </button>
                                                             <div x-show="openDropDown" @click.outside="openDropDown = false"
-                                                                class="shadow-theme-lg dark:bg-gray-dark absolute top-full right-0 z-40 w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-700"
+                                                                class="shadow-theme-lg dark:bg-gray-dark absolute top-full right-0 z-40 w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-800 shadow-xl"
                                                                 style="display: none;">
                                                                 <button
                                                                     wire:click="mostrarDatos({{ $matricula->estudiante->id }})"
                                                                     class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
                                                                     Ver más
-                                                                </button>
-                                                                <button
-                                                                    class="text-theme-xs flex w-full rounded-lg px-3 py-2 text-left font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
-                                                                    Eliminar
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -337,7 +351,16 @@
                         </div>
                         <!-- Table Five -->
                     </div>
-
+                    <!-- comienzo del Grafico residencias -->
+                    <!-- Gráfico de barras de residencia de estudiantes -->
+                    <div
+                        class="rounded-2xl border border-gray-200 bg-white p-5 mt-6 dark:border-gray-800 dark:bg-gray-800">
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-2">
+                            Estudiantes por departamento de residencia
+                        </h3>
+                        <div id="grafico-residencia" style="min-height: 320px;"></div>
+                    </div>
+                    <!-- final del grafico de residencias -->
                 </div>
 
                 <div class="col-span-12 space-y-4 xl:col-span-4">
@@ -348,36 +371,42 @@
                             <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
                                 Estudiantes
                             </h3>
-
-                            <div x-data="{openDropDown: false}" class="relative">
-                                <button @click="openDropDown = !openDropDown" :class="openDropDown ? 'text-gray-700 dark:text-white' : 'text-gray-400 hover:text-gray-700 dark:hover:text-white'"
-                                    class="text-gray-400 hover:text-gray-700 dark:hover:text-white">
-                                    <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M10.2441 6C10.2441 5.0335 11.0276 4.25 11.9941 4.25H12.0041C12.9706 4.25 13.7541 5.0335 13.7541 6C13.7541 6.9665 12.9706 7.75 12.0041 7.75H11.9941C11.0276 7.75 10.2441 6.9665 10.2441 6ZM10.2441 18C10.2441 17.0335 11.0276 16.25 11.9941 16.25H12.0041C12.9706 16.25 13.7541 17.0335 13.7541 18C13.7541 18.9665 12.9706 19.75 12.0041 19.75H11.9941C11.0276 19.75 10.2441 18.9665 10.2441 18ZM11.9941 10.25C11.0276 10.25 10.2441 11.0335 10.2441 12C10.2441 12.9665 11.0276 13.75 11.9941 13.75H12.0041C12.9706 13.75 13.7541 12.9665 13.7541 12C13.7541 11.0335 12.9706 10.25 12.0041 10.25H11.9941Z"
-                                            fill=""></path>
-                                    </svg>
-                                </button>
-                                <div x-show="openDropDown" @click.outside="openDropDown = false"
-                                    class="absolute right-0 top-full z-40 w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 shadow-theme-lg dark:border-gray-700 dark:bg-gray-dark"
-                                    style="display: none;">
-                                    <a href=""><button
-                                            class="flex w-full rounded-lg px-3 py-2 text-left text-theme-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
-                                            Ver más
-                                        </button>
-                                    </a>
-                                    <button
-                                        class="flex w-full rounded-lg px-3 py-2 text-left text-theme-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
-                                        Eliminar
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                         <div>
                             <div id="chartFifteen" class="-ml-5" style="min-height: 215px;">
                                 <!-- Donut Chart -->
                                 <div class="py-6 text-white dark:text-gray-300" id="donut-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ====== Chart Fifteen End -->
+
+                    <!-- ====== Chart Sixteen Start -->
+                    <div
+                        class="rounded-2xl border border-gray-200 bg-white p-5 md:p-6 dark:border-gray-800 dark:bg-gray-800">
+                        <div class="flex items-start justify-between">
+                            <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white/90">
+                                Usuarios Conectados
+                            </h3>
+                        </div>
+                        <div class="max-w-sm w-full bg-gray-50 rounded-lg dark:bg-white/[0.03] p-5 md:p-7">
+                            <div class="flex justify-between">
+                                <div class="flex items-center">
+                                    <span class="relative flex h-4 w-4 mr-2">
+                                        <span
+                                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 dark:bg-green-500 opacity-75"></span>
+                                        <span
+                                            class="relative inline-flex rounded-full h-4 w-4 bg-green-500 dark:bg-green-600"></span>
+                                    </span>
+
+
+                                    <h5
+                                        class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2 inline">
+                                        {{ $usuariosActivos }}
+                                    </h5>
+                                    <p class="ml-3 text-base font-normal text-gray-500 dark:text-gray-400 inline">
+                                        Conectados</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -389,30 +418,6 @@
                             <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
                                 Estudiantes destacados
                             </h3>
-
-                            <div x-data="{openDropDown: false}" class="relative">
-                                <button @click="openDropDown = !openDropDown" :class="openDropDown ? 'text-gray-700 dark:text-white' : 'text-gray-400 hover:text-gray-700 dark:hover:text-white'"
-                                    class="text-gray-400 hover:text-gray-700 dark:hover:text-white">
-                                    <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M10.2441 6C10.2441 5.0335 11.0276 4.25 11.9941 4.25H12.0041C12.9706 4.25 13.7541 5.0335 13.7541 6C13.7541 6.9665 12.9706 7.75 12.0041 7.75H11.9941C11.0276 7.75 10.2441 6.9665 10.2441 6ZM10.2441 18C10.2441 17.0335 11.0276 16.25 11.9941 16.25H12.0041C12.9706 16.25 13.7541 17.0335 13.7541 18C13.7541 18.9665 12.9706 19.75 12.0041 19.75H11.9941C11.0276 19.75 10.2441 18.9665 10.2441 18ZM11.9941 10.25C11.0276 10.25 10.2441 11.0335 10.2441 12C10.2441 12.9665 11.0276 13.75 11.9941 13.75H12.0041C12.9706 13.75 13.7541 12.9665 13.7541 12C13.7541 11.0335 12.9706 10.25 12.0041 10.25H11.9941Z"
-                                            fill=""></path>
-                                    </svg>
-                                </button>
-                                <div x-show="openDropDown" @click.outside="openDropDown = false"
-                                    class="absolute right-0 top-full z-40 w-40 space-y-1 rounded-2xl border border-gray-200 bg-white p-2 shadow-theme-lg dark:border-gray-700 dark:bg-gray-dark"
-                                    style="display: none;">
-                                    <button
-                                        class="flex w-full rounded-lg px-3 py-2 text-left text-theme-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
-                                        Ver más
-                                    </button>
-                                    <button
-                                        class="flex w-full rounded-lg px-3 py-2 text-left text-theme-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
-                                        Eliminar
-                                    </button>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="flex h-[372px] flex-col">
@@ -464,214 +469,295 @@
                         </div>
                     </div>
                     <!-- ====== Chart Fifteen End -->
+
                 </div>
+
             </div>
         </div>
     </main>
 
-   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let femenino = @json($data['femenino']);
-        let masculino = @json($data['masculino']);
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let femenino = @json($data['femenino']);
+            let masculino = @json($data['masculino']);
 
-        // Detectar modo oscuro
-        function isDarkMode() {
-            return document.documentElement.classList.contains('dark');
-        }
+            // Detectar modo oscuro
+            function isDarkMode() {
+                return document.documentElement.classList.contains('dark');
+            }
 
-        function getChartOptions(dark) {
-            return {
-                series: [femenino, masculino],
-                colors: ["#E74694", "#16BDCA"],
-                chart: {
-                    height: 320,
-                    width: "100%",
-                    type: "donut",
-                    background: "transparent",
-                     toolbar: {
-                        show: true,
-                        tools: {
-                            download: true, // Activa el botón de descarga (PNG, SVG)
-                            selection: false,
-                            zoom: false,
-                            zoomin: false,
-                            zoomout: false,
-                            pan: false,
-                            reset: false,
-                            customIcons: []
+            function getChartOptions(dark) {
+                return {
+                    series: [femenino, masculino],
+                    colors: ["#E74694", "#16BDCA"],
+                    chart: {
+                        height: 320,
+                        width: "100%",
+                        type: "donut",
+                        background: "transparent",
+                        toolbar: {
+                            show: true,
+                            tools: {
+                                download: true, // Activa el botón de descarga (PNG, SVG)
+                                selection: false,
+                                zoom: false,
+                                zoomin: false,
+                                zoomout: false,
+                                pan: false,
+                                reset: false,
+                                customIcons: []
+                            }
                         }
-                    }
-                },
-                stroke: {
-                    colors: ["transparent"],
-                },
-                plotOptions: {
-                    pie: {
-                        donut: {
-                            labels: {
-                                show: true,
-                                total: {
+                    },
+                    stroke: {
+                        colors: ["transparent"],
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                labels: {
                                     show: true,
-                                    label: "Total",
-                                    color: dark ? '#d1d5db' : '#374151',
-                                    formatter: function (w) {
-                                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                    total: {
+                                        show: true,
+                                        label: "Total",
+                                        color: dark ? '#d1d5db' : '#374151',
+                                        formatter: function (w) {
+                                            return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                        },
                                     },
                                 },
+                                size: "80%",
                             },
-                            size: "80%",
                         },
                     },
-                },
-                labels: ["Femenino", "Masculino"],
-                dataLabels: {
-                    enabled: true,
-                    style: {
-                        colors: [dark ? '#d1d5db' : '#d1d5db']
-                    }
-                },
-                legend: {
-                    position: "bottom",
-                    labels: {
-                        colors: dark ? '#d1d5db' : '#6B7280',
-                        useSeriesColors: false,
+                    labels: ["Femenino", "Masculino"],
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            colors: [dark ? '#d1d5db' : '#d1d5db']
+                        }
                     },
-                },
-                theme: {
-                    mode: dark ? 'dark' : 'light'
-                }
-            };
-        }
+                    legend: {
+                        position: "bottom",
+                        labels: {
+                            colors: dark ? '#d1d5db' : '#6B7280',
+                            useSeriesColors: false,
+                        },
+                    },
+                    theme: {
+                        mode: dark ? 'dark' : 'light'
+                    }
+                };
+            }
 
-        // Renderizar el gráfico
-        if (document.getElementById("donut-chart")) {
-            let chart = new ApexCharts(
-                document.getElementById("donut-chart"),
-                getChartOptions(isDarkMode())
-            );
-            chart.render();
+            // Renderizar el gráfico
+            if (document.getElementById("donut-chart")) {
+                let chart = new ApexCharts(
+                    document.getElementById("donut-chart"),
+                    getChartOptions(isDarkMode())
+                );
+                chart.render();
 
-            // Actualizar datos desde Livewire
-            Livewire.on('chartUpdated', (newData) => {
-                chart.updateSeries([newData.femenino, newData.masculino]);
-            });
+                // Actualizar datos desde Livewire
+                Livewire.on('chartUpdated', (newData) => {
+                    chart.updateSeries([newData.femenino, newData.masculino]);
+                });
 
-            // Escuchar cambios de modo oscuro (Tailwind)
-            const observer = new MutationObserver(() => {
-                chart.updateOptions(getChartOptions(isDarkMode()));
-            });
-            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-        }
-    });
-</script>
+                // Escuchar cambios de modo oscuro (Tailwind)
+                const observer = new MutationObserver(() => {
+                    chart.updateOptions(getChartOptions(isDarkMode()));
+                });
+                observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+            }
+        });
+    </script>
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let labelsProgramas = @json($labelsProgramas);
-        let dataActivos = @json($dataActivos);
-        let dataBajas = @json($dataBajas);
+        document.addEventListener("DOMContentLoaded", function () {
+            let labelsProgramas = @json($labelsProgramas);
+            let dataActivos = @json($dataActivos);
+            let dataBajas = @json($dataBajas);
 
-        // Detectar modo oscuro
-        function isDarkMode() {
-            return document.documentElement.classList.contains('dark');
-        }
+            // Detectar modo oscuro
+            function isDarkMode() {
+                return document.documentElement.classList.contains('dark');
+            }
 
-        function getChartOptions(dark) {
-            return {
-                series: [
-                    {
-                        name: 'Activos',
-                        data: dataActivos
+            function getChartOptions(dark) {
+                return {
+                    series: [
+                        {
+                            name: 'Activos',
+                            data: dataActivos
+                        },
+                        {
+                            name: 'Bajas',
+                            data: dataBajas,
+                        }
+                    ],
+                    chart: {
+                        type: 'bar',
+                        height: 320,
+                        stacked: false,
+                        background: 'transparent',
+                        toolbar: {
+                            show: true,
+                            tools: {
+                                download: true, // Activa el botón de descarga (PNG, SVG)
+                                selection: false,
+                                zoom: false,
+                                zoomin: false,
+                                zoomout: false,
+                                pan: false,
+                                reset: false,
+                                customIcons: []
+                            }
+                        }
                     },
-                    {
-                        name: 'Bajas',
-                        data: dataBajas,
-                    }
-                ],
-                chart: {
-                    type: 'bar',
-                    height: 320,
-                    stacked: false,
-                    background: 'transparent',
-                     toolbar: {
-                        show: true,
-                        tools: {
-                            download: true, // Activa el botón de descarga (PNG, SVG)
-                            selection: false,
-                            zoom: false,
-                            zoomin: false,
-                            zoomout: false,
-                            pan: false,
-                            reset: false,
-                            customIcons: []
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '55%',
+                            endingShape: 'rounded'
                         }
-                    }
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: '55%',
-                        endingShape: 'rounded'
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                xaxis: {
-                    categories: labelsProgramas,
-                    labels: {
-                        rotate: -45,
-                        style: {
-                            fontSize: '12px',
+                    },
+                    dataLabels: {
+                        enabled: true
+                    },
+                    xaxis: {
+                        categories: labelsProgramas,
+                        labels: {
+                            rotate: -45,
+                            style: {
+                                fontSize: '12px',
+                                colors: dark ? '#d1d5db' : '#374151'
+                            }
+                        }
+                    },
+                    yaxis: {
+                        labels: {
+                            style: {
+                                colors: dark ? '#d1d5db' : '#374151'
+                            }
+                        }
+                    },
+                    grid: {
+                        borderColor: dark ? '#374151' : '#e5e7eb'
+                    },
+                    colors: ['#22c55e', '#dc2626'],
+                    legend: {
+                        position: 'top',
+                        labels: {
                             colors: dark ? '#d1d5db' : '#374151'
                         }
-                    }
-                },
-                yaxis: {
-                    labels: {
+                    },
+                    theme: {
+                        mode: dark ? 'dark' : 'light'
+                    },
+                    title: {
+                        text: 'Activos vs Bajas',
+                        align: 'center',
                         style: {
-                            colors: dark ? '#d1d5db' : '#374151'
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            color: dark ? '#d1d5db' : '#000000'
                         }
                     }
-                },
-                grid: {
-                    borderColor: dark ? '#374151' : '#e5e7eb'
-                },
-                colors: ['#22c55e', '#dc2626'],
-                legend: {
-                    position: 'top',
-                    labels: {
-                        colors: dark ? '#d1d5db' : '#374151'
-                    }
-                },
-                theme: {
-                    mode: dark ? 'dark' : 'light'
-                },
-                title: {
-                    text: 'Activos vs Bajas',
-                    align: 'center',
-                    style: {
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        color: dark ? '#d1d5db' : '#000000'
-                    }
-                }
-            };
-        }
+                };
+            }
 
-        // Renderizar gráfico
-        if (document.getElementById("chart-programas")) {
-            let chartProgramas = new ApexCharts(
-                document.getElementById("chart-programas"),
-                getChartOptions(isDarkMode())
-            );
-            chartProgramas.render();
+            // Renderizar gráfico
+            if (document.getElementById("chart-programas")) {
+                let chartProgramas = new ApexCharts(
+                    document.getElementById("chart-programas"),
+                    getChartOptions(isDarkMode())
+                );
+                chartProgramas.render();
 
-            // Escuchar cambios de modo oscuro (Tailwind)
-            const observer = new MutationObserver(() => {
-                chartProgramas.updateOptions(getChartOptions(isDarkMode()));
-            });
-            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-        }
-    });
-</script>
+                // Escuchar cambios de modo oscuro (Tailwind)
+                const observer = new MutationObserver(() => {
+                    chartProgramas.updateOptions(getChartOptions(isDarkMode()));
+                });
+                observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let departamentos = @json($departamentos);
+            let cantidad = @json($cantidadPorDepartamento);
+
+            function isDarkMode() {
+                return document.documentElement.classList.contains('dark');
+            }
+
+            function getOptions(dark) {
+                return {
+                    chart: {
+                        type: 'bar',
+                        height: 320,
+                        background: 'transparent',
+                        toolbar: {
+                            show: true,
+                            tools: {
+                                download: true
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Estudiantes',
+                        data: cantidad
+                    }],
+                    xaxis: {
+                        categories: departamentos,
+                        labels: {
+                            rotate: -45,
+                            style: {
+                                colors: dark ? '#d1d5db' : '#374151'
+                            }
+                        },
+                        title: {
+                            text: 'Departamento',
+                            style: {
+                                color: dark ? '#d1d5db' : '#374151'
+                            }
+                        }
+                    },
+                    yaxis: {
+                        labels: {
+                            style: {
+                                colors: dark ? '#d1d5db' : '#374151'
+                            }
+                        },
+                        title: {
+                            text: 'Cantidad',
+                            style: {
+                                color: dark ? '#d1d5db' : '#374151'
+                            }
+                        }
+                    },
+                    grid: {
+                        borderColor: dark ? '#374151' : '#e5e7eb'
+                    },
+                    colors: ['#eab308'],
+                    theme: {
+                        mode: dark ? 'dark' : 'light'
+                    }
+                };
+            }
+
+            if (document.getElementById("grafico-residencia")) {
+                let chart = new ApexCharts(
+                    document.getElementById("grafico-residencia"),
+                    getOptions(isDarkMode())
+                );
+                chart.render();
+
+                // Soporte para modo oscuro
+                const observer = new MutationObserver(() => {
+                    chart.updateOptions(getOptions(isDarkMode()));
+                });
+                observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+            }
+        });
+    </script>
 </div>
