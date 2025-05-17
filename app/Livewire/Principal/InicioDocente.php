@@ -5,42 +5,57 @@ namespace App\Livewire\Principal;
 use App\Models\AsignaturaDocente;
 use App\Models\Docente;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
 class InicioDocente extends Component
 {
+    use WithPagination;
+
     public function render()
     {
-        // Obtener el usuario autenticado y su docente asociado
         $user = Auth::user();
         $docente = Docente::where('user_id', $user->id)->first();
         
         if($docente) {
-            // Obtener asignaturas actuales (periodos activos)
+            
             $clasesActuales = AsignaturaDocente::where('docente_id', $docente->id)
-                ->whereHas('periodo', function ($query) {
-                    $query->where('estado', 1); // Periodos activos
-                })
+                ->whereHas('periodo', fn($query) => $query->where('estado', 1))
                 ->with(['asignatura', 'periodo', 'seccion'])
-                ->withCount('asignaturaEstudiantes as estudiantes_count')
-                ->get();
+                ->withCount(['asignaturaEstudiantes' => function($query) {
+                    $query->where('estado', 1); 
+                }])
+                ->paginate(10, ['*'], 'current_page');
 
-            // Obtener asignaturas históricas (periodos inactivos)
             $clasesHistoricas = AsignaturaDocente::where('docente_id', $docente->id)
-                ->whereHas('periodo', function ($query) {
-                    $query->where('estado', 0); // Periodos inactivos
-                })
+                ->whereHas('periodo', fn($query) => $query->where('estado', 0))
                 ->with(['asignatura', 'periodo', 'seccion'])
+                
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->paginate(10, ['*'], 'historic_page');
+
+       
+            $totalClasesActuales = $clasesActuales->total();
+            $totalEstudiantesActuales = $clasesActuales->sum('asignatura_estudiantes_count');
+            $totalClasesHistoricas = $clasesHistoricas->total();
+           
         } else {
             $clasesActuales = collect();
             $clasesHistoricas = collect();
+            $totalClasesActuales = 0;
+            $totalEstudiantesActuales = 0;
+            $totalClasesHistoricas = 0;
+          
         }
 
         return view('livewire.principal.iniciodocente', [
             'clasesActuales' => $clasesActuales,
             'clasesHistoricas' => $clasesHistoricas,
+            'totalClasesActuales' => $totalClasesActuales,
+            'totalEstudiantesActuales' => $totalEstudiantesActuales,
+            'totalClasesHistoricas' => $totalClasesHistoricas,
+           
+            'docente' => $docente,
         ])->layout('layouts.app');
     }
 }

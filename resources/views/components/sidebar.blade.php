@@ -352,7 +352,7 @@
           </li>
           <li>
             @php
-   $isDropdown2Active = request()->routeIs('asignaturaDocente') || request()->routeIs('programas') || request()->routeIs('periodo') || request()->routeIs('seccion') || request()->routeIs('instituto');
+            $isDropdown2Active = request()->routeIs('asignaturaDocente') || request()->routeIs('programas') || request()->routeIs('periodo') || request()->routeIs('seccion') || request()->routeIs('instituto');
             @endphp
             <button type="button"
                class="{{ $isDropdown2Active ? 'bg-gray-200 dark:bg-gray-700' : '' }} flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700"

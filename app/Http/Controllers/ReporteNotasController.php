@@ -8,14 +8,17 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReporteNotasController extends Controller
 {
-    public function cuadro($codigo_asignatura, $codigo_docente)
+    public function cuadro($codigo_asignatura, $codigo_docente, $seccion_id)
     {
-        $datos = AsignaturaEstudiante::with(['matricula.estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
+        $datos = AsignaturaEstudiante::with(['matricula.estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente', 'asignaturadocente.seccion'])
             ->whereHas('asignaturadocente.asignatura', function ($q) use ($codigo_asignatura) {
                 $q->where('codigo', $codigo_asignatura);
             })
             ->whereHas('asignaturadocente.docente', function ($q) use ($codigo_docente) {
                 $q->where('codigo', $codigo_docente);
+            })
+            ->whereHas('asignaturadocente.seccion', function ($q) use ( $seccion_id) {
+                $q->where('seccion_id',  $seccion_id);
             })
             ->get()
             ->filter(fn($item) => $item->notas);
@@ -24,14 +27,17 @@ class ReporteNotasController extends Controller
         return $pdf->stream('cuadro_consolidado.pdf');
     }
     
-    public function boletas($codigo_asignatura, $codigo_docente)
+    public function boletas($codigo_asignatura, $codigo_docente, $seccion_id)
     {
-        $datos = AsignaturaEstudiante::with(['matricula.estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente'])
+        $datos = AsignaturaEstudiante::with(['matricula.estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente', 'asignaturadocente.seccion'])
             ->whereHas('asignaturadocente.asignatura', function ($q) use ($codigo_asignatura) {
                 $q->where('codigo', $codigo_asignatura);
             })
             ->whereHas('asignaturadocente.docente', function ($q) use ($codigo_docente) {
                 $q->where('codigo', $codigo_docente);
+            })
+            ->whereHas('asignaturadocente.seccion', function ($q) use ( $seccion_id) {
+                $q->where('seccion_id',  $seccion_id);
             })
             ->get()
             ->filter(fn($item) => $item->notas);
