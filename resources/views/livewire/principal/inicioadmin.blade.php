@@ -361,10 +361,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Table Five -->
                     </div>
-                    <!-- comienzo del Grafico residencias -->
-                    <!-- Gráfico de barras de residencia de estudiantes -->
                     <div
                         class="rounded-2xl border border-gray-200 bg-white p-5 mt-6 dark:border-gray-800 dark:bg-gray-800">
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90 mb-2">
@@ -372,11 +369,9 @@
                         </h3>
                         <div id="grafico-residencia" style="min-height: 320px;"></div>
                     </div>
-                    <!-- final del grafico de residencias -->
                 </div>
 
                 <div class="col-span-12 space-y-4 xl:col-span-4">
-                    <!-- ====== Chart donut -->
                     <div
                         class="rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-700 dark:bg-gray-800 sm:px-6 sm:pt-6">
                         <div class="flex items-center justify-between">
@@ -510,7 +505,7 @@
                         toolbar: {
                             show: true,
                             tools: {
-                                download: true, // Activa el botón de descarga (PNG, SVG)
+                                download: true, 
                                 selection: false,
                                 zoom: false,
                                 zoomin: false,
@@ -562,7 +557,6 @@
                 };
             }
 
-            // Renderizar el gráfico
             if (document.getElementById("donut-chart")) {
                 let chart = new ApexCharts(
                     document.getElementById("donut-chart"),
@@ -570,12 +564,10 @@
                 );
                 chart.render();
 
-                // Actualizar datos desde Livewire
+         
                 Livewire.on('chartUpdated', (newData) => {
                     chart.updateSeries([newData.femenino, newData.masculino]);
                 });
-
-                // Escuchar cambios de modo oscuro (Tailwind)
                 const observer = new MutationObserver(() => {
                     chart.updateOptions(getChartOptions(isDarkMode()));
                 });
@@ -589,7 +581,6 @@
             let dataActivos = @json($dataActivos);
             let dataBajas = @json($dataBajas);
 
-            // Detectar modo oscuro
             function isDarkMode() {
                 return document.documentElement.classList.contains('dark');
             }
@@ -614,7 +605,7 @@
                         toolbar: {
                             show: true,
                             tools: {
-                                download: true, // Activa el botón de descarga (PNG, SVG)
+                                download: true, 
                                 selection: false,
                                 zoom: false,
                                 zoomin: false,
@@ -685,7 +676,6 @@
                 );
                 chartProgramas.render();
 
-                // Escuchar cambios de modo oscuro (Tailwind)
                 const observer = new MutationObserver(() => {
                     chartProgramas.updateOptions(getChartOptions(isDarkMode()));
                 });
