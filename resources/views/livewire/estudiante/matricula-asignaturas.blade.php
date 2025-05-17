@@ -1,4 +1,41 @@
 <div>
+    <style>
+        /* Estilo para navegadores modernos */
+        .barra::-webkit-scrollbar {
+            width: 8px;
+            /* Ancho de la barra de desplazamiento */
+        }
+
+        .barra::-webkit-scrollbar-thumb {
+            background-color: #d4d3d3;
+            /* Color rojo */
+            border-radius: 10px;
+            /* Bordes redondeados */
+        }
+
+        .barra::-webkit-scrollbar-thumb:hover {
+            background-color: #c5c3c3;
+            /* Color gris más oscuro al pasar el mouse */
+        }
+
+        .barra::-webkit-scrollbar-track {
+            background-color: #ffffff;
+            /* Color del fondo de la barra */
+            border-radius: 10px;
+        }
+
+        /* Para navegadores que soportan scrollbar-color */
+        .barra {
+            scrollbar-color: #d4d3d3 #ffffff;
+            /* Color del pulgar y del fondo */
+            scrollbar-width: thin;
+            /* Barra más delgada */
+        }
+
+        .dark\:barra:is(.dark *) {
+            scrollbar-color: #707070 #1f2937;
+        }
+    </style>
     <nav class="flex mb-2" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
@@ -50,20 +87,20 @@
             @else
 
                 @if(!$mostrarAsignaturas)
-    <div class="col-span-3 bg-white dark:bg-gray-800 dark:border-gray-300 overflow-hidden shadow rounded-lg mt-4">
-        <div class="px-4 py-5 sm:p-6 text-center">
-            <p class="text-gray-600 dark:text-gray-400">
-                @if(!$periodoActivo)
-                    No hay un período activo actualmente.
-                @elseif($FechaActual >= $periodoActivo->fecha_inicio)
-                    El período de adición de asignaturas ha finalizado
+                    <div class="col-span-3 bg-white dark:bg-gray-800 dark:border-gray-300 overflow-hidden shadow rounded-lg mt-4">
+                        <div class="px-4 py-5 sm:p-6 text-center">
+                            <p class="text-gray-600 dark:text-gray-400">
+                                @if(!$periodoActivo)
+                                    No hay un período activo actualmente.
+                                @elseif($FechaActual >= $periodoActivo->fecha_inicio)
+                                    El período de adición de asignaturas ha finalizado
+                                @else
+                                    El período de matrícula aún no está disponible.
+                                @endif
+                            </p>
+                        </div>
+                    </div>
                 @else
-                    El período de matrícula aún no está disponible.
-                @endif
-            </p>
-        </div>
-    </div>
-@else
                     <div class="mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         @forelse($asignaturas as $asignatura)
                             <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -134,7 +171,7 @@
         @if($matriculadas->isNotEmpty())
             <div class="mt-8">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-300 mb-4">Asignaturas Matriculadas</h3>
-                <div class="relative overflow-x-auto scrollbar-hidden bg-white rounded-lg dark:bg-gray-800 items-center justify-between">
+                <div class="relative overflow-x-auto barra dark:barra bg-white rounded-lg dark:bg-gray-800 items-center justify-between">
                     <table class="min-w-full w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
