@@ -28,8 +28,11 @@
     </style>
 </head>
 <body>
-
-    <h2>Cuadro de Notas Consolidado</h2>
+<div class="encabezado" style="text-align: center; margin-bottom: 15px;">
+        <img src="{{ public_path('Logo/LOGO.png') }}" alt="Logo" style="height: 70px; display: block; margin: 0 auto 5px auto;">
+        <h2 style="margin: 0; font-size: 22px; letter-spacing: 1px;">ACADEMIA NACIONAL DE POLICÍA</h2>
+        <span style="font-size: 13px;">Cuadro de Notas Consolidado</span>
+    </div>
 
     @php
         $docente = $datos->first()?->asignaturadocente->docente->nombre ?? '';
@@ -48,9 +51,9 @@
             <tr>
                 <th>#</th>
                 <th>Estudiante</th>
-                <th>1er Parcial</th>
-                <th>2do Parcial</th>
-                <th>3er Parcial</th>
+                <th>I Parcial</th>
+                <th>II Parcial</th>
+                <th>III Parcial</th>
                 <th>Asistencia</th>
                 <th>Recuperación</th>
                 <th>Promedio</th>

@@ -14,11 +14,6 @@
             page-break-after: always;
         }
 
-        h3 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -90,7 +85,11 @@
     @endphp
 
     <div class="boleta">
-        <h3>Boleta de Notas</h3>
+        <div class="encabezado" style="text-align: center; margin-bottom: 15px;">
+        <img src="{{ public_path('Logo/LOGO.png') }}" alt="Logo" style="height: 100px; display: block; margin: 0 auto 5px auto;">
+        <h2 style="margin: 0; font-size: 22px; letter-spacing: 1px;">ACADEMIA NACIONAL DE POLICÍA</h2>
+        <span style="font-size: 13px;">Boleta de Calificaciones de {{ $registro->asignaturadocente->asignatura->nombre ?? 'Materia' }}</span>
+    </div>
 
        
         <table class="info-table">
@@ -99,19 +98,14 @@
                     <strong>Periodo:</strong> {{ $periodo }}<br>
                     <strong>Sección:</strong> {{ $seccion }}
                 </td>
-                <td style="text-align: right; width: 30%;">
-                    <img src="{{ public_path('storage/' . $estudiante->foto) }}" class="foto" alt="Foto">
-
-
-
-                </td>
+                
             </tr>
         </table>
         <table class="w-full border border-gray-200 dark:border-gray-700">
             <thead>
                 <tr>
                     <th class="px-4 py-2 border">Parcial</th>
-                    <th class="px-4 py-2 border">{{ $registro->asignaturadocente->asignatura->nombre ?? 'Materia' }}</th>
+                    <th class="px-4 py-2 border">Nota</th>
                     <th class="px-4 py-2 border">Asistencia</th>
                 </tr>
             </thead>
@@ -121,7 +115,7 @@
                     <td class="px-4 py-2 border">I Parcial</td>
                     <td class="px-4 py-2 border">{{ $nota->primerparcial ?? 'N/A' }}</td>
                     <td class="px-4 py-2 border" rowspan="4">
-                        {{ $nota->asistencia ?? 'N/A' }} %
+                        {{ $nota->asistencia ?? 'N/A' }}%
                         @if($nota && $nota->asistencia)
                             <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1 dark:bg-gray-700">
                                 <div class="bg-blue-600 h-2.5 rounded-full" 
@@ -146,7 +140,7 @@
              
                 <tr>
                     <td class="px-4 py-2 border">Promedio</td>
-                    <td class="px-4 py-2 border">{{ $promedio ?? 'N/A' }}</td>
+                    <td class="px-4 py-2 border">{{ $promedio ?? 'N/A' }}%</td>
                 </tr>
                 
             </tbody>

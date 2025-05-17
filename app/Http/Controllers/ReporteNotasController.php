@@ -46,4 +46,3 @@ class ReporteNotasController extends Controller
         return $pdf->stream('boletas.pdf');
     }
 }
-
