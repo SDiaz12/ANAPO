@@ -18,7 +18,8 @@ class AsignaturaEstudiantes extends Component
     public $IdAEliminar, $nombreAEliminar;
     public $isOpen = false;
     public $error;
-    public $viewMode = 'table';  
+    public $viewMode = 'table';
+    public $periodoSeleccionado;
     public function toggleViewMode()
     {
         $this->viewMode = $this->viewMode === 'table' ? 'cards' : 'table';
@@ -33,7 +34,7 @@ class AsignaturaEstudiantes extends Component
     public $searchEstudiante = [];
     public $inputSearchAsignatura = '';
     public $searchAsignatura = [];
-    
+
     public $perPage = 10;
 
     public function create()
@@ -72,39 +73,39 @@ class AsignaturaEstudiantes extends Component
             'matricula_id' => 'required|integer|exists:matriculas,id',
             'asignaturadocente_id' => 'required|integer|exists:asignaturadocentes,id',
         ]);
-    
+
         $periodoActivo = Periodo::where('estado', 1)->first();
         if (!$periodoActivo) {
             $this->error = 'No hay período activo.';
             return;
         }
-    
+
         $matricula = Matricula::find($this->matricula_id);
         $asignaturaDocente = AsignaturaDocente::with(['asignatura.requisitos'])->find($this->asignaturadocente_id);
-    
-        
+
+
         if ($asignaturaDocente->asignatura->programa_formacion_id != $matricula->programaformacion_id) {
             $this->error = 'La asignatura no pertenece al programa de formación del estudiante.';
             return;
         }
-    
+
         // Verificar requisitos previos
         if ($asignaturaDocente->asignatura->requisitos->isNotEmpty()) {
             foreach ($asignaturaDocente->asignatura->requisitos as $requisito) {
                 $requisitoAprobado = AsignaturaEstudiante::where('estudiantes_id', $this->matricula_id)
-                    ->whereHas('asignaturaDocente.asignatura', function($query) use ($requisito) {
+                    ->whereHas('asignaturaDocente.asignatura', function ($query) use ($requisito) {
                         $query->where('id', $requisito->id);
                     })
-                    ->whereHas('notas', function($query) {
+                    ->whereHas('notas', function ($query) {
                         $query->where('estado', 1)
-                            ->where(function($q) {
-                                
+                            ->where(function ($q) {
+
                                 $q->whereRaw('(primerparcial + segundoparcial + tercerparcial) / 3 >= 70.0')
-                                  ->orWhere('recuperacion', '>=', 70.0);
+                                    ->orWhere('recuperacion', '>=', 70.0);
                             });
                     })
                     ->exists();
-    
+
                 if (!$requisitoAprobado) {
                     $this->error = "El estudiante no ha aprobado el requisito previo: {$requisito->nombre}";
                     return;
@@ -117,13 +118,13 @@ class AsignaturaEstudiantes extends Component
                 ->where('asignatura_id', $this->asignaturadocente_id)
                 ->where('periodo_id', $periodoActivo->id)
                 ->first();
-                
+
             if ($existente) {
                 $this->error = 'El estudiante ya está matriculado en esta asignatura.';
                 return;
             }
         }
-    
+
         AsignaturaEstudiante::updateOrCreate(
             ['id' => $this->asignaturaestudiante_id],
             [
@@ -133,14 +134,14 @@ class AsignaturaEstudiantes extends Component
                 'estado' => $this->estado,
             ]
         );
-    
+
         session()->flash(
             'message',
             $this->asignaturaestudiante_id
-                ? 'Matrícula de asignatura actualizada correctamente!'
-                : 'Matrícula de asignatura creada correctamente!'
+            ? 'Matrícula de asignatura actualizada correctamente!'
+            : 'Matrícula de asignatura creada correctamente!'
         );
-    
+
         $this->closeModal();
         $this->resetInputFields();
     }
@@ -150,9 +151,9 @@ class AsignaturaEstudiantes extends Component
         $this->searchEstudiante = Matricula::with('estudiante')
             ->whereHas('estudiante', function ($q) {
                 $q->where('nombre', 'like', '%' . $this->inputSearchEstudiante . '%')
-                  ->orWhere('apellido', 'like', '%' . $this->inputSearchEstudiante . '%')
-                  ->orWhere('dni', 'like', '%' . $this->inputSearchEstudiante . '%')
-                  ->orWhere('codigo', 'like', '%' . $this->inputSearchEstudiante . '%');
+                    ->orWhere('apellido', 'like', '%' . $this->inputSearchEstudiante . '%')
+                    ->orWhere('dni', 'like', '%' . $this->inputSearchEstudiante . '%')
+                    ->orWhere('codigo', 'like', '%' . $this->inputSearchEstudiante . '%');
             })
             ->where('estado', 1)
             ->limit(10)
@@ -171,14 +172,14 @@ class AsignaturaEstudiantes extends Component
     {
         if ($this->matricula_id) {
             $matricula = Matricula::find($this->matricula_id);
-            
+
             $this->searchAsignatura = AsignaturaDocente::with(['asignatura', 'docente'])
-                ->whereHas('asignatura', function($q) use ($matricula) {
+                ->whereHas('asignatura', function ($q) use ($matricula) {
                     $q->where('programa_formacion_id', $matricula->programaformacion_id)
-                      ->where(function($query) {
-                          $query->where('nombre', 'like', '%' . $this->inputSearchAsignatura . '%')
+                        ->where(function ($query) {
+                            $query->where('nombre', 'like', '%' . $this->inputSearchAsignatura . '%')
                                 ->orWhere('codigo', 'like', '%' . $this->inputSearchAsignatura . '%');
-                      });
+                        });
                 })
                 ->where('estado', 1)
                 ->limit(15)
@@ -200,14 +201,14 @@ class AsignaturaEstudiantes extends Component
     public function edit($id)
     {
         $asignaturaEstudiante = AsignaturaEstudiante::with(['matricula.estudiante', 'asignaturaDocente.asignatura'])->findOrFail($id);
-        
+
         $this->asignaturaestudiante_id = $asignaturaEstudiante->id;
         $this->matricula_id = $asignaturaEstudiante->estudiantes_id;
         $this->inputSearchEstudiante = $asignaturaEstudiante->matricula->estudiante->nombre . ' ' . $asignaturaEstudiante->matricula->estudiante->apellido;
         $this->asignaturadocente_id = $asignaturaEstudiante->asignatura_id;
         $this->inputSearchAsignatura = $asignaturaEstudiante->asignaturaDocente->asignatura->nombre;
         $this->estado = $asignaturaEstudiante->estado;
-        
+
         $this->openModal();
     }
 
@@ -248,42 +249,44 @@ class AsignaturaEstudiantes extends Component
     }
     public function syncEstadoConPeriodo()
     {
-      
+
         $periodos = Periodo::select('id', 'estado')->get();
 
         foreach ($periodos as $periodo) {
             AsignaturaEstudiante::where('periodo_id', $periodo->id)
-            ->update(['estado' => $periodo->estado]);
+                ->update(['estado' => $periodo->estado]);
         }
     }
     public function mount()
     {
         $this->syncEstadoConPeriodo();
+        $periodoActual = Periodo::where('estado', true)->first();
+        $this->periodoSeleccionado = $periodoActual ? $periodoActual->id : null;
     }
     public function render()
     {
-        $this->syncEstadoConPeriodo(); 
-        $asignaturaEstudiantes = AsignaturaEstudiante::with([
-                'matricula.estudiante', 
-                'asignaturaDocente.asignatura', 
-                'asignaturaDocente.docente',
-                'periodo'
-            ])
-            ->where(function($query) {
-                $query->whereHas('matricula.estudiante', function($q) {
-                    $q->where('nombre', 'like', '%' . $this->search . '%')
-                      ->orWhere('apellido', 'like', '%' . $this->search . '%');
-                })
-                ->orWhereHas('asignaturaDocente.asignatura', function($q) {
-                    $q->where('nombre', 'like', '%' . $this->search . '%')
-                      ->orWhere('codigo', 'like', '%' . $this->search . '%');
-                });
+        $this->syncEstadoConPeriodo();
+        $periodos = Periodo::orderBy('nombre', 'desc')->get();
+
+        $asignaturaEstudiantes = AsignaturaEstudiante::with(['asignaturaDocente.asignatura', 'asignaturaDocente.docente', 'periodo', 'matricula.estudiante'])
+            ->when($this->periodoSeleccionado, function ($query) {
+                $query->where('periodo_id', $this->periodoSeleccionado);
             })
-            ->orderBy('id', 'DESC')
+            ->where(function ($q) {
+                $q->whereHas('asignaturaDocente.asignatura', function ($q2) {
+                    $q2->where('nombre', 'like', '%' . $this->search . '%');
+                })
+                    ->orWhereHas('matricula.estudiante', function ($q2) {
+                        $q2->where('nombre', 'like', '%' . $this->search . '%')
+                            ->orWhere('apellido', 'like', '%' . $this->search . '%')
+                            ->orWhere('codigo', 'like', '%' . $this->search . '%');
+                    });
+            })
             ->paginate($this->perPage);
-    
+
         return view('livewire.asignatura-estudiante.asignatura-estudiantes', [
             'asignaturaEstudiantes' => $asignaturaEstudiantes,
+            'periodos' => $periodos,
         ])->layout('layouts.app');
     }
 }

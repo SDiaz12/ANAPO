@@ -120,6 +120,7 @@
          scrollbar-width: thin;
          /* Barra más delgada */
       }
+
       .dark\:barra:is(.dark *) {
          scrollbar-color: #707070 #1f2937;
       }
@@ -192,21 +193,6 @@
                </x-nav-link>
             </li>
          @endcan
-
-            @can('admin-admin-asignatura')
-            <li>
-               <x-nav-link href="{{ route('asignatura') }}" :active="request()->routeIs('asignatura')"
-                 class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                 <x-activeIcons :active="request()->routeIs('asignatura')" class="w-6 h-6" aria-hidden="true"
-                   xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                   <path
-                     d="M9 6c0-1.65685 1.3431-3 3-3s3 1.34315 3 3-1.3431 3-3 3-3-1.34315-3-3Zm2 3.62992c-.1263-.04413-.25-.08799-.3721-.13131-1.33928-.47482-2.49256-.88372-4.77995-.8482C4.84875 8.66593 4 9.46413 4 10.5v7.2884c0 1.0878.91948 1.8747 1.92888 1.8616 1.283-.0168 2.04625.1322 2.79671.3587.29285.0883.57733.1863.90372.2987l.00249.0008c.11983.0413.24534.0845.379.1299.2989.1015.6242.2088.9892.3185V9.62992Zm2-.00374V20.7551c.5531-.1678 1.0379-.3374 1.4545-.4832.2956-.1034.5575-.1951.7846-.2653.7257-.2245 1.4655-.3734 2.7479-.3566.5019.0065.9806-.1791 1.3407-.4788.3618-.3011.6723-.781.6723-1.3828V10.5c0-.58114-.2923-1.05022-.6377-1.3503-.3441-.29904-.8047-.49168-1.2944-.49929-2.2667-.0352-3.386.36906-4.6847.83812-.1256.04539-.253.09138-.3832.13765Z" />
-
-                 </x-activeIcons>
-                 <span class="flex-1 ms-3 whitespace-nowrap">Asignaturas</span>
-               </x-nav-link>
-            </li>
-         @endcan
             @can('docente-admin-notas')
             <li>
                <x-nav-link href="{{ route('notas') }}" :active="request()->routeIs('notas')"
@@ -258,7 +244,7 @@
             @can('admin-admin-personas')
                <li>
                   @php
-   $isDropdown3Active = request()->routeIs('docente') || request()->routeIs('estudiante') || request()->routeIs('users') || request()->routeIs('rol');
+                  $isDropdown3Active = request()->routeIs('docente') || request()->routeIs('estudiante') || request()->routeIs('users') || request()->routeIs('rol');
                @endphp
                   <button type="button"
                     class="{{ $isDropdown3Active ? 'bg-gray-200 dark:bg-gray-700' : '' }} flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700"
@@ -352,8 +338,8 @@
           </li>
           <li>
             @php
-            $isDropdown2Active = request()->routeIs('asignaturaDocente') || request()->routeIs('programas') || request()->routeIs('periodo') || request()->routeIs('seccion') || request()->routeIs('instituto');
-            @endphp
+               $isDropdown2Active = request()->routeIs('asignaturaDocente') || request()->routeIs('programas') || request()->routeIs('periodo') || request()->routeIs('seccion') || request()->routeIs('instituto');
+          @endphp
             <button type="button"
                class="{{ $isDropdown2Active ? 'bg-gray-200 dark:bg-gray-700' : '' }} flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700"
                id="dropdown2">
@@ -386,20 +372,36 @@
                 </x-nav-link>
               @endcan
 
-                 @can('admin-admin-programas')
+                 @can('admin-admin-asignatura')
                  <li class="ms-8">
-                  <x-nav-link href="{{ route('programas') }}" :active="request()->routeIs('programas')"
+                  <x-nav-link href="{{ route('asignatura') }}" :active="request()->routeIs('asignatura')"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
-                    <x-activeIcons :active="request()->routeIs('programas')" class="w-6 h-6" aria-hidden="true"
+                    <x-activeIcons :active="request()->routeIs('asignatura')" class="w-6 h-6" aria-hidden="true"
                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                      viewBox="0 0 24 24">
                      <path
-                        d="M12.8638 3.49613C12.6846 3.18891 12.3557 3 12 3s-.6846.18891-.8638.49613l-3.49998 6c-.18042.30929-.1817.69147-.00336 1.00197S8.14193 11 8.5 11h7c.3581 0 .6888-.1914.8671-.5019.1784-.3105.1771-.69268-.0033-1.00197l-3.5-6ZM4 13c-.55228 0-1 .4477-1 1v6c0 .5523.44772 1 1 1h6c.5523 0 1-.4477 1-1v-6c0-.5523-.4477-1-1-1H4Zm12.5-1c-2.4853 0-4.5 2.0147-4.5 4.5s2.0147 4.5 4.5 4.5 4.5-2.0147 4.5-4.5-2.0147-4.5-4.5-4.5Z" />
+                        d="M9 6c0-1.65685 1.3431-3 3-3s3 1.34315 3 3-1.3431 3-3 3-3-1.34315-3-3Zm2 3.62992c-.1263-.04413-.25-.08799-.3721-.13131-1.33928-.47482-2.49256-.88372-4.77995-.8482C4.84875 8.66593 4 9.46413 4 10.5v7.2884c0 1.0878.91948 1.8747 1.92888 1.8616 1.283-.0168 2.04625.1322 2.79671.3587.29285.0883.57733.1863.90372.2987l.00249.0008c.11983.0413.24534.0845.379.1299.2989.1015.6242.2088.9892.3185V9.62992Zm2-.00374V20.7551c.5531-.1678 1.0379-.3374 1.4545-.4832.2956-.1034.5575-.1951.7846-.2653.7257-.2245 1.4655-.3734 2.7479-.3566.5019.0065.9806-.1791 1.3407-.4788.3618-.3011.6723-.781.6723-1.3828V10.5c0-.58114-.2923-1.05022-.6377-1.3503-.3441-.29904-.8047-.49168-1.2944-.49929-2.2667-.0352-3.386.36906-4.6847.83812-.1256.04539-.253.09138-.3832.13765Z" />
+
                     </x-activeIcons>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Programas</span>
+                    <span class="flex-1 ms-3 whitespace-nowrap">Asignaturas</span>
                   </x-nav-link>
                  </li>
                @endcan
+
+               @can('admin-admin-programas')
+               <li class="ms-8">
+                <x-nav-link href="{{ route('programas') }}" :active="request()->routeIs('programas')"
+                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
+                  <x-activeIcons :active="request()->routeIs('programas')" class="w-6 h-6" aria-hidden="true"
+                   xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                   viewBox="0 0 24 24">
+                   <path
+                     d="M12.8638 3.49613C12.6846 3.18891 12.3557 3 12 3s-.6846.18891-.8638.49613l-3.49998 6c-.18042.30929-.1817.69147-.00336 1.00197S8.14193 11 8.5 11h7c.3581 0 .6888-.1914.8671-.5019.1784-.3105.1771-.69268-.0033-1.00197l-3.5-6ZM4 13c-.55228 0-1 .4477-1 1v6c0 .5523.44772 1 1 1h6c.5523 0 1-.4477 1-1v-6c0-.5523-.4477-1-1-1H4Zm12.5-1c-2.4853 0-4.5 2.0147-4.5 4.5s2.0147 4.5 4.5 4.5 4.5-2.0147 4.5-4.5-2.0147-4.5-4.5-4.5Z" />
+                  </x-activeIcons>
+                  <span class="flex-1 ms-3 whitespace-nowrap">Programas</span>
+                </x-nav-link>
+               </li>
+            @endcan
                @can('admin-admin-periodo')
                <x-nav-link href="{{ route('periodo') }}" :active="request()->routeIs('periodo')"
                 class="ms-8 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
