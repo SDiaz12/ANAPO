@@ -16,12 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('asignatura_id'); 
             $table->unsignedBigInteger('requisito_id'); 
             $table->timestamps();
-
-            // Claves foráneas
             $table->foreign('asignatura_id')->references('id')->on('asignaturas')->onDelete('cascade');
             $table->foreign('requisito_id')->references('id')->on('asignaturas')->onDelete('cascade');
-
-            // Evitar duplicados
             $table->unique(['asignatura_id', 'requisito_id']);
         });
         

@@ -137,45 +137,61 @@ class Notas extends Component
     public function store()
     {
         $this->validate([
-            'notas.*.asignatura_estudiante_id' => 'required|integer|exists:asignatura_estudiantes,id',
-            'notas.*.primerparcial' => 'required|numeric',
-            'notas.*.segundoparcial' => 'nullable|numeric',
-            'notas.*.tercerparcial' => 'nullable|numeric',
+            'notas.*.asignatura_estudiante_id' => [
+                'required',
+                'integer',
+                'exists:asignatura_estudiantes,id',
+                function ($attribute, $value, $fail) {
+                   
+                    $exists = Nota::where('asignatura_estudiante_id', $value)->exists();
+                    if ($exists) {
+                        $fail('Ya existe un registro de notas para este estudiante en esta asignatura.');
+                    }
+                }
+            ],
+            'notas.*.primerparcial' => 'required|numeric|between:0,100',
+            'notas.*.segundoparcial' => 'nullable|numeric|between:0,100',
+            'notas.*.tercerparcial' => 'nullable|numeric|between:0,100',
             'notas.*.asistencia' => 'nullable|string|max:255',
-            'notas.*.recuperacion' => 'nullable|numeric',
+            'notas.*.recuperacion' => 'nullable|numeric|between:0,100',
             'notas.*.observacion' => 'nullable|string|max:500',
         ]);
         
-        foreach ($this->notas as $id => $nota) {
-            if (empty($nota['asignatura_estudiante_id'])) {
-                session()->flash('error', 'El ID de asignatura del estudiante no está disponible.');
-                return;
-            }
+        DB::beginTransaction();
+        
+        try {
+            foreach ($this->notas as $id => $nota) {
+                
+                $asignaturaEstudiante = AsignaturaEstudiante::findOrFail($nota['asignatura_estudiante_id']);
 
-            try {
-                Nota::updateOrCreate(
-                    ['asignatura_estudiante_id' => $nota['asignatura_estudiante_id']],
-                    [
-                        'primerparcial' => $nota['primerparcial'],
-                        'segundoparcial' => $nota['segundoparcial'],
-                        'tercerparcial' => $nota['tercerparcial'],
-                        'asistencia' => $nota['asistencia'],
-                        'recuperacion' => $nota['recuperacion'],
-                        'observacion' => $nota['observacion'],
-                        'estado' => $this->estado,
-                    ]
-                );
-            } catch (\Exception $e) {
-                session()->flash('error', 'Error al guardar las notas: ' . $e->getMessage());
-                return;
+                $notaExistente = Nota::where('asignatura_estudiante_id', $nota['asignatura_estudiante_id'])->first();
+                
+                if ($notaExistente) {
+                    throw new \Exception('Ya existe un registro de notas para el estudiante en esta asignatura');
+                }
+                
+                Nota::create([
+                    'asignatura_estudiante_id' => $nota['asignatura_estudiante_id'],
+                    'primerparcial' => $nota['primerparcial'],
+                    'segundoparcial' => $nota['segundoparcial'],
+                    'tercerparcial' => $nota['tercerparcial'],
+                    'asistencia' => $nota['asistencia'],
+                    'recuperacion' => $nota['recuperacion'],
+                    'observacion' => $nota['observacion'],
+                    'estado' => $this->estado,
+                ]);
             }
+            
+            DB::commit();
+            session()->flash('success', 'Notas registradas correctamente.');
+            $this->closeModal();
+            $this->resetInputFields();
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('error', 'Error al guardar las notas: ' . $e->getMessage());
         }
-    
-        session()->flash('success', 'Notas registradas correctamente.');
-        $this->closeModal();
-        $this->resetInputFields();
     }
-
     public function edit($codigo_asignatura, $codigo_docente, $seccion_id)
     {
         $this->seccion_id = $seccion_id;

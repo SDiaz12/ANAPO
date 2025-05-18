@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('asignatura_id')->constrained('asignaturadocentes')->onDelete('cascade');
             $table->foreignId('estudiantes_id')->constrained('matriculas')->onDelete('cascade'); 
             $table->foreignId('periodo_id')->constrained('periodos')->onDelete('cascade');
+            $table->unique(
+                ['asignatura_id', 'estudiantes_id', 'periodo_id'],
+                'asig_est_per_unique'
+            );
             $table->integer( 'estado')->default(1);
             $table->timestamps();
             $table->softDeletes();
