@@ -11,6 +11,7 @@ use App\Livewire\Docente\Docentes;
 use App\Livewire\Estudiant\Estudiants;
 use App\Livewire\Matricula\Matriculas;
 use App\Livewire\Nota\Notas;
+use App\Livewire\Nota\HistorialNotas;
 use App\Livewire\Nota\EditarNotas;
 use App\Livewire\Principal\Principales;
 use App\Livewire\ProgramaFormacion\ProgramaFormaciones;
@@ -76,6 +77,10 @@ Route::middleware([
     Route::get('/notas', Notas::class)
     ->name('notas')
     ->middleware('can:docente-admin-notas');
+
+    Route::get('/historial-notas', HistorialNotas::class)
+    ->name('historial-notas')
+    ->middleware('can:docente-admin-notas');
     
     Route::get('/editarnotas', Notas::class)
     ->name('editarnotas')
@@ -100,6 +105,7 @@ Route::middleware([
     Route::get('/seccion', Secciones::class)
     ->name('seccion')
     ->middleware('can:admin-admin-seccion');
+
     Route::get('/periodo', Periodos::class)
     ->name('periodo')
     ->middleware('can:admin-admin-periodo');

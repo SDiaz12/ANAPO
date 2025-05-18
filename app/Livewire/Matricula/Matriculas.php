@@ -12,7 +12,7 @@ use Livewire\Component;
 //#[Lazy()]
 class Matriculas extends Component
 {
-    public $search, $matricula_id, $fecha_matricula, $programaformacion_id, $estado = 1, $motivo_estado, $observacion_estado, $estudiante_id, $instituto_id;
+    public $search, $matricula_id, $dni, $fecha_matricula, $programaformacion_id, $estado = 1, $motivo_estado, $observacion_estado, $estudiante_id, $instituto_id;
     public $dniBusqueda; 
     public $codigoEstudiante;         
     public $nombreCompleto;
@@ -21,7 +21,11 @@ class Matriculas extends Component
     public $inputSearchProgramaFormacion = '';  
     public $searchProgramasFormacion = []; 
     public $isOpen = 0;
-
+    public $showBajaModal = false;
+    public $matriculaBajaId;
+    public $motivoBaja;
+    public $observacionBaja;
+    public $nuevoEstado; 
     public function placeholder()
     {
         return view('livewire.Placeholder.loader')->layout('layouts.app');
@@ -58,15 +62,55 @@ class Matriculas extends Component
         }
     }
     
-
+    public $matriculaParaBaja; 
     public function toggleEstado($id)
     {
+        $this->matricula_id = $id;
         $matricula = Matricula::findOrFail($id);
-        $matricula->estado = !$matricula->estado;
-        $matricula->save();
+        
+        if($matricula->estado == 1) {
+            $this->motivo_estado = $matricula->motivo_estado ?? '';
+            $this->observacion_estado = $matricula->observacion_estado ?? '';
+            $this->showBajaModal = true;
+        } else {
+            $matricula->update([
+                'estado' => 1,
+                'motivo_estado' => null,
+                'observacion_estado' => null
+            ]);
+            session()->flash('success', 'Matrícula reactivada correctamente!');
+        }
     }
-    
 
+    public function confirmarBaja()
+    {
+        $this->validate([
+            'motivo_estado' => 'required|string|max:255',
+            'observacion_estado' => 'nullable|string|max:500',
+        ]);
+
+        Matricula::find($this->matricula_id)->update([
+            'estado' => 0,
+            'motivo_estado' => $this->motivo_estado,
+            'observacion_estado' => $this->observacion_estado,
+        ]);
+
+        $this->resetBajaModal();
+        session()->flash('success', 'Matrícula dada de baja correctamente!');
+    }
+
+    public function cancelarBaja()
+    {
+        $this->resetBajaModal();
+    }
+
+    protected function resetBajaModal()
+    {
+        $this->showBajaModal = false;
+        $this->matricula_id = null;
+        $this->motivo_estado = '';
+        $this->observacion_estado = '';
+    }
     public function updatedInputSearchProgramaFormacion()
     {
         $this->searchProgramasFormacion = ProgramaFormacion::where('nombre', 'like', '%' . $this->inputSearchProgramaFormacion . '%')
@@ -99,49 +143,47 @@ class Matriculas extends Component
     }
 
     public function store()
-{
-    $this->validate([
-        'programaformacion_id' => 'required|integer|exists:programaformaciones,id',
-        'motivo_estado' => 'nullable|string',
-        'observacion_estado' => 'nullable|string',
-        'estudiante_id' => 'required|integer|exists:estudiantes,id',
-        'instituto_id'         => 'required|integer|exists:instituto,id',
-    ]);
+    {
+        $this->validate([
+            'programaformacion_id' => 'required|integer|exists:programaformaciones,id',
+            'motivo_estado' => 'nullable|string',
+            'observacion_estado' => 'nullable|string',
+            'estudiante_id' => 'required|integer|exists:estudiantes,id',
+            'instituto_id'         => 'required|integer|exists:instituto,id',
+        ]);
 
-    // Verificamos duplicado
-    $query = Matricula::where('estudiante_id', $this->estudiante_id)
-                ->where('programaformacion_id', $this->programaformacion_id);
-    // Si es actualización, excluimos el registro actual
-    if ($this->matricula_id) {
-        $query->where('id', '!=', $this->matricula_id);
+        $query = Matricula::where('estudiante_id', $this->estudiante_id)
+                    ->where('programaformacion_id', $this->programaformacion_id);
+        if ($this->matricula_id) {
+            $query->where('id', '!=', $this->matricula_id);
+        }
+        $matriculaExistente = $query->first();
+        if ($matriculaExistente) {
+            $this->errorUnique = 'El estudiante ya está matriculado en ese programa.';
+            return;
+        }
+
+        $this->fecha_matricula = Carbon::today();
+        Matricula::updateOrCreate(
+            ['id' => $this->matricula_id],
+            [
+                'fecha_matricula' => $this->fecha_matricula,
+                'programaformacion_id' => $this->programaformacion_id,
+                'estado'             => $this->estado,
+                'motivo_estado'      => $this->motivo_estado,
+                'observacion_estado' => $this->observacion_estado,
+                'estudiante_id'      => $this->estudiante_id,
+                'instituto_id'      => $this->instituto_id,
+            ]
+        );
+
+        session()->flash(
+            'message',
+            $this->matricula_id ? 'Matricula actualizada correctamente!' : 'Estudiante matriculado correctamente!'
+        );
+        $this->resetInputFields();
+        $this->closeModal();
     }
-    $matriculaExistente = $query->first();
-    if ($matriculaExistente) {
-        $this->errorUnique = 'El estudiante ya está matriculado en ese programa.';
-        return;
-    }
-
-    $this->fecha_matricula = Carbon::today();
-    Matricula::updateOrCreate(
-        ['id' => $this->matricula_id],
-        [
-            'fecha_matricula' => $this->fecha_matricula,
-            'programaformacion_id' => $this->programaformacion_id,
-            'estado'             => $this->estado,
-            'motivo_estado'      => $this->motivo_estado,
-            'observacion_estado' => $this->observacion_estado,
-            'estudiante_id'      => $this->estudiante_id,
-            'instituto_id'      => $this->instituto_id,
-        ]
-    );
-
-    session()->flash(
-        'message',
-        $this->matricula_id ? 'Matricula actualizada correctamente!' : 'Estudiante matriculado correctamente!'
-    );
-    $this->resetInputFields();
-    $this->closeModal();
-}
 
     public function resetInputFields()
     {
@@ -171,8 +213,6 @@ class Matriculas extends Component
         $this->dniBusqueda = $matricula->estudiante->dni;
         $this->openModal();
     }
-
-    // Método para cargar más asignaturas
     public $perPage = 10;
     public function loadMore($suma)
     {
@@ -191,7 +231,7 @@ class Matriculas extends Component
         $query->whereHas('estudiante', function ($q) {
             $q->where('nombre', 'like', '%' . $this->search . '%')
               ->orWhere('apellido', 'like', '%' . $this->search . '%')
-              ->orWhere('codigo', 'like', '%' . $this->search . '%');// Búsqueda por código del estudiante
+              ->orWhere('codigo', 'like', '%' . $this->search . '%');
         })
         ->orWhereHas('programaFormacion', function ($q) {
             $q->where('nombre', 'like', '%' . $this->search . '%');

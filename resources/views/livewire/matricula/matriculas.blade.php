@@ -46,7 +46,6 @@
                         d="m1 1 4 4 4-4" />
                 </svg>
             </button>
-            <!-- Dropdown menu -->
             <div id="dropdownRadio"
                 class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-xl border dark:border-gray-600 dark:bg-gray-700 dark:divide-gray-600"
                 data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top"
@@ -142,8 +141,8 @@
                             <span class="ml-3 text-gray-700 dark:text-gray-400">{{ $matricula->estado ? 'Habilitada' : 'Desabilitada' }}</span>
                         </label>
                     </td>
-                    <td class="px-6 py-4">{{ $matricula->motivo }}</td>
-                    <td class="px-6 py-4">{{ $matricula->observaciones }}</td>
+                    <td class="px-6 py-4">{{ $matricula->motivo_estado }}</td>
+                    <td class="px-6 py-4">{{ $matricula->observacion_estado ?? '' }}</td>
                     <td class="px-6 py-4">
                         <button wire:click="edit({{ $matricula->id }})"
                             class="mb-1 px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
@@ -171,5 +170,6 @@
         {{ $matriculas->links() }}
         <br>
     </div>
+    @include('livewire.matricula.darbaja')
 </div>
 

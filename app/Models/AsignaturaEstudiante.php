@@ -30,7 +30,10 @@ class AsignaturaEstudiante extends Model
     {
         return $this->hasOne(\App\Models\Nota::class, 'asignatura_estudiante_id');
     }
-
+    public function nota()
+    {
+        return $this->hasOne(\App\Models\Nota::class, 'asignatura_estudiante_id');
+    }
     public function periodo()
     {
         return $this->belongsTo(Periodo::class, 'periodo_id');

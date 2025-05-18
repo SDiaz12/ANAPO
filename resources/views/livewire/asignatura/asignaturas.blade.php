@@ -49,7 +49,7 @@
             <button wire:click="toggleViewMode"
                 class="inline-flex items-center ml-2 text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                 type="button">
-                        <!-- Icono y texto cambian según la vista -->
+                    
                         @if ($viewMode === 'table')
                         <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                             <path fill-rule="evenodd" d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6Zm2 8v-2h7v2H4Zm0 2v2h7v-2H4Zm9 2h7v-2h-7v2Zm7-4v-2h-7v2h7Z" clip-rule="evenodd"/>
@@ -140,7 +140,7 @@
                             Creditos
                         </th>
                         <th scope="col" class="px-6 py-3">
-                           Cantidad Requisitos
+                           Programa de formación
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Requisitos
@@ -172,11 +172,7 @@
                             {{ $asignatura->creditos }}
                         </td>
                         <td class="px-6 py-4">
-                            @if($asignatura->requisitos->isEmpty())
-                                No tiene requisitos
-                            @else
-                                {{ $asignatura->requisitos->count() }} 
-                            @endif
+                            {{ $asignatura->programaformacion->nombre ?? 'Sin programa' }}
                         </td>
                         <td class="px-6 py-4">
                             @if($asignatura->requisitos->isEmpty())
@@ -249,7 +245,6 @@
                             <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-500"></div>
                         </label>
                     </div>
-                    <!-- Contenido de la tarjeta -->
                     <div class="p-4">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $asignatura->nombre }}</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400"><span class="font-bold text-md text-gray-800 dark:text-gray-300">Código: </span>{{ $asignatura->codigo }}</p>

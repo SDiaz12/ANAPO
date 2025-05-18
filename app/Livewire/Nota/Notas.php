@@ -13,6 +13,10 @@ use App\Imports\ActualizarNotas;
 use App\Exports\ActualizarNotasExport;
 use Illuminate\Http\Request;
 use App\Exports\FormatoNotasImport;
+use App\Models\Promocion;
+use App\Models\Periodo;
+use App\Models\Asignatura;
+use Illuminate\Support\Facades\DB;
 
 class Notas extends Component
 {
@@ -361,9 +365,11 @@ class Notas extends Component
     {
         $this->estudiantes = collect();
     }
-
     public function render()
     {
+     
+        $this->verificarPromociones();
+        
         $user = auth()->user();
         
         $query = AsignaturaEstudiante::query()
@@ -372,7 +378,8 @@ class Notas extends Component
                 'asignaturadocente.docente', 
                 'asignaturadocente.periodo',
                 'asignaturadocente.seccion',
-                'matricula.estudiante'
+                'matricula.estudiante',
+                'matricula.programaformacion' 
             ])
             ->whereHas('asignaturadocente.asignatura', function($query) {
                 $query->where('estado', 1);
@@ -416,5 +423,67 @@ class Notas extends Component
         return view('livewire.nota.notas', [
             'asignaturas' => $asignaturas,
         ])->layout('layouts.app');
+    }
+    public function redirectToHistorial()
+    {
+        return redirect()->route('historial-notas');
+    }
+    protected function verificarPromociones()
+    {
+        $periodoActual = Periodo::where('estado', 1)->first();
+        if (!$periodoActual) return;
+        $estudiantes = AsignaturaEstudiante::whereHas('asignaturadocente.periodo', function($q) use ($periodoActual) {
+                $q->where('id', $periodoActual->id);
+            })
+            ->with([
+                'matricula.estudiante',
+                'matricula.programaformacion.asignaturas' => function($query) {
+                    $query->where('estado', 1);
+                },
+                'nota',
+                'asignaturadocente.asignatura'
+            ])
+            ->get()
+            ->groupBy('matricula.estudiante_id');
+
+        foreach ($estudiantes as $estudianteId => $asignaturasEstudiante) {
+            $programa = $asignaturasEstudiante->first()->matricula->programaformacion;
+
+            $yaPromovido = Promocion::where('estudiante_id', $estudianteId)
+                ->where('programaformacion_id', $programa->id)
+                ->exists();
+                
+            if ($yaPromovido) continue;
+            $asignaturasRequeridas = $programa->asignaturas->pluck('id')->unique()->toArray();
+            $asignaturasAprobadas = Nota::whereHas('asignaturaEstudiante', function($query) use ($estudianteId) {
+                    $query->whereHas('matricula', function($q) use ($estudianteId) {
+                        $q->where('estudiante_id', $estudianteId);
+                    });
+                })
+                ->where(function($query) {
+                    $query->whereRaw('(primerparcial + segundoparcial + tercerparcial) / 3 >= 70')
+                        ->orWhere('recuperacion', '>=', 70);
+                })
+                ->with('asignaturaEstudiante.asignaturadocente.asignatura')
+                ->get()
+                ->pluck('asignaturaEstudiante.asignaturadocente.asignatura_id')
+                ->unique()
+                ->toArray();
+            $todasAprobadas = empty(array_diff($asignaturasRequeridas, $asignaturasAprobadas));
+
+            if ($todasAprobadas) {
+                $estudiante = $asignaturasEstudiante->first()->matricula->estudiante;
+                
+                Promocion::firstOrCreate([
+                    'estudiante_id' => $estudianteId,
+                    'programaformacion_id' => $programa->id,
+                ], [
+                    'nombre' => 'Promoción ' . now()->year,
+                    'periodo_id' => $periodoActual->id,
+                    'fecha_promocion' => now()->month(11)->day(30),
+                    'estado' => 1
+                ]);
+            }
+        }
     }
 }

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('estudiante_id');
             $table->unsignedBigInteger('programaformacion_id');
             $table->unsignedBigInteger('periodo_id');
-            $table->string('nivel_anterior', 100);
-            $table->string('nivel_actual', 100);
+            $table->string('nivel_anterior', 100)->nullable();
+            $table->string('nivel_actual', 100)->nullable();
             $table->date('fecha_promocion');
             $table->integer('estado');
             $table->unsignedBigInteger('created_by')->nullable();
