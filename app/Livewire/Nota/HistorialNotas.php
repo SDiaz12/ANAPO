@@ -115,33 +115,37 @@ class HistorialNotas extends Component
     }
 
    public function render()
-{
-    $user = auth()->user();
-    
-    $query = AsignaturaEstudiante::query()
-        ->with([
-            'asignaturadocente.asignatura', 
-            'asignaturadocente.docente', 
-            'asignaturadocente.periodo',
-            'asignaturadocente.seccion',
-            'matricula.estudiante',
-            'nota'
-        ])
-        ->whereHas('nota');
+   {
+        $user = auth()->user();
+        
+        $query = AsignaturaEstudiante::query()
+            ->with([
+                'asignaturadocente.asignatura', 
+                'asignaturadocente.docente', 
+                'asignaturadocente.periodo',
+                'asignaturadocente.seccion',
+                'matricula.estudiante',
+                'nota'
+            ])
+            ->whereHas('nota')
+            ->whereHas('asignaturadocente.periodo', function($q) {
+                $q->where('estado', '0'); 
+            });
 
-    if ($this->periodo_id) {
-        $query->whereHas('asignaturadocente.periodo', function($q) {
-            $q->where('id', $this->periodo_id);
-        });
-    }
+        if ($this->periodo_id) {
+            $query->whereHas('asignaturadocente.periodo', function($q) {
+                $q->where('id', $this->periodo_id)
+                ->where('estado', '0'); 
+            });
+        }
 
-    if ($user && !$user->hasRole('root')) {
-        $query->whereHas('asignaturadocente.docente', function($q) use ($user) {
-            $q->where('user_id', $user->id);
-        });
-    }
+        if ($user && !$user->hasRole('root')) {
+            $query->whereHas('asignaturadocente.docente', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
+        }
 
-    $asignaturas = $query->selectRaw('
+        $asignaturas = $query->selectRaw('
             asignaturadocentes.asignatura_id, 
             asignaturadocentes.seccion_id, 
             COUNT(asignatura_estudiantes.id) as estudiantes_count,
@@ -152,32 +156,38 @@ class HistorialNotas extends Component
             secciones.nombre as seccion_nombre,
             periodos.nombre as periodo_nombre,
             periodos.id as periodo_id,
-            asignaturadocentes.estado as asignatura_docente_estado
+            periodos.estado as periodo_estado,
+            asignaturadocentes.estado as asignatura_docente_estado 
         ')
-        ->join('asignaturadocentes', 'asignatura_estudiantes.asignatura_id', '=', 'asignaturadocentes.id')
-        ->join('asignaturas', 'asignaturadocentes.asignatura_id', '=', 'asignaturas.id')
-        ->join('docentes', 'asignaturadocentes.docente_id', '=', 'docentes.id')
-        ->join('secciones', 'asignaturadocentes.seccion_id', '=', 'secciones.id')
-        ->join('periodos', 'asignaturadocentes.periodo_id', '=', 'periodos.id')
-        ->groupBy(
-            'asignaturadocentes.asignatura_id', 
-            'asignaturadocentes.seccion_id', 
-            'asignaturas.codigo', 
-            'asignaturas.nombre', 
-            'docentes.codigo', 
-            'docentes.nombre', 
-            'secciones.nombre', 
-            'periodos.nombre',
-            'periodos.id',
-            'asignaturadocentes.estado'
-        )
-        ->orderBy('periodos.id', 'DESC')
-        ->paginate($this->perPage);
+            ->join('asignaturadocentes', 'asignatura_estudiantes.asignatura_id', '=', 'asignaturadocentes.id')
+            ->join('asignaturas', 'asignaturadocentes.asignatura_id', '=', 'asignaturas.id')
+            ->join('docentes', 'asignaturadocentes.docente_id', '=', 'docentes.id')
+            ->join('secciones', 'asignaturadocentes.seccion_id', '=', 'secciones.id')
+            ->join('periodos', 'asignaturadocentes.periodo_id', '=', 'periodos.id')
+            ->groupBy(
+                'asignaturadocentes.asignatura_id', 
+                'asignaturadocentes.seccion_id', 
+                'asignaturas.codigo', 
+                'asignaturas.nombre', 
+                'docentes.codigo', 
+                'docentes.nombre', 
+                'secciones.nombre', 
+                'periodos.nombre',
+                'periodos.id',
+                'periodos.estado',
+                'asignaturadocentes.estado'
+            )
+            ->orderBy('periodos.id', 'DESC')
+            ->paginate($this->perPage);
 
-    return view('livewire.nota.historial-notas', [
-        'asignaturas' => $asignaturas,
-    ])->layout('layouts.app');
-}
+    
+        $periodoActivo = Periodo::where('estado', '1')->exists();
+
+        return view('livewire.nota.historial-notas', [
+            'asignaturas' => $asignaturas,
+            'periodoActivo' => $periodoActivo
+        ])->layout('layouts.app');
+    }
     public function redirectToNotas()
     {
         return redirect()->route('notas');

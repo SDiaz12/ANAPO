@@ -85,7 +85,6 @@
                             <th scope="col" class="px-3 py-3 sm:px-6 sm:py-3 hidden sm:table-cell">Periodo</th>
                             <th scope="col" class="px-3 py-3 sm:px-6 sm:py-3 hidden md:table-cell">Docente</th>
                             <th scope="col" class="px-3 py-3 sm:px-6 sm:py-3">Sección</th>
-                            <th scope="col" class="px-3 py-3 sm:px-6 sm:py-3 hidden sm:table-cell">Estado</th>
                             <th scope="col" class="px-3 py-3 sm:px-6 sm:py-3 hidden sm:table-cell">Estudiantes</th>
                             <th scope="col" class="px-3 py-3 sm:px-6 sm:py-3">Acciones</th>
                         </tr>
@@ -114,11 +113,7 @@
                                 <td class="px-3 py-4 sm:px-6 sm:py-4">
                                     {{ $asignatura->seccion_nombre }}
                                 </td>
-                                <td class="px-3 py-4 sm:px-6 sm:py-4 hidden sm:table-cell">
-                                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $asignatura->asignatura_docente_estado ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' }}">
-                                        {{ $asignatura->asignatura_docente_estado ? 'Activo' : 'Inactivo' }}
-                                    </span>
-                                </td>
+                                
                                 <td class="px-3 py-4 sm:px-6 sm:py-4 hidden sm:table-cell">
                                     {{ $asignatura->estudiantes_count }}
                                 </td>
@@ -155,11 +150,6 @@
                                 <p><span class="font-semibold">Periodo:</span> {{ $asignatura->periodo_nombre }}</p>
                                 <p><span class="font-semibold">Docente:</span> {{ $asignatura->docente_nombre }}</p>
                                 <p><span class="font-semibold">Sección:</span> {{ $asignatura->seccion_nombre }}</p>
-                                <p><span class="font-semibold">Estado:</span> 
-                                    <span class="{{ $asignatura->asignatura_docente_estado ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400' }}">
-                                        {{ $asignatura->asignatura_docente_estado ? 'Activo' : 'Inactivo' }}
-                                    </span>
-                                </p>
                                 <p><span class="font-semibold">Estudiantes:</span> {{ $asignatura->estudiantes_count }}</p>
                             </div>
                             
@@ -185,6 +175,11 @@
     @else
         <div class="p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
             No se encontraron asignaturas asignadas en ese periodo.
+        </div>
+    @endif
+    @if($periodoActivo)
+        <div class="p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+            Actualmente hay un período activo. Los historiales de notas del período actual estarán disponibles una vez que el período termine.
         </div>
     @endif
 </div>
