@@ -35,6 +35,16 @@
                 </svg>
                 Nuevo
             </button>
+            <button id="dropdownRadioButton" data-dropdown-toggle="dropdownRadio"
+                class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                type="button">
+                {{ $perPage }}
+                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 4 4 4-4" />
+                </svg>
+            </button>
             
             <!-- Dropdown menu -->
             <div id="dropdownRadio"
@@ -76,6 +86,14 @@
                         </div>
                     </li>
                 </ul>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2 w-full sm:w-auto">
+                <select wire:model.live="periodoSeleccionado" id="periodo"
+                    class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                    @foreach($periodos as $periodo)
+                        <option value="{{ $periodo->id }}">{{ $periodo->nombre }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <label for="table-search" class="sr-only">Search</label>

@@ -35,7 +35,7 @@
                             <textarea wire:model="observacion_estado" id="observacion_estado" rows="3"
                                 class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm transition duration-150 ease-in-out"></textarea>
                             @error('observacion_estado') 
-                                <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> 
+                                <span class="text-red-500 text-xs mt-1 block"></span> 
                             @enderror
                         </div>
                     </div>

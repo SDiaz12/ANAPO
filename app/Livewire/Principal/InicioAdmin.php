@@ -146,14 +146,14 @@ class InicioAdmin extends Component
         return array_slice($lista, 0, $limite);
     }
 
-    public function DestacadosMayor85()
+    public function DestacadosMayor84()
     {
         // Suponiendo que ya tienes el método para obtener los destacados
         $todos = $this->estudiantesDestacados(10); // o el método que uses
 
         // Filtrar solo los que tengan índice mayor a 85
         return collect($todos)->filter(function ($item) {
-            return $item['indice'] > 85;
+            return $item['indice'] > 84;
         })->values();
     }
 
@@ -188,7 +188,7 @@ class InicioAdmin extends Component
             $dataActivos[] = $programa->matriculaprograma()->where('estado', 1)->count();
             $dataBajas[] = $programa->matriculaprograma()->where('estado', 0)->count();
         }
-        $destacados = $this->DestacadosMayor85();
+        $destacados = $this->DestacadosMayor84();
         $estudiantesPorPrograma = $this->getEstudiantesPorPrograma();
         //contadores
         $docentesCount = Docente::count();

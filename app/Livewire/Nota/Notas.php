@@ -48,7 +48,7 @@ class Notas extends Component
 
     public function exportarNotas($codigo_asignatura, $codigo_docente, $seccion_id)
     {
-        $nombreArchivo = 'Asignatura_' . $codigo_asignatura . '_Docente_' . $codigo_docente . '_Seccion_' . $seccion_id . '_Notas.xlsx';
+        $nombreArchivo = 'Asignatura_' . $codigo_asignatura . 'Docente' . $codigo_docente . 'Seccion' . $seccion_id . '_Notas.xlsx';
         return Excel::download(new FormatoNotasExport($codigo_asignatura, $codigo_docente, $seccion_id), $nombreArchivo);
     }
 

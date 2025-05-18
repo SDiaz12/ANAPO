@@ -156,7 +156,7 @@
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th class="py-2 px-4">Código</th>
-                        <th class="py-2 px-4">Nombre</th>
+                        <th class="py-2 px-4">Asignatura</th>
                         <th class="py-2 px-4">Periodo</th>
                         <th class="py-2 px-4">Docente</th>
                         <th class="py-2 px-4">Sección</th>
