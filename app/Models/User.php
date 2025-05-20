@@ -29,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'active_role_id',
     ];
 
    
@@ -77,5 +78,10 @@ class User extends Authenticatable
     public function estudiante()
     {
         return $this->hasOne(\App\Models\Estudiante::class, 'user_id', 'id');
+    }
+
+    public function getActiveRoleAttribute()
+    {
+        return \Spatie\Permission\Models\Role::find($this->active_role_id);
     }
 }
