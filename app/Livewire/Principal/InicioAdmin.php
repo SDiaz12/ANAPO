@@ -149,7 +149,7 @@ class InicioAdmin extends Component
     public function DestacadosMayor84()
     {
         // Suponiendo que ya tienes el método para obtener los destacados
-        $todos = $this->estudiantesDestacados(10); // o el método que uses
+        $todos = $this->estudiantesDestacados(10); 
 
         // Filtrar solo los que tengan índice mayor a 85
         return collect($todos)->filter(function ($item) {
