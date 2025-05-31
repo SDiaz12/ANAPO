@@ -41,6 +41,21 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
         ];
     }
 
+    private function determinarCalificacion($notaFinal)
+{
+    if ($notaFinal >= 90) {
+        return 'Excelente';
+    } elseif ($notaFinal >= 80) {
+        return 'Muy Bueno';
+    } elseif ($notaFinal >= 70) {
+        return 'Bueno';
+    } elseif ($notaFinal >= 0) {
+        return 'Insuficiente';
+    } else {
+        return 'Sin calificación';
+    }
+}
+
     public function collection()
     {
         return AsignaturaEstudiante::whereHas('asignaturadocente', function ($query) {
@@ -67,11 +82,21 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                     'primer_parcial' => $nota->primerparcial ?? 0,
                     'segundo_parcial' => $nota->segundoparcial ?? 0,
                     'tercer_parcial' => $nota->tercerparcial ?? 0,
-                    'nota_promedio' => $nota->tercerparcial ?? 0,
+                    'nota_promedio' => round((($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0)) / 3, 0), // Promedio de los parciales
                     'recuperacion' => $nota->recuperacion ?? 0,
-                    'nota_promedio_recuperacion' => $nota->recuperacion ?? 0,
-                    'nota_final' => $nota->recuperacion ?? 0,
-                    'calificacion' => $nota->observacion ?? ' ',
+                    'nota_promedio_recuperacion' => ($nota->recuperacion ?? 0) > 0
+                        ? round(
+                            (($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0) - min(($nota->primerparcial ?? 0), ($nota->segundoparcial ?? 0), ($nota->tercerparcial ?? 0)) + ($nota->recuperacion ?? 0)) / 3,
+                            0
+                        )
+                        : null, // Si la recuperación es null o 0, no se calcula
+                    'nota_final' => ($nota->recuperacion ?? 0) > 0
+                        ? round(
+                            (($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0) - min(($nota->primerparcial ?? 0), ($nota->segundoparcial ?? 0), ($nota->tercerparcial ?? 0)) + ($nota->recuperacion ?? 0)) / 3,
+                            0
+                        )
+                        : round((($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0)) / 3, 2), // Si la recuperación es 0, usa el promedio de los parciales
+                    'calificacion' => $this->determinarCalificacion(round(max(($nota->recuperacion ?? 0), (($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0)) / 3), 2)), // Calificación basada en la nota final
                 ];
             });
     }
