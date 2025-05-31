@@ -134,21 +134,9 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->insertNewRowBefore(1, 12);
 
                 // Escribir los encabezados manualmente en la fila 12
-                $headings = [
-                    'Nº',
-                    'Nº Cuenta',
-                    'Nombres y Apellidos',
-                    '1era. Prueba parcial 100%',
-                    '2da. Prueba parcial 100%',
-                    '3era. Prueba parcial 100%',
-                    'Nota promedio 100%',
-                    'Prueba de Recuperación 100%',
-                    'Nota promedio 100%',
-                    'Nota final',
-                    'Calificación'
-                ];
+                $headings = $this->headings();
                 $col = 'A';
-                foreach ($headings as $heading) {
+                foreach ( $headings as $heading) {
                     if ($col === 'D') {
                         // Salta la columna D porque ahora está combinada con C
                         $col = 'E';
