@@ -103,6 +103,10 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
         // Aplica bordes dobles solo a los exteriores
         $sheet->getStyle('A1:L' . $sheet->getHighestRow())
             ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE);
+        $sheet->getStyle('A1:L' . $sheet->getHighestRow())
+            ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE);
+        $sheet->getStyle('A1:L' . $sheet->getHighestRow())
+            ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE);
 
         $sheet->getStyle('A1:L' . $sheet->getHighestRow())
             ->getAlignment()->setHorizontal('center');
@@ -127,6 +131,22 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet = $event->sheet->getDelegate();
                 // Establecer el nombre de la hoja
                 $sheet->setTitle('Calificaciones');
+                // Configurar la orientación de la página y los márgenes
+                $sheet->getPageSetup()
+                    ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE) // Orientación horizontal
+                    ->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_LETTER) // Tamaño de papel carta (22x28 cm)
+                    ->setFitToWidth(1) // Ajustar al ancho de una página
+                    ->setFitToHeight(0); // Ajustar al alto automático
+    
+                $sheet->getPageMargins()
+                    ->setTop(0.6) // Margen superior
+                    ->setRight(0.4) // Margen derecho
+                    ->setLeft(0.9) // Margen izquierdo
+                    ->setBottom(0.4) // Margen inferior
+                    ->setHeader(0.4) // Margen del encabezado
+                    ->setFooter(0.4); // Margen del pie de página
+    
+
                 // Establecer el altura de las filas
                 $sheet->getDefaultRowDimension()->setRowHeight(16);
 
@@ -136,7 +156,7 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 // Escribir los encabezados manualmente en la fila 12
                 $headings = $this->headings();
                 $col = 'A';
-                foreach ( $headings as $heading) {
+                foreach ($headings as $heading) {
                     if ($col === 'D') {
                         // Salta la columna D porque ahora está combinada con C
                         $col = 'E';
@@ -237,6 +257,9 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->getStyle('A6')->getFont()->setName('Arial')->setBold(true)->setSize(10);
                 $sheet->mergeCells("C6:F6");
                 $sheet->setCellValue('C6', ($asignaturaEstudiante->asignaturadocente->asignatura->programaFormacion->nombre ?? ''));
+                $sheet->getStyle('C6')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('C6')->getAlignment()->setVertical('center'); // Centrar verticalmente el contenido
+                $sheet->getRowDimension('6')->setRowHeight(20);
                 $sheet->getStyle('C6:F6')->getFont()->setName('Cambria')->setBold(true)->setSize(10);
                 // Aplicar estilo de borde grueso a las celdas combinadas
                 $sheet->getStyle('C6:F6')->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
@@ -247,6 +270,9 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->getStyle('A8')->getFont()->setName('Arial')->setBold(true)->setSize(10);
                 $sheet->mergeCells('C8:F8');
                 $sheet->setCellValue('C8', ($asignaturaEstudiante->asignaturadocente->asignatura->nombre ?? ''));
+                $sheet->getStyle('C8')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('C8')->getAlignment()->setVertical('center'); // Centrar verticalmente el contenido
+                $sheet->getRowDimension('8')->setRowHeight(20);
                 $sheet->getStyle('C8:F8')->getFont()->setName('Cambria')->setBold(true)->setSize(10);
                 // Aplicar estilo de borde grueso a las celdas combinadas
                 $sheet->getStyle('C8:F8')->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
@@ -257,6 +283,9 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->getStyle('A10')->getFont()->setName('Arial')->setBold(true)->setSize(10);
                 $sheet->mergeCells('C10:F10');
                 $sheet->setCellValue('C10', ($asignaturaEstudiante->asignaturadocente->docente->nombre ?? ''));
+                $sheet->getStyle('C10')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('C10')->getAlignment()->setVertical('center'); // Centrar verticalmente el contenido
+                $sheet->getRowDimension('10')->setRowHeight(20);
                 $sheet->getStyle('C10:F10')->getFont()->setName('Cambria')->setBold(true)->setSize(10);
                 // Aplicar estilo de borde grueso a las celdas combinadas
                 $sheet->getStyle('C10:F10')->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
@@ -265,6 +294,8 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->mergeCells('G6');
                 $sheet->setCellValue('G6', 'Área: ');
                 $sheet->getStyle('G6')->getFont()->setName('Arial')->setBold(true)->setSize(10);
+                $sheet->getStyle('G6')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('G6')->getAlignment()->setVertical('center'); // Centrar verticalmente el contenido
                 $sheet->getStyle('G6')->getAlignment()->setHorizontal('right');
 
                 // Combinar las celdas desde E6 hasta I6
@@ -279,6 +310,8 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 // Duración (D8:F8)
                 $sheet->mergeCells('G8');
                 $sheet->setCellValue('G8', 'Duración: ');
+                $sheet->getStyle('G8')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('G8')->getAlignment()->setVertical('center'); // Centrar verticalmente el contenido
                 $sheet->getStyle('G8')->getFont()->setName('Arial')->setBold(true)->setSize(10);
                 $sheet->getStyle('G8')->getAlignment()->setHorizontal('right');
 
@@ -299,6 +332,7 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->getStyle('G10')->getAlignment()->setHorizontal('right');
                 $sheet->getStyle('H10')->getFont()->setName('Cambria')->setBold(true)->setSize(10);
                 $sheet->getStyle('H10')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('H10')->getAlignment()->setVertical('center'); // Centrar verticalmente el contenido
                 // Aplicar estilo de borde grueso a las celdas combinadas
                 $sheet->getStyle('H10')->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
 
@@ -309,6 +343,7 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->getStyle('I10')->getAlignment()->setHorizontal('right');
                 $sheet->setCellValue('J10', ($asignaturaEstudiante->asignaturadocente->asignatura->creditos ?? ''));
                 $sheet->getStyle('J10')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('J10')->getAlignment()->setVertical('center'); // Centrar verticalmente el contenido
                 $sheet->getStyle('J10')->getFont()->setName('Cambria')->setBold(true)->setSize(10);
                 // Aplicar estilo de borde grueso a las celdas combinadas
                 $sheet->getStyle('J10')->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
@@ -320,6 +355,7 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->getStyle('K10')->getAlignment()->setHorizontal('right');
                 $sheet->setCellValue('L10', ($asignaturaEstudiante->asignaturadocente->asignatura->codigo ?? ''));
                 $sheet->getStyle('L10')->getAlignment()->setHorizontal('center');
+                $sheet->getStyle('L10')->getAlignment()->setVertical('center'); // Centrar verticalmente el contenido
                 $sheet->getStyle('L10')->getFont()->setName('Cambria')->setBold(true)->setSize(10);
                 // Aplicar estilo de borde grueso a las celdas combinadas
                 $sheet->getStyle('L10')->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
@@ -389,7 +425,7 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                     $sheet->getStyle("A{$row}:D{$row}")
                         ->getAlignment()->setHorizontal('center')->setVertical('center');
                     $sheet->getStyle("A{$row}:D{$row}")
-                        ->getFont()->setName('Cambria')->setBold(true)->setSize(11);
+                        ->getFont()->setName('Cambria')->setBold(true)->setSize(10);
                     $row++;
                 }
 
@@ -443,6 +479,7 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
 
                 // Escribir el texto "Recibido"
                 $sheet->setCellValue("C{$pageRow}", 'Recibido: ');
+                $sheet->getRowDimension($pageRow)->setRowHeight(20);
                 $sheet->getStyle("C{$pageRow}")->getAlignment()->setHorizontal('right');
                 // Aplicar estilo de borde grueso a las celdas combinadas
                 $sheet->mergeCells("D{$pageRow}:G{$pageRow}");
