@@ -42,19 +42,19 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
     }
 
     private function determinarCalificacion($notaFinal)
-{
-    if ($notaFinal >= 90) {
-        return 'Excelente';
-    } elseif ($notaFinal >= 80) {
-        return 'Muy Bueno';
-    } elseif ($notaFinal >= 70) {
-        return 'Bueno';
-    } elseif ($notaFinal >= 0) {
-        return 'Insuficiente';
-    } else {
-        return 'Sin calificación';
+    {
+        if ($notaFinal >= 90) {
+            return 'Excelente';
+        } elseif ($notaFinal >= 80) {
+            return 'Muy Bueno';
+        } elseif ($notaFinal >= 70) {
+            return 'Bueno';
+        } elseif ($notaFinal >= 0) {
+            return 'Insuficiente';
+        } else {
+            return 'Sin calificación';
+        }
     }
-}
 
     public function collection()
     {
@@ -81,22 +81,105 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                     'nombre_estudiante' => $item->matricula->estudiante->nombre . ' ' . $item->matricula->estudiante->apellido ?? 'Sin Nombre',
                     'primer_parcial' => $nota->primerparcial ?? 0,
                     'segundo_parcial' => $nota->segundoparcial ?? 0,
-                    'tercer_parcial' => $nota->tercerparcial ?? 0,
-                    'nota_promedio' => round((($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0)) / 3, 0), // Promedio de los parciales
-                    'recuperacion' => $nota->recuperacion ?? 0,
-                    'nota_promedio_recuperacion' => ($nota->recuperacion ?? 0) > 0
+                    'tercer_parcial' => $nota->tercerparcial ?? null, // Puede ser null si no hay tercer parcial
+                    'nota_promedio' => count(array_filter([
+                        $nota->primerparcial ?? 0,
+                        $nota->segundoparcial ?? 0,
+                        $nota->tercerparcial ?? null,
+                    ])) > 0
                         ? round(
-                            (($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0) - min(($nota->primerparcial ?? 0), ($nota->segundoparcial ?? 0), ($nota->tercerparcial ?? 0)) + ($nota->recuperacion ?? 0)) / 3,
+                            array_sum(array_filter([
+                                $nota->primerparcial ?? 0,
+                                $nota->segundoparcial ?? 0,
+                                $nota->tercerparcial ?? null,
+                            ])) / count(array_filter([
+                                    $nota->primerparcial ?? 0,
+                                    $nota->segundoparcial ?? 0,
+                                    $nota->tercerparcial ?? null,
+                                ])),
                             0
                         )
-                        : null, // Si la recuperación es null o 0, no se calcula
-                    'nota_final' => ($nota->recuperacion ?? 0) > 0
+                        : 0, // Si no hay parciales, el promedio es 0
+                    'recuperacion' => $nota->recuperacion ?? '',
+                    'nota_promedio_recuperacion' => ($nota->recuperacion ?? 0) > 0 && count(array_filter([
+                        $nota->primerparcial ?? 0,
+                        $nota->segundoparcial ?? 0,
+                        $nota->tercerparcial ?? null,
+                    ])) > 0
                         ? round(
-                            (($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0) - min(($nota->primerparcial ?? 0), ($nota->segundoparcial ?? 0), ($nota->tercerparcial ?? 0)) + ($nota->recuperacion ?? 0)) / 3,
+                            (array_sum(array_filter([
+                                $nota->primerparcial ?? 0,
+                                $nota->segundoparcial ?? 0,
+                                $nota->tercerparcial ?? null,
+                            ])) - min(array_filter([
+                                    $nota->primerparcial ?? 0,
+                                    $nota->segundoparcial ?? 0,
+                                    $nota->tercerparcial ?? null,
+                                ])) + ($nota->recuperacion ?? 0)) / count(array_filter([
+                                    $nota->primerparcial ?? 0,
+                                    $nota->segundoparcial ?? 0,
+                                    $nota->tercerparcial ?? null,
+                                ])),
                             0
                         )
-                        : round((($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0)) / 3, 2), // Si la recuperación es 0, usa el promedio de los parciales
-                    'calificacion' => $this->determinarCalificacion(round(max(($nota->recuperacion ?? 0), (($nota->primerparcial ?? 0) + ($nota->segundoparcial ?? 0) + ($nota->tercerparcial ?? 0)) / 3), 2)), // Calificación basada en la nota final
+                        : null, // Si la recuperación es null o 0, o no hay parciales, no se calcula
+                    'nota_final' => ($nota->recuperacion ?? 0) > 0 && count(array_filter([
+                        $nota->primerparcial ?? 0,
+                        $nota->segundoparcial ?? 0,
+                        $nota->tercerparcial ?? null,
+                    ])) > 0
+                        ? round(
+                            (array_sum(array_filter([
+                                $nota->primerparcial ?? 0,
+                                $nota->segundoparcial ?? 0,
+                                $nota->tercerparcial ?? null,
+                            ])) - min(array_filter([
+                                    $nota->primerparcial ?? 0,
+                                    $nota->segundoparcial ?? 0,
+                                    $nota->tercerparcial ?? null,
+                                ])) + ($nota->recuperacion ?? 0)) / count(array_filter([
+                                    $nota->primerparcial ?? 0,
+                                    $nota->segundoparcial ?? 0,
+                                    $nota->tercerparcial ?? null,
+                                ])),
+                            0
+                        )
+                        : round(
+                            count(array_filter([
+                                $nota->primerparcial ?? 0,
+                                $nota->segundoparcial ?? 0,
+                                $nota->tercerparcial ?? null,
+                            ])) > 0
+                            ? array_sum(array_filter([
+                                $nota->primerparcial ?? 0,
+                                $nota->segundoparcial ?? 0,
+                                $nota->tercerparcial ?? null,
+                            ])) / count(array_filter([
+                                    $nota->primerparcial ?? 0,
+                                    $nota->segundoparcial ?? 0,
+                                    $nota->tercerparcial ?? null,
+                                ]))
+                            : 0,
+                            0
+                        ), // Si la recuperación es 0, usa el promedio dinámico o 0 si no hay parciales
+                    'calificacion' => $this->determinarCalificacion(round(
+                        max(($nota->recuperacion ?? 0), count(array_filter([
+                            $nota->primerparcial ?? 0,
+                            $nota->segundoparcial ?? 0,
+                            $nota->tercerparcial ?? null,
+                        ])) > 0
+                            ? array_sum(array_filter([
+                                $nota->primerparcial ?? 0,
+                                $nota->segundoparcial ?? 0,
+                                $nota->tercerparcial ?? null,
+                            ])) / count(array_filter([
+                                    $nota->primerparcial ?? 0,
+                                    $nota->segundoparcial ?? 0,
+                                    $nota->tercerparcial ?? null,
+                                ]))
+                            : 0),
+                        0
+                    )), // Calificación basada en la nota final
                 ];
             });
     }
@@ -175,75 +258,162 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 // Establecer el altura de las filas
                 $sheet->getDefaultRowDimension()->setRowHeight(16);
 
-                // Insertar filas para el encabezado de tabla (11 filas)
+                // Insertar filas para el encabezado de tabla (12 filas)
                 $sheet->insertNewRowBefore(1, 12);
 
-                // Escribir los encabezados manualmente en la fila 12
+                // Escribir encabezados
                 $headings = $this->headings();
                 $col = 'A';
                 foreach ($headings as $heading) {
                     if ($col === 'D') {
-                        // Salta la columna D porque ahora está combinada con C
                         $col = 'E';
                     }
                     $sheet->setCellValue($col . '12', $heading);
-                    $sheet->getStyle($col . '12')->getFont()->setName('Cambria')->setBold(true)->setSize(8);
+                    $sheet->getStyle($col . '12')->getFont()
+                        ->setName('Cambria')->setBold(true)->setSize(8);
                     $sheet->getStyle($col . '12')->getAlignment()
-                        ->setHorizontal('center') // Centrar horizontalmente
-                        ->setVertical('center')   // Centrar verticalmente
-                        ->setWrapText(true);      // Ajustar texto automáticamente
+                        ->setHorizontal('center')
+                        ->setVertical('center')
+                        ->setWrapText(true);
                     $col++;
                 }
 
-                // Determinar la fila inicial y final de los registros
-                $startRow = 14; // los registros comienzan en la fila 14
+                $datos = $this->collection()->toArray();
+                $totalRecords = count($datos);
+                $recordsPerPage = 24;
                 $endRow = $sheet->getHighestRow(); // Última fila con datos
-                // Obtener los datos de la colección
-                $datos = $this->collection()->toArray(); // Convierte la colección en un array
-                // Escribir los registros directamente en las posiciones correctas
-                $row = $startRow;
-                foreach ($datos as $dato) {
-                    $col = 'A';
-                    foreach ([$dato['asignatura_estudiante_id'], // Nº
-                        $dato['codigo_estudiante'],        // Código
-                        $dato['nombre_estudiante'],        // Nombres y Apellidos
-                        $dato['primer_parcial'],           // 1era. Prueba parcial 100%
-                        $dato['segundo_parcial'],          // 2da. Prueba parcial 100%
-                        $dato['tercer_parcial'],           // 3era. Prueba parcial 100%
-                        $dato['nota_promedio'],            // Nota promedio 100%
-                        $dato['recuperacion'],             // Prueba de Recuperación 100%
-                        $dato['nota_promedio_recuperacion'], // Nota promedio 100%
-                        $dato['nota_final'],               // Nota final
-                        $dato['calificacion']              // Calificación
-                    ] as $value) {
-                        if ($col === 'D') {
-                            // Salta la columna D porque ahora está combinada con C
-                            $col = 'E';
+                $spaceBetweenBlocks = 4;
+                $startRow = 14; // Comenzar justo después del encabezado existente
+                $blockNumber = 0;
+
+                while ($blockNumber * $recordsPerPage < $totalRecords) {
+                    $startIdx = $blockNumber * $recordsPerPage;
+                    $endIdx = min(($blockNumber + 1) * $recordsPerPage, $totalRecords);
+
+                    // Calcular la fila de inicio para este bloque
+                    if ($blockNumber == 0) {
+                        $currentStartRow = $startRow;
+                    } else {
+                        // Para bloques adicionales, la fila inicial será después del espacio entre bloques
+                        $previousEndRow = $startRow + ($blockNumber * $recordsPerPage) + (($blockNumber - 1) * $spaceBetweenBlocks);
+                        $currentStartRow = $previousEndRow + $spaceBetweenBlocks;
+
+                        // Insertar filas para el espacio entre bloques
+                        $sheet->insertNewRowBefore($previousEndRow, $spaceBetweenBlocks);
+
+                        // Eliminar cualquier estilo o formato de las filas de espacio
+                        for ($i = $previousEndRow; $i < $currentStartRow; $i++) {
+                            // Limpiar bordes
+                            $sheet->getStyle("A{$i}:L{$i}")->getBorders()->getAllBorders()->setBorderStyle(null);
+                            // Limpiar colores de fondo
+                            $sheet->getStyle("A{$i}:L{$i}")->getFill()->setFillType(null);
+                            // Restaurar fuente predeterminada
+                            $sheet->getStyle("A{$i}:L{$i}")->getFont()->setName('Calibri')->setSize(11)->setBold(false);
                         }
-                        $sheet->setCellValue($col . $row, $value); // Escribe el valor real en la celda
-                        $col++;
+
+                        // Agregar "Página ______ de ______" en la primera fila del espacio entre bloques (sólo para el primer espacio)
+                        if ($blockNumber == 1) {
+                            $sheet->mergeCells("A{$previousEndRow}:B{$previousEndRow}");
+                            $sheet->setCellValue("A{$previousEndRow}", 'Página ______ de ______');
+                            $sheet->getStyle("A{$previousEndRow}")
+                                ->getFont()->setBold(true)->setSize(10)->setName('Cambria');
+                        }
+
+                        // Encabezado del bloque adicional
+                        $col = 'A';
+                        foreach ($headings as $heading) {
+                            if ($col === 'D') {
+                                $col = 'E';
+                            }
+                            $sheet->setCellValue($col . $currentStartRow, $heading);
+                            $sheet->getStyle($col . $currentStartRow)->getFont()
+                                ->setName('Cambria')->setBold(true)->setSize(8);
+                            $sheet->getStyle($col . $currentStartRow)->getAlignment()
+                                ->setHorizontal('center')
+                                ->setVertical('center')
+                                ->setWrapText(true);
+                            $col++;
+                        }
+
+                        // Aplicar estilos a los encabezados del bloque
+                        $sheet->getStyle('A' . $currentStartRow . ':L' . $currentStartRow)
+                            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                        $sheet->getStyle('A' . $currentStartRow . ':L' . $currentStartRow)
+                            ->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE);
+
+                        $currentStartRow++; // Avanzar a la siguiente fila después del encabezado
                     }
-                    $row++;
+
+                    // Datos del bloque - SOLO LOS CORRESPONDIENTES AL RANGO DE ESTE BLOQUE
+                    $row = $currentStartRow;
+                    $blockEndRow = $row - 1; // Inicializar para mantener seguimiento de la última fila
+    
+                    for ($i = $startIdx; $i < $endIdx; $i++) {
+                        $dato = $datos[$i];
+                        $col = 'A';
+                        foreach ([$i + 1, $dato['codigo_estudiante'], $dato['nombre_estudiante'], $dato['primer_parcial'], $dato['segundo_parcial'], $dato['tercer_parcial'], $dato['nota_promedio'], $dato['recuperacion'], $dato['nota_promedio_recuperacion'], $dato['nota_final'], $dato['calificacion']] as $value) {
+                            if ($col === 'D') {
+                                $col = 'E';
+                            }
+                            $sheet->setCellValue($col . $row, $value);
+                            $col++;
+                        }
+
+                        // Aplicar estilos a cada fila de datos
+                        $sheet->getStyle('A' . $row . ':L' . $row)
+                            ->getFont()->setName('Calibri')->setSize(11);
+                        $sheet->getStyle('A' . $row . ':L' . $row)
+                            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+                        $blockEndRow = $row; // Actualizar la última fila de este bloque
+                        $row++;
+                    }
+
+                    // Aplicar bordes dobles solo al rango de este bloque
+                    $rangeStart = $currentStartRow;
+                    $sheet->getStyle('A' . $rangeStart . ':L' . $blockEndRow)
+                        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE);
+                    $sheet->getStyle('A' . $rangeStart . ':L' . $blockEndRow)
+                        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE);
+                    $sheet->getStyle('A' . $rangeStart . ':L' . $blockEndRow)
+                        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DOUBLE);
+
+                    // Alineación centrada para todas las filas del bloque
+                    $sheet->getStyle('A' . $rangeStart . ':L' . $blockEndRow)
+                        ->getAlignment()->setHorizontal('center')->setVertical('center');
+
+                    // Combinar celdas C-D en este bloque
+                    for ($r = $rangeStart; $r <= $blockEndRow; $r++) {
+                        $range = "C{$r}:D{$r}";
+                        if (!isset($sheet->getMergeCells()[$range])) {
+                            $sheet->mergeCells($range);
+                        }
+                    }
+
+                    // Si es el primer bloque, agregamos el texto "Página ______ de ______" 
+                    // justo después de terminar este bloque
+                    if ($blockNumber == 0 && $blockNumber + 1 < ceil($totalRecords / $recordsPerPage)) {
+                        $pageRow = $blockEndRow + 1;
+                        $sheet->mergeCells("A{$pageRow}:B{$pageRow}");
+                        $sheet->setCellValue("A{$pageRow}", 'Página ______ de ______');
+                        $sheet->getStyle("A{$pageRow}")
+                            ->getFont()->setBold(true)->setSize(10)->setName('Cambria');
+                    }
+
+                    $blockNumber++;
                 }
 
-                // Combinar registros
-                for ($row = $startRow; $row <= $endRow; $row++) {
-                    $range = "C{$row}:D{$row}";
-                    if (!isset($sheet->getMergeCells()[$range])) {
-                        $sheet->mergeCells($range); // Combina C y D
-                    }
-                }
-
-                /// Unir celdas de encabezado para que ocupen dos filas
+                // Ajustar estilos de encabezados combinados
                 foreach (range('A', 'L') as $col) {
                     if ($col === 'C') {
-                        $sheet->mergeCells('C12:D13'); // Combina C y D
+                        $sheet->mergeCells('C12:D13');
                     } else {
                         $sheet->mergeCells("{$col}12:{$col}13");
                     }
-                    $sheet->getStyle("{$col}12")->getAlignment()->setVertical('center')->setHorizontal('center');
-                    // Color de letra blanco y negrita
-                    $sheet->getStyle("{$col}12")->getFont()->setName('Cambria')->setBold(true)->getColor()->setARGB('000000');
+                    $sheet->getStyle("{$col}12")->getAlignment()
+                        ->setVertical('center')->setHorizontal('center');
+                    $sheet->getStyle("{$col}12")->getFont()
+                        ->setName('Cambria')->setBold(true)->getColor()->setARGB('000000');
                 }
 
 
@@ -267,7 +437,7 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $sheet->getStyle('B2')->getAlignment()->setHorizontal('center');
 
                 $sheet->mergeCells('B3:L3');
-                $sheet->setCellValue('B3', 'UNIVERSIDAD NACIONAL DE LA POLICIA DE HONDURAS (UNPH)');
+                $sheet->setCellValue('B3', value: 'UNIVERSIDAD NACIONAL DE LA POLICIA DE HONDURAS (UNPH)');
                 $sheet->getStyle('B3')->getFont()->setName('Cambria')->setBold(true)->setSize(12);
                 $sheet->getStyle('B3')->getAlignment()->setHorizontal('center');
 
@@ -458,7 +628,7 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
                 $pageRow = $row + 2; // Deja 2 filas de espacio después del contenido
     
                 // Determinar la fila donde termina la tabla de registros
-                $reglamentoStartRow = $endRow + 3; // Deja 2 filas de espacio después de la tabla de registros
+                $reglamentoStartRow = $endRow + 8; // Deja 2 filas de espacio después de la tabla de registros
     
                 // Dividir el texto del reglamento en líneas
                 $reglamentoTexto = [
