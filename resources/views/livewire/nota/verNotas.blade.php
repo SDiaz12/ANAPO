@@ -35,6 +35,52 @@
         .dark\:barra:is(.dark *) {
             scrollbar-color: #707070 #1f2937;
         }
+        
+        /* Estilo para el toggle switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #2196F3;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
     </style>
     @if ($showVerNotasModal)
         <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
@@ -61,6 +107,15 @@
                 </div>
 
                 <form wire:submit.prevent="storeEditar">
+                    <!-- Toggle switch para tercer parcial -->
+                    <div class="flex items-center justify-end mb-4">
+                        <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Calificar tres parciales:</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" wire:model.live="mostrarTercerParcial" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
                     <div class="overflow-x-auto">
                         <div class="max-h-[400px] barra overflow-y-auto border border-gray-300 rounded-lg">
                             <table class="w-full border-collapse border border-gray-300 text-xs sm:text-sm">
@@ -70,8 +125,10 @@
                                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">Nombre</th>
                                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">Primer Parcial</th>
                                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">Segundo Parcial</th>
+                                        @if($mostrarTercerParcial)
                                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">Tercer Parcial</th>
-                                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">Asistencia</th>
+                                        @endif
+                                      <!--  <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">Asistencia</th>-->
                                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">Recuperación</th>
                                         <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3">Observación</th>
                                     </tr>
@@ -93,18 +150,20 @@
                                                     class="w-full sm:w-[100px] border-gray-300 rounded-md py-2 px-2 sm:px-3 text-xs sm:text-sm" 
                                                     placeholder="Segundo Parcial">
                                             </td>
+                                            @if($mostrarTercerParcial)
                                             <td class="border border-gray-300 px-2 sm:px-4 py-2">
                                                 <input type="number" 
                                                     wire:model="estudiantes.{{ $loop->index }}.tercerparcial" 
                                                     class="w-full sm:w-[100px] border-gray-300 rounded-md py-2 px-2 sm:px-3 text-xs sm:text-sm" 
                                                     placeholder="Tercer Parcial">
                                             </td>
-                                            <td class="border border-gray-300 px-2 sm:px-4 py-2">
+                                            @endif
+                                           <!-- <td class="border border-gray-300 px-2 sm:px-4 py-2">
                                                 <input type="text" 
                                                     wire:model="estudiantes.{{ $loop->index }}.asistencia" 
                                                     class="w-full sm:w-[100px] border-gray-300 rounded-md py-2 px-2 sm:px-3 text-xs sm:text-sm" 
                                                     placeholder="Asistencia">
-                                            </td>
+                                            </td>-->
                                             <td class="border border-gray-300 px-2 sm:px-4 py-2">
                                                 <input type="number" 
                                                     wire:model="estudiantes.{{ $loop->index }}.recuperacion" 

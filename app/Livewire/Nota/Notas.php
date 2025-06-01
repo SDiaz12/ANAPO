@@ -35,6 +35,7 @@ class Notas extends Component
     public $nombre_docente;
     public $showVerNotasModal = false;
     public $seccion_id;
+    public $mostrarTercerParcial = true;
 
     public function placeholder()
     {
@@ -312,7 +313,13 @@ class Notas extends Component
 
     public function exportNotas($codigo_asignatura, $codigo_docente, $seccion_id)
     {
-        return Excel::download(new ActualizarNotasExport($codigo_asignatura, $codigo_docente, $seccion_id), 'notas.xlsx');
+        $nombreArchivo = 'Asignatura_' . $codigo_asignatura . '_Seccion' . $seccion_id . '_Notas.xlsx';
+
+        // Usar el valor actual de $this->mostrarTercerParcial
+        return Excel::download(
+            new ActualizarNotasExport($codigo_asignatura, $codigo_docente, $seccion_id, $this->mostrarTercerParcial),
+            $nombreArchivo
+        );
     }
 
     public function import(Request $request)
