@@ -35,6 +35,7 @@ class Notas extends Component
     public $nombre_docente;
     public $showVerNotasModal = false;
     public $seccion_id;
+    public $mostrarTercerParcial = true;
 
     public function placeholder()
     {
@@ -85,24 +86,24 @@ class Notas extends Component
         $asignaturaEstudiantes = AsignaturaEstudiante::whereHas('asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente, $seccion_id) {
             $query->whereHas('asignatura', function ($query) use ($codigo_asignatura) {
                 $query->where('codigo', $codigo_asignatura)
-                      ->where('estado', 1);
+                    ->where('estado', 1);
             })
-            ->whereHas('docente', function ($query) use ($codigo_docente) {
-                $query->where('codigo', $codigo_docente);
-            })
-            ->whereHas('periodo', function ($query) {
-                $query->where('estado', 1);
-            })
-            ->where('seccion_id', $seccion_id)
-            ->where('estado', 1);
+                ->whereHas('docente', function ($query) use ($codigo_docente) {
+                    $query->where('codigo', $codigo_docente);
+                })
+                ->whereHas('periodo', function ($query) {
+                    $query->where('estado', 1);
+                })
+                ->where('seccion_id', $seccion_id)
+                ->where('estado', 1);
         })
-        ->with([
-            'matricula.estudiante', 
-            'asignaturadocente.asignatura', 
-            'asignaturadocente.docente',
-            'asignaturadocente.seccion'
-        ])
-        ->get();
+            ->with([
+                'matricula.estudiante',
+                'asignaturadocente.asignatura',
+                'asignaturadocente.docente',
+                'asignaturadocente.seccion'
+            ])
+            ->get();
 
         if ($asignaturaEstudiantes->isEmpty()) {
             session()->flash('error', 'No hay estudiantes matriculados en esta asignatura para la sección seleccionada.');
@@ -119,7 +120,7 @@ class Notas extends Component
                 'recuperacion' => null,
                 'observacion' => '',
             ];
-            
+
             return [
                 'asignatura_estudiante_id' => $asignaturaEstudiante->id,
                 'id' => $asignaturaEstudiante->matricula->estudiante->id,
@@ -156,71 +157,65 @@ class Notas extends Component
             'notas.*.recuperacion' => 'nullable|numeric|between:0,100',
             'notas.*.observacion' => 'nullable|string|max:500',
         ]);
-        
-        DB::beginTransaction();
-        
-        try {
-            foreach ($this->notas as $id => $nota) {
-                
-                $asignaturaEstudiante = AsignaturaEstudiante::findOrFail($nota['asignatura_estudiante_id']);
 
-                $notaExistente = Nota::where('asignatura_estudiante_id', $nota['asignatura_estudiante_id'])->first();
-                
-                if ($notaExistente) {
-                    throw new \Exception('Ya existe un registro de notas para el estudiante en esta asignatura');
-                }
-                
-                Nota::create([
-                    'asignatura_estudiante_id' => $nota['asignatura_estudiante_id'],
-                    'primerparcial' => $nota['primerparcial'],
-                    'segundoparcial' => $nota['segundoparcial'],
-                    'tercerparcial' => $nota['tercerparcial'],
-                    'asistencia' => $nota['asistencia'],
-                    'recuperacion' => $nota['recuperacion'],
-                    'observacion' => $nota['observacion'],
-                    'estado' => $this->estado,
-                ]);
+        foreach ($this->notas as $id => $nota) {
+            if (empty($nota['asignatura_estudiante_id'])) {
+                session()->flash('error', 'El ID de asignatura del estudiante no está disponible.');
+                return;
             }
-            
-            DB::commit();
-            session()->flash('success', 'Notas registradas correctamente.');
-            $this->closeModal();
-            $this->resetInputFields();
-            
-        } catch (\Exception $e) {
-            DB::rollBack();
-            session()->flash('error', 'Error al guardar las notas: ' . $e->getMessage());
+
+            try {
+                Nota::updateOrCreate(
+                    ['asignatura_estudiante_id' => $nota['asignatura_estudiante_id']],
+                    [
+                        'primerparcial' => $nota['primerparcial'],
+                        'segundoparcial' => $nota['segundoparcial'],
+                        'tercerparcial' => $nota['tercerparcial'],
+                        'asistencia' => $nota['asistencia'],
+                        'recuperacion' => $nota['recuperacion'],
+                        'observacion' => $nota['observacion'],
+                        'estado' => $this->estado,
+                    ]
+                );
+            } catch (\Exception $e) {
+                session()->flash('error', 'Error al guardar las notas: ' . $e->getMessage());
+                return;
+            }
         }
+
+        session()->flash('success', 'Notas registradas correctamente.');
+        $this->closeModal();
+        $this->resetInputFields();
     }
     public function edit($codigo_asignatura, $codigo_docente, $seccion_id)
     {
         $this->seccion_id = $seccion_id;
-        
+
         $notas = Nota::whereHas('asignaturaEstudiante.asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente, $seccion_id) {
             $query->whereHas('asignatura', function ($q) use ($codigo_asignatura) {
                 $q->where('codigo', $codigo_asignatura)
-                  ->where('estado', 1);
+                    ->where('estado', 1);
             })
-            ->whereHas('docente', function ($q) use ($codigo_docente) {
-                $q->where('codigo', $codigo_docente);
-            })
-            ->whereHas('periodo', function ($q) {
-                $q->where('estado', 1);
-            })
-            ->where('seccion_id', $seccion_id)
-            ->where('estado', 1);
+                ->whereHas('docente', function ($q) use ($codigo_docente) {
+                    $q->where('codigo', $codigo_docente);
+                })
+                ->whereHas('periodo', function ($q) {
+                    $q->where('estado', 1);
+                })
+                ->where('seccion_id', $seccion_id)
+                ->where('estado', 1);
         })
-        ->with([
-            'asignaturaEstudiante.matricula.estudiante',
-            'asignaturaEstudiante.asignaturadocente.seccion'
-        ])
-        ->get();
+            ->with([
+                'asignaturaEstudiante.matricula.estudiante',
+                'asignaturaEstudiante.asignaturadocente.seccion'
+            ])
+            ->get();
 
         if ($notas->isEmpty()) {
             session()->flash('error', 'No hay notas registradas para esta asignatura en la sección seleccionada.');
             return;
         }
-    
+
         $this->estudiantes = $notas->map(function ($nota) {
             return [
                 'asignatura_estudiante_id' => $nota->asignatura_estudiante_id,
@@ -238,12 +233,30 @@ class Notas extends Component
                 'seccion' => $nota->asignaturaEstudiante->asignaturadocente->seccion->nombre ?? 'Sin sección',
             ];
         })->toArray();
-    
+
         $this->openModalEditar('VerNotas');
     }
 
     public function storeEditar()
     {
+        // Convertir valores vacíos en valores válidos - Usa & para crear referencias
+        foreach ($this->estudiantes as &$estudiante) {
+            // Si mostrarTercerParcial está desactivado, establecer tercerparcial como null
+            if (!$this->mostrarTercerParcial) {
+                $estudiante['tercerparcial'] = null;
+            } else {
+                $estudiante['tercerparcial'] = $estudiante['tercerparcial'] === '' ? null : $estudiante['tercerparcial'];
+            }
+            //$estudiante['tercerparcial'] = $estudiante['tercerparcial'] === '' ? null : $estudiante['tercerparcial'];
+            $estudiante['segundoparcial'] = $estudiante['segundoparcial'] === '' ? null : $estudiante['segundoparcial'];
+            $estudiante['asistencia'] = $estudiante['asistencia'] === '' ? '' : $estudiante['asistencia']; // Usa cadena vacía en lugar de null
+            $estudiante['observacion'] = $estudiante['observacion'] === '' ? '' : $estudiante['observacion']; // Usa cadena vacía en lugar de null
+            $estudiante['primerparcial'] = $estudiante['primerparcial'] === '' ? null : $estudiante['primerparcial'];
+            $estudiante['recuperacion'] = $estudiante['recuperacion'] === '' ? null : $estudiante['recuperacion'];
+        }
+        // Importante: Desreferenciar después del bucle
+        unset($estudiante);
+
         $this->validate([
             'estudiantes.*.asignatura_estudiante_id' => 'required|integer|exists:asignatura_estudiantes,id',
             'estudiantes.*.primerparcial' => 'required|numeric',
@@ -253,22 +266,30 @@ class Notas extends Component
             'estudiantes.*.recuperacion' => 'nullable|numeric',
             'estudiantes.*.observacion' => 'nullable|string|max:500',
         ]);
-    
+
         foreach ($this->estudiantes as $estudiante) {
+            // Verifica que el registro tenga un ID válido
+            if (!isset($estudiante['id_nota']) || empty($estudiante['id_nota'])) {
+                session()->flash('error', 'El ID de la nota no está disponible para el estudiante: ' . $estudiante['nombre']);
+                continue;
+            }
+
             $nota = Nota::find($estudiante['id_nota']);
-        
+
             if ($nota) {
                 $nota->update([
                     'primerparcial' => $estudiante['primerparcial'],
                     'segundoparcial' => $estudiante['segundoparcial'],
-                    'tercerparcial' => $estudiante['tercerparcial'],
+                    'tercerparcial' => $this->mostrarTercerParcial ? $estudiante['tercerparcial'] : null,
                     'asistencia' => $estudiante['asistencia'],
                     'recuperacion' => $estudiante['recuperacion'],
                     'observacion' => $estudiante['observacion'],
                 ]);
+            } else {
+                session()->flash('error', 'No se encontró la nota con ID: ' . $estudiante['id_nota']);
             }
         }
-        
+
         session()->flash('success', 'Notas actualizadas correctamente.');
         $this->closeModal();
         $this->resetInputFields();
@@ -279,23 +300,23 @@ class Notas extends Component
         return Nota::whereHas('asignaturaEstudiante.asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente, $seccion_id) {
             $query->whereHas('asignatura', function ($query) use ($codigo_asignatura) {
                 $query->where('codigo', $codigo_asignatura)
-                      ->where('estado', 1);
+                    ->where('estado', 1);
             })
-            ->whereHas('docente', function ($query) use ($codigo_docente) {
-                $query->where('codigo', $codigo_docente);
-            })
-            ->whereHas('periodo', function ($query) {
-                $query->where('estado', 1);
-            })
-            ->where('seccion_id', $seccion_id)
-            ->where('estado', 1);
+                ->whereHas('docente', function ($query) use ($codigo_docente) {
+                    $query->where('codigo', $codigo_docente);
+                })
+                ->whereHas('periodo', function ($query) {
+                    $query->where('estado', 1);
+                })
+                ->where('seccion_id', $seccion_id)
+                ->where('estado', 1);
         })->exists();
     }
 
     public function actualizarNotas(Request $request)
     {
-       $request->validate([
-        'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
         ]);
 
         try {
@@ -308,7 +329,18 @@ class Notas extends Component
 
     public function exportNotas($codigo_asignatura, $codigo_docente, $seccion_id)
     {
-        return Excel::download(new ActualizarNotasExport($codigo_asignatura, $codigo_docente, $seccion_id), 'notas.xlsx');
+        // Obtener el nombre de la asignatura desde la base de datos
+        $asignatura = Asignatura::where('codigo', $codigo_asignatura)->first();
+        $nombreAsignatura = $asignatura ? $asignatura->nombre : $codigo_asignatura;
+        
+        // Crear nombre de archivo incluyendo el nombre de la asignatura
+        $nombreArchivo = 'Cuadro de Notas - ' . $nombreAsignatura . ' - ' . now()->format('Y') . '.xlsx';
+
+        // Usar el valor actual de $this->mostrarTercerParcial
+        return Excel::download(
+            new ActualizarNotasExport($codigo_asignatura, $codigo_docente, $seccion_id, $this->mostrarTercerParcial),
+            $nombreArchivo
+        );
     }
 
     public function import(Request $request)
@@ -383,32 +415,32 @@ class Notas extends Component
     }
     public function render()
     {
-     
+
         $this->verificarPromociones();
-        
+
         $user = auth()->user();
-        
+
         $query = AsignaturaEstudiante::query()
             ->with([
-                'asignaturadocente.asignatura', 
-                'asignaturadocente.docente', 
+                'asignaturadocente.asignatura',
+                'asignaturadocente.docente',
                 'asignaturadocente.periodo',
                 'asignaturadocente.seccion',
                 'matricula.estudiante',
-                'matricula.programaformacion' 
+                'matricula.programaformacion'
             ])
-            ->whereHas('asignaturadocente.asignatura', function($query) {
+            ->whereHas('asignaturadocente.asignatura', function ($query) {
                 $query->where('estado', 1);
             })
-            ->whereHas('asignaturadocente.periodo', function($query) {
+            ->whereHas('asignaturadocente.periodo', function ($query) {
                 $query->where('estado', 1);
             })
-            ->whereHas('asignaturadocente', function($query) {
+            ->whereHas('asignaturadocente', function ($query) {
                 $query->where('estado', 1);
             });
 
         if ($user && !$user->hasRole('root')) {
-            $query->whereHas('asignaturadocente.docente', function($q) use ($user) {
+            $query->whereHas('asignaturadocente.docente', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             });
         }
@@ -447,13 +479,14 @@ class Notas extends Component
     protected function verificarPromociones()
     {
         $periodoActual = Periodo::where('estado', 1)->first();
-        if (!$periodoActual) return;
-        $estudiantes = AsignaturaEstudiante::whereHas('asignaturadocente.periodo', function($q) use ($periodoActual) {
-                $q->where('id', $periodoActual->id);
-            })
+        if (!$periodoActual)
+            return;
+        $estudiantes = AsignaturaEstudiante::whereHas('asignaturadocente.periodo', function ($q) use ($periodoActual) {
+            $q->where('id', $periodoActual->id);
+        })
             ->with([
                 'matricula.estudiante',
-                'matricula.programaformacion.asignaturas' => function($query) {
+                'matricula.programaformacion.asignaturas' => function ($query) {
                     $query->where('estado', 1);
                 },
                 'nota',
@@ -468,15 +501,16 @@ class Notas extends Component
             $yaPromovido = Promocion::where('estudiante_id', $estudianteId)
                 ->where('programaformacion_id', $programa->id)
                 ->exists();
-                
-            if ($yaPromovido) continue;
+
+            if ($yaPromovido)
+                continue;
             $asignaturasRequeridas = $programa->asignaturas->pluck('id')->unique()->toArray();
-            $asignaturasAprobadas = Nota::whereHas('asignaturaEstudiante', function($query) use ($estudianteId) {
-                    $query->whereHas('matricula', function($q) use ($estudianteId) {
-                        $q->where('estudiante_id', $estudianteId);
-                    });
-                })
-                ->where(function($query) {
+            $asignaturasAprobadas = Nota::whereHas('asignaturaEstudiante', function ($query) use ($estudianteId) {
+                $query->whereHas('matricula', function ($q) use ($estudianteId) {
+                    $q->where('estudiante_id', $estudianteId);
+                });
+            })
+                ->where(function ($query) {
                     $query->whereRaw('(primerparcial + segundoparcial + tercerparcial) / 3 >= 70')
                         ->orWhere('recuperacion', '>=', 70);
                 })
@@ -489,7 +523,7 @@ class Notas extends Component
 
             if ($todasAprobadas) {
                 $estudiante = $asignaturasEstudiante->first()->matricula->estudiante;
-                
+
                 Promocion::firstOrCreate([
                     'estudiante_id' => $estudianteId,
                     'programaformacion_id' => $programa->id,

@@ -41,10 +41,10 @@ class SetRoleController extends Controller
 
         session()->flash(
                 'message',
-                'Rol cambiado exitosamente.'
+             'Rol cambiado a ' . $roleToChange->name
             );
 
         // Redirigir a la ruta 'inicio' con un mensaje de éxito
-        return redirect()->route('dashboard')->with('success', 'Rol cambiado exitosamente.');
+        return redirect()->route('dashboard')->with('success', 'Rol cambiado a '. $roleToChange->name);
     }
 }

@@ -33,6 +33,16 @@
     </div>
     @endif
 
+    @if (session()->has('success'))
+    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
+        <div class="flex">
+            <div>
+                <p class="text-sm">{{ session('success') }}</p>
+            </div>
+        </div>
+    </div>
+    @endif
+
     @if (session()->has('info'))
     <div class="bg-blue-100 border-t-4 border-blue-500 rounded-b text-blue-900 px-4 py-3 shadow-md my-3" role="alert">
         <div class="flex">
@@ -43,9 +53,6 @@
     </div>
      <button wire:click="redirectToHistorial" 
                 class="inline-flex items-center text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                    <path d="M19 0H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1ZM2 6v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1Zm11-3h2v2h-2V3Z"/>
-                </svg>
                 Historial Notas
             </button>
     @endif
@@ -89,9 +96,6 @@
             </button>
             <button wire:click="redirectToHistorial" 
                 class="inline-flex items-center text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                    <path d="M19 0H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1ZM2 6v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1Zm11-3h2v2h-2V3Z"/>
-                </svg>
                 Historial Notas
             </button>
             <div id="dropdownRadio"
@@ -177,25 +181,26 @@
                                 @if (!$this->hasNotas($asignatura->asignatura_codigo, $asignatura->docente_codigo, $asignatura->seccion_id))
                                     <button wire:click="create('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                             class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                            ➕ Agregar
+                                            Agregar
                                     </button>
                                     <button 
                                             wire:click="exportarNotas('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                             class="bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                            📄 Excel Notas
+                                            Excel Notas
                                     </button>
                                 @else
                                     <button wire:click="edit('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
-                                        class="bg-green-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        📖 Ver
+                                        class="bg-green-600 inline-flex items-center text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
+                                        
+ Ver
                                     </button>
                                     <button wire:click="exportNotas('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                         class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        📥 Descargar Notas
+                                        Descargar Notas
                                     </button>
                                     <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                         class="bg-purple-600 text-white px-3 py-2 rounded-md text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        📊 Generar Cuadros
+                                        Generar Cuadros
                                     </button>
                                 @endif
                             </td>
@@ -221,25 +226,25 @@
                         @if (!$this->hasNotas($asignatura->asignatura_codigo, $asignatura->docente_codigo, $asignatura->seccion_id))
                             <button wire:click="create('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                     class="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                    ➕ Agregar
+                                    Agregar
                             </button>
                             <button 
                                     wire:click="exportarNotas('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                     class="bg-green-500 text-white px-3 py-2 rounded-md text-sm hover:bg-green-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                    📄 Excel Notas
+                                    Excel Notas
                             </button>
                         @else
                             <button wire:click="edit('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                 class="bg-green-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                📖 Ver
+                                Ver
                             </button>
                             <button wire:click="exportNotas('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                 class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                📥 Descargar Notas
+                                Descargar Notas
                             </button>
                             <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
                                 class="bg-purple-600 text-white px-3 py-2 rounded-md text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                📊 Generar Cuadros
+                                Generar Cuadros
                             </button>
                         @endif                      
                     </div>
@@ -260,9 +265,6 @@
     </div>
    <button wire:click="redirectToHistorial" 
         class="inline-flex items-center text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-        <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-            <path d="M19 0H1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1ZM2 6v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1Zm11-3h2v2h-2V3Z"/>
-        </svg>
         Historial Notas
     </button>
     @endif
