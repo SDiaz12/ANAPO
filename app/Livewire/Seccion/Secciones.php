@@ -13,6 +13,7 @@ class Secciones extends Component
     use WithPagination;
 
     public $confirmingDelete = false;
+    public $showDuplicateError = false; // Nueva propiedad para controlar la modal de error
     public $IdAEliminar, $nombreAEliminar;
     public $search, $seccion_id, $nombre, $estado = 1;
     public $isOpen = false;
@@ -32,16 +33,15 @@ class Secciones extends Component
         $this->openModal();
     }
 
-    
     public function openModal()
     {
         $this->isOpen = true;
     }
 
-  
     public function closeModal()
     {
         $this->isOpen = false;
+        $this->showDuplicateError = false; 
         $this->resetInputFields();
     }
 
@@ -49,16 +49,25 @@ class Secciones extends Component
     {
         $this->seccion_id = null;
         $this->nombre = '';
-       
     }
 
-   public function store()
+    public function store()
     {
         $this->validate([
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|unique:secciones,nombre,'.$this->seccion_id,
         ]);
 
         try {
+          
+            $existingSeccion = Seccion::where('nombre', $this->nombre)
+                                    ->where('id', '!=', $this->seccion_id)
+                                    ->first();
+
+            if ($existingSeccion) {
+                $this->showDuplicateError = true;
+                return;
+            }
+
             $seccion = Seccion::updateOrCreate(
                 ['id' => $this->seccion_id],
                 [
@@ -105,7 +114,6 @@ class Secciones extends Component
         }
     }
 
-    
     public function toggleEstado($id)
     {
         $seccion = Seccion::findOrFail($id);
@@ -113,14 +121,12 @@ class Secciones extends Component
         $seccion->save();
     }
 
-    
     public $perPage = 9;
     public function loadMore($suma)
     {
         $this->perPage = $suma;
     }
 
-    
     public function confirmDelete($id)
     {
         $seccion = Seccion::find($id);
@@ -130,19 +136,18 @@ class Secciones extends Component
             return;
         }
     
-      
-    
-    
         $this->IdAEliminar = $id;
         $this->nombreAEliminar = $seccion->nombre;
         $this->confirmingDelete = true;
     }
+
     public function render()
     {
         $seccionesCount = Seccion::count();
         $secciones = Seccion::where('nombre', 'like', '%' . $this->search . '%')
-        ->orderBy('id', 'DESC')
-        ->paginate($this->perPage);
+            ->orderBy('id', 'DESC')
+            ->paginate($this->perPage);
+            
         return view('livewire.seccion.secciones', [
             'seccionesCount' => $seccionesCount,
             'secciones' => $secciones

@@ -65,6 +65,46 @@
                         </p>
                      </div>
                      <ul class="py-1" role="none">
+                           @php
+                              $roles = Auth::user()->roles; // Obtiene la colección de roles con ID y nombre
+                           @endphp
+                        <li>
+                           <x-dropdown-link id="dropdownLeftButton" data-dropdown-toggle="dropdownLeft"
+                              data-dropdown-placement="left" class="inline-flex items-center cursor-pointer">
+                              {{ __('Rol de')  }} {{ Auth::user()->activeRole ? Auth::user()->activeRole->name : 'Invitado' }}
+                           </x-dropdown-link>
+                           <!-- Dropdown menu -->
+                           <div id="dropdownLeft"
+                              class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                 aria-labelledby="dropdownLeftButton">
+                                 <li>
+                                    @forelse ($roles as $rol)
+                              <div class="py-1">
+                                 <x-dropdown-link href="{{ route('setrole', $rol->id) }}"
+                                   class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:text-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:text-gray-200 dark:focus-visible:bg-gray-800 dark:hover:bg-white/5 dark:focus-visible:bg-white/10 dark:border-gray-700">
+                                   Cambiar a {{ $rol->name }}
+                                   <svg xmlns="http://www.w3.org/2000/svg" class="ml-auto h-5 w-5 text-gray-400"
+                                     viewBox="0 0 20 20" fill="currentColor">
+                                     <path
+                                       d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                                     <path
+                                       d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                                   </svg>
+                                 </x-dropdown-link>
+                              </div>
+                           @empty
+                           <p>
+                              No tienes roles asignados.
+                           </p>
+                           @endforelse
+                                 </li>
+
+                              </ul>
+                           </div>
+                        </li>
+
+
                         <li>
                            <x-dropdown-link href="{{ route('profile.show') }}">
                               {{ __('Cuenta') }}
@@ -130,7 +170,7 @@
       aria-label="Sidebar">
       <div class="h-full px-3 pb-4 overflow-y-auto barra dark:barra bg-white dark:bg-gray-800">
          <ul class="space-y-2 font-medium">
-            @can('estudiante-admin-dashboard')
+            @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('estudiante-admin-dashboard'))
             <li>
                <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')"
                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -144,7 +184,7 @@
                  <span class="ms-3">Inicio</span>
                </x-nav-link>
             </li>
-         @endcan
+         @endif
 
             <li>
                <x-nav-link href="{{ route('principal') }}" :active="request()->routeIs('principal')"
@@ -160,7 +200,7 @@
                </x-nav-link>
             </li>
 
-            @can('admin-admin-matricula')
+            @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-matricula'))
             <li>
                <x-nav-link href="{{ route('matricula') }}" :active="request()->routeIs('matricula')"
                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -176,8 +216,8 @@
 
                </x-nav-link>
             </li>
-         @endcan
-            @can('admin-admin-asignaturaestudiante')
+         @endif
+            @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-asignaturaestudiante'))
             <li>
                <x-nav-link href="{{ route('asignaturaEstudiante') }}"
                  :active="request()->routeIs('asignaturaEstudiante')"
@@ -192,8 +232,8 @@
                  <span class="flex-1 ms-3 whitespace-nowrap">Matricular Asignatura</span>
                </x-nav-link>
             </li>
-         @endcan
-            @can('docente-admin-notas')
+         @endif
+            @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('docente-admin-notas'))
             <li>
                <x-nav-link href="{{ route('notas') }}" :active="request()->routeIs('notas')"
                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -207,8 +247,8 @@
                  <span class="flex-1 ms-3 whitespace-nowrap">Notas</span>
                </x-nav-link>
             </li>
-         @endcan
-            @can('admin-admin-promocion')
+         @endif
+            @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-promocion'))
             <li>
                <x-nav-link href="{{ route('promocion') }}" :active="request()->routeIs('promocion')"
                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -223,8 +263,8 @@
                  <span class="flex-1 ms-3 whitespace-nowrap">Promoción</span>
                </x-nav-link>
             </li>
-         @endcan
-            @can('estudiante-admin-matricularasignatura')
+         @endif
+            @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('estudiante-admin-matricularasignatura'))
             <li>
                <x-nav-link href="{{ route('matricula-asignaturas') }}"
                  :active="request()->routeIs('matricula-asignaturas')"
@@ -239,9 +279,9 @@
                  <span class="flex-1 ms-3 whitespace-nowrap">Matricula</span>
                </x-nav-link>
             </li>
-         @endcan
+         @endif
 
-            @can('admin-admin-personas')
+            @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-personas'))
                <li>
                   @php
                   $isDropdown3Active = request()->routeIs('docente') || request()->routeIs('estudiante') || request()->routeIs('users') || request()->routeIs('rol');
@@ -265,7 +305,7 @@
                   <ul id="dropdown-menu3"
                     class="{{ $isDropdown3Active ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0' }} overflow-hidden transition-all duration-300 ease-in-out space-y-2 rounded-md">
                     <li>
-                      @can('admin-admin-docente')
+                      @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-docente'))
                      <x-nav-link href="{{ route('docente') }}" :active="request()->routeIs('docente')"
                       class="mt-2 ms-8 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                       <x-activeIcons :active="request()->routeIs('docente')"
@@ -279,8 +319,8 @@
                       </x-activeIcons>
                       <span class="flex-1 ms-3 whitespace-nowrap">Docentes</span>
                      </x-nav-link>
-                  @endcan
-                      @can('admin-admin-estudiante')
+                  @endif
+                      @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-estudiante'))
                      <li class="ms-8">
                        <x-nav-link href="{{ route('estudiante') }}" :active="request()->routeIs('estudiante')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -296,8 +336,8 @@
                         <span class="flex-1 ms-3 whitespace-nowrap">Estudiantes</span>
                        </x-nav-link>
                      </li>
-                   @endcan
-                    @can('admin-admin-users')
+                   @endif
+                    @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-users'))
                    <li class="ms-8">
                      <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')"
                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -311,8 +351,8 @@
                       <span class="flex-1 ms-3 whitespace-nowrap">Usuarios</span>
                      </x-nav-link>
                    </li>
-                 @endcan
-                    @can('admin-admin-rol')
+                 @endif
+                    @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-rol'))
                    <li class="ms-8">
                      <x-nav-link href="{{ route('rol') }}" :active="request()->routeIs('rol')"
                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -326,20 +366,20 @@
                       <span class="flex-1 ms-3 whitespace-nowrap">Roles</span>
                      </x-nav-link>
                    </li>
-                 @endcan
+                 @endif
                </li>
 
              </ul>
              </li>
-          @endcan
-         @can('admin-admin-administracion')
+          @endif
+         @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-administracion'))
           <li>
             <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
           </li>
           <li>
             @php
                $isDropdown2Active = request()->routeIs('asignaturaDocente') || request()->routeIs('programas') || request()->routeIs('periodo') || request()->routeIs('seccion') || request()->routeIs('instituto');
-          @endphp
+            @endphp
             <button type="button"
                class="{{ $isDropdown2Active ? 'bg-gray-200 dark:bg-gray-700' : '' }} flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700"
                id="dropdown2">
@@ -359,7 +399,7 @@
             <ul id="dropdown-menu2"
                class="{{ $isDropdown2Active ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0' }} overflow-hidden transition-all duration-300 ease-in-out py-2 space-y-2 rounded-md">
                <li>
-                 @can('admin-admin-asignaturaDocente')
+                 @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-asignaturaDocente'))
                 <x-nav-link href="{{ route('asignaturaDocente') }}" :active="request()->routeIs('asignaturaDocente')"
                   class=" ms-8 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                   <x-activeIcons :active="request()->routeIs('asignaturaDocente')" class="flex-shrink-0 w-6 h-6 "
@@ -370,9 +410,9 @@
                   </x-activeIcons>
                   <span class="flex-1 ms-3 whitespace-nowrap">Asignar a docente</span>
                 </x-nav-link>
-              @endcan
+              @endif
 
-                 @can('admin-admin-asignatura')
+                 @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-asignatura'))
                  <li class="ms-8">
                   <x-nav-link href="{{ route('asignatura') }}" :active="request()->routeIs('asignatura')"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -386,9 +426,8 @@
                     <span class="flex-1 ms-3 whitespace-nowrap">Asignaturas</span>
                   </x-nav-link>
                  </li>
-               @endcan
-
-               @can('admin-admin-programas')
+               @endif
+               @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-programas'))
                <li class="ms-8">
                 <x-nav-link href="{{ route('programas') }}" :active="request()->routeIs('programas')"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
@@ -401,8 +440,8 @@
                   <span class="flex-1 ms-3 whitespace-nowrap">Programas</span>
                 </x-nav-link>
                </li>
-            @endcan
-               @can('admin-admin-periodo')
+            @endif
+               @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-periodo'))
                <x-nav-link href="{{ route('periodo') }}" :active="request()->routeIs('periodo')"
                 class="ms-8 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                 <x-activeIcons :active="request()->routeIs('periodo')" class="flex-shrink-0 w-6 h-6"
@@ -413,8 +452,8 @@
                 </x-activeIcons>
                 <span class="flex-1 ms-3 whitespace-nowrap">Periodo</span>
                </x-nav-link>
-            @endcan
-               @can('admin-admin-seccion')
+            @endif
+               @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-seccion'))
                <x-nav-link href="{{ route('seccion') }}" :active="request()->routeIs('seccion')"
                 class="ms-8 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                 <x-activeIcons :active="request()->routeIs('seccion')" class="flex-shrink-0 w-6 h-6"
@@ -427,9 +466,8 @@
                 </x-activeIcons>
                 <span class="flex-1 ms-3 whitespace-nowrap">Sección</span>
                </x-nav-link>
-            @endcan
-
-               @can('admin-admin-instituto')
+            @endif
+               @if (Auth::user()->activeRole && Auth::user()->activeRole->hasPermissionTo('admin-admin-instituto'))
                <x-nav-link href="{{ route('instituto') }}" :active="request()->routeIs('instituto')"
                 class="ms-8 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 dark:hover:bg-gray-700 group">
                 <x-activeIcons :active="request()->routeIs('instituto')" class="flex-shrink-0 w-6 h-6"
@@ -442,12 +480,12 @@
                 </x-activeIcons>
                 <span class="flex-1 ms-3 whitespace-nowrap">Instituto</span>
                </x-nav-link>
-            @endcan
+            @endif
           </li>
 
           </ul>
           </li>
-       @endcan
+       @endif
 
          {{-- <div id="dropdown-cta" class="p-4 mt-6 rounded-lg bg-yellow-50 dark:bg-blue-900" role="alert">
             <div class="flex items-center mb-3">

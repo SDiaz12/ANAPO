@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\SetRoleController;
 use App\Livewire\Asignatura\Asignaturas;
 use App\Livewire\Estudiant\EstudiantePorUsuario;
 use App\Livewire\Instituto\Instituto;
@@ -145,4 +146,7 @@ Route::middleware([
     Route::get('/users', Usuario::class)
     ->name('users')
     ->middleware('can:admin-admin-users');
+
+    Route::get('setPerfil/{role_id}', [SetRoleController::class, 'SetRole'])
+        ->name('setrole');
 });
