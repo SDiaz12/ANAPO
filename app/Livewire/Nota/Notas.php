@@ -231,7 +231,13 @@ class Notas extends Component
     {
         // Convertir valores vacíos en valores válidos - Usa & para crear referencias
         foreach ($this->estudiantes as &$estudiante) {
-            $estudiante['tercerparcial'] = $estudiante['tercerparcial'] === '' ? null : $estudiante['tercerparcial'];
+            // Si mostrarTercerParcial está desactivado, establecer tercerparcial como null
+            if (!$this->mostrarTercerParcial) {
+                $estudiante['tercerparcial'] = null;
+            } else {
+                $estudiante['tercerparcial'] = $estudiante['tercerparcial'] === '' ? null : $estudiante['tercerparcial'];
+            }
+            //$estudiante['tercerparcial'] = $estudiante['tercerparcial'] === '' ? null : $estudiante['tercerparcial'];
             $estudiante['segundoparcial'] = $estudiante['segundoparcial'] === '' ? null : $estudiante['segundoparcial'];
             $estudiante['asistencia'] = $estudiante['asistencia'] === '' ? '' : $estudiante['asistencia']; // Usa cadena vacía en lugar de null
             $estudiante['observacion'] = $estudiante['observacion'] === '' ? '' : $estudiante['observacion']; // Usa cadena vacía en lugar de null
@@ -264,7 +270,7 @@ class Notas extends Component
                 $nota->update([
                     'primerparcial' => $estudiante['primerparcial'],
                     'segundoparcial' => $estudiante['segundoparcial'],
-                    'tercerparcial' => $estudiante['tercerparcial'],
+                    'tercerparcial' => $this->mostrarTercerParcial ? $estudiante['tercerparcial'] : null,
                     'asistencia' => $estudiante['asistencia'],
                     'recuperacion' => $estudiante['recuperacion'],
                     'observacion' => $estudiante['observacion'],

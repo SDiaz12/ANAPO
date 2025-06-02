@@ -85,126 +85,91 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
             $query->whereHas('asignatura', function ($query) {
                 $query->where('codigo', $this->codigo_asignatura);
             })
-                ->whereHas('docente', function ($query) {
-                    $query->where('codigo', $this->codigo_docente);
-                })
-                ->whereHas('seccion', function ($query) {
-                    $query->where('id', $this->seccion_id);
-                });
-        })
-            ->with(['matricula.estudiante', 'asignaturadocente.asignatura', 'notas'])
-            ->get()
-            ->map(function ($item) {
-
-                $nota = $item->notas;
-
-                return [
-                    'asignatura_estudiante_id' => $item->id ?? 'Sin código',
-                    'codigo_estudiante' => $item->matricula->estudiante->codigo ?? 'Sin código',
-                    'nombre_estudiante' => $item->matricula->estudiante->nombre . ' ' . $item->matricula->estudiante->apellido ?? 'Sin Nombre',
-                    'primer_parcial' => $nota->primerparcial ?? 0,
-                    'segundo_parcial' => $nota->segundoparcial ?? 0,
-                    'tercer_parcial' => $nota->tercerparcial ?? null, // Puede ser null si no hay tercer parcial
-                    'nota_promedio' => count(array_filter([
-                        $nota->primerparcial ?? 0,
-                        $nota->segundoparcial ?? 0,
-                        $nota->tercerparcial ?? null,
-                    ])) > 0
-                        ? round(
-                            array_sum(array_filter([
-                                $nota->primerparcial ?? 0,
-                                $nota->segundoparcial ?? 0,
-                                $nota->tercerparcial ?? null,
-                            ])) / count(array_filter([
-                                    $nota->primerparcial ?? 0,
-                                    $nota->segundoparcial ?? 0,
-                                    $nota->tercerparcial ?? null,
-                                ])),
-                            0
-                        )
-                        : 0, // Si no hay parciales, el promedio es 0
-                    'recuperacion' => $nota->recuperacion ?? '',
-                    'nota_promedio_recuperacion' => ($nota->recuperacion ?? 0) > 0 && count(array_filter([
-                        $nota->primerparcial ?? 0,
-                        $nota->segundoparcial ?? 0,
-                        $nota->tercerparcial ?? null,
-                    ])) > 0
-                        ? round(
-                            (array_sum(array_filter([
-                                $nota->primerparcial ?? 0,
-                                $nota->segundoparcial ?? 0,
-                                $nota->tercerparcial ?? null,
-                            ])) - min(array_filter([
-                                    $nota->primerparcial ?? 0,
-                                    $nota->segundoparcial ?? 0,
-                                    $nota->tercerparcial ?? null,
-                                ])) + ($nota->recuperacion ?? 0)) / count(array_filter([
-                                    $nota->primerparcial ?? 0,
-                                    $nota->segundoparcial ?? 0,
-                                    $nota->tercerparcial ?? null,
-                                ])),
-                            0
-                        )
-                        : null, // Si la recuperación es null o 0, o no hay parciales, no se calcula
-                    'nota_final' => ($nota->recuperacion ?? 0) > 0 && count(array_filter([
-                        $nota->primerparcial ?? 0,
-                        $nota->segundoparcial ?? 0,
-                        $nota->tercerparcial ?? null,
-                    ])) > 0
-                        ? round(
-                            (array_sum(array_filter([
-                                $nota->primerparcial ?? 0,
-                                $nota->segundoparcial ?? 0,
-                                $nota->tercerparcial ?? null,
-                            ])) - min(array_filter([
-                                    $nota->primerparcial ?? 0,
-                                    $nota->segundoparcial ?? 0,
-                                    $nota->tercerparcial ?? null,
-                                ])) + ($nota->recuperacion ?? 0)) / count(array_filter([
-                                    $nota->primerparcial ?? 0,
-                                    $nota->segundoparcial ?? 0,
-                                    $nota->tercerparcial ?? null,
-                                ])),
-                            0
-                        )
-                        : round(
-                            count(array_filter([
-                                $nota->primerparcial ?? 0,
-                                $nota->segundoparcial ?? 0,
-                                $nota->tercerparcial ?? null,
-                            ])) > 0
-                            ? array_sum(array_filter([
-                                $nota->primerparcial ?? 0,
-                                $nota->segundoparcial ?? 0,
-                                $nota->tercerparcial ?? null,
-                            ])) / count(array_filter([
-                                    $nota->primerparcial ?? 0,
-                                    $nota->segundoparcial ?? 0,
-                                    $nota->tercerparcial ?? null,
-                                ]))
-                            : 0,
-                            0
-                        ), // Si la recuperación es 0, usa el promedio dinámico o 0 si no hay parciales
-                    'calificacion' => $this->determinarCalificacion(round(
-                        max(($nota->recuperacion ?? 0), count(array_filter([
-                            $nota->primerparcial ?? 0,
-                            $nota->segundoparcial ?? 0,
-                            $nota->tercerparcial ?? null,
-                        ])) > 0
-                            ? array_sum(array_filter([
-                                $nota->primerparcial ?? 0,
-                                $nota->segundoparcial ?? 0,
-                                $nota->tercerparcial ?? null,
-                            ])) / count(array_filter([
-                                    $nota->primerparcial ?? 0,
-                                    $nota->segundoparcial ?? 0,
-                                    $nota->tercerparcial ?? null,
-                                ]))
-                            : 0),
-                        0
-                    )), // Calificación basada en la nota final
-                ];
+            ->whereHas('docente', function ($query) {
+                $query->where('codigo', $this->codigo_docente);
+            })
+            ->whereHas('seccion', function ($query) {
+                $query->where('id', $this->seccion_id);
             });
+        })
+        ->with(['matricula.estudiante', 'asignaturadocente.asignatura', 'notas'])
+        ->get()
+        ->map(function ($item) {
+            // Verificar si el estudiante tiene notas
+            $nota = $item->notas;
+            
+            // Valores predeterminados en caso de que $nota sea null
+            $primerparcial = 0;
+            $segundoparcial = 0;
+            $tercerparcial = null;
+            $recuperacion = '';
+            
+            // Si hay registro de notas, obtener los valores
+            if ($nota) {
+                $primerparcial = $nota->primerparcial ?? 0;
+                $segundoparcial = $nota->segundoparcial ?? 0;
+                $tercerparcial = $nota->tercerparcial; // Mantenemos el valor original, sin importar la configuración
+                $recuperacion = $nota->recuperacion ?? '';
+            }
+            
+            // Definir los parciales a considerar para cálculos según el toggle mostrarTercerParcial
+            $parciales = [
+                $primerparcial,
+                $segundoparcial
+            ];
+            
+            // Solo incluir el tercer parcial en los cálculos si mostrarTercerParcial es true
+            if ($this->mostrarTercerParcial && $tercerparcial !== null) {
+                $parciales[] = $tercerparcial;
+            }
+            
+            // Filtrar valores válidos (mayores a 0)
+            $parcialesFiltrados = array_filter($parciales, function($value) {
+                return $value !== null && $value > 0;
+            });
+            
+            // Calcular promedio si hay parciales válidos
+            $promedio = count($parcialesFiltrados) > 0
+                ? round(array_sum($parcialesFiltrados) / count($parcialesFiltrados), 0)
+                : 0;
+            
+            // Calcular promedio con recuperación
+            $promedioRecuperacion = null;
+            if ($recuperacion > 0 && count($parcialesFiltrados) > 0) {
+                // Si hay recuperación, se quita la nota más baja y se agrega la recuperación
+                if (count($parcialesFiltrados) > 1) {
+                    $promedioRecuperacion = round(
+                        (array_sum($parcialesFiltrados) - min($parcialesFiltrados) + $recuperacion) / count($parcialesFiltrados),
+                        0
+                    );
+                } else {
+                    // Si solo hay un parcial, se promedia con la recuperación
+                    $promedioRecuperacion = round(
+                        (array_sum($parcialesFiltrados) + $recuperacion) / 2,
+                        0
+                    );
+                }
+            }
+            
+            // Calcular nota final
+            $notaFinal = $recuperacion > 0 && $promedioRecuperacion !== null
+                ? $promedioRecuperacion
+                : $promedio;
+            
+            return [
+                'asignatura_estudiante_id' => $item->id ?? 'Sin código',
+                'codigo_estudiante' => $item->matricula->estudiante->codigo ?? 'Sin código',
+                'nombre_estudiante' => $item->matricula->estudiante->nombre . ' ' . $item->matricula->estudiante->apellido ?? 'Sin Nombre',
+                'primer_parcial' => $primerparcial,
+                'segundo_parcial' => $segundoparcial,
+                'tercer_parcial' => $tercerparcial, // Siempre incluimos el valor, pero en la exportación se mostrará o no según el encabezado
+                'nota_promedio' => $promedio,
+                'recuperacion' => $recuperacion,
+                'nota_promedio_recuperacion' => $promedioRecuperacion,
+                'nota_final' => $notaFinal,
+                'calificacion' => $this->determinarCalificacion($notaFinal)
+            ];
+        });
     }
 
     public function styles($sheet)
