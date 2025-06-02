@@ -319,7 +319,12 @@ class Notas extends Component
 
     public function exportNotas($codigo_asignatura, $codigo_docente, $seccion_id)
     {
-        $nombreArchivo = 'Asignatura_' . $codigo_asignatura . '_Seccion' . $seccion_id . '_Notas.xlsx';
+        // Obtener el nombre de la asignatura desde la base de datos
+        $asignatura = Asignatura::where('codigo', $codigo_asignatura)->first();
+        $nombreAsignatura = $asignatura ? $asignatura->nombre : $codigo_asignatura;
+        
+        // Crear nombre de archivo incluyendo el nombre de la asignatura
+        $nombreArchivo = 'Cuadro de Notas - ' . $nombreAsignatura . ' - ' . now()->format('Y') . '.xlsx';
 
         // Usar el valor actual de $this->mostrarTercerParcial
         return Excel::download(
