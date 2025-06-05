@@ -66,7 +66,25 @@ class AsignaturaEstudiantes extends Component
         $this->estado = 1;
         $this->error = null;
     }
-
+    public function scopeAprobada($query)
+    {
+        return $query->where('estado', 1)
+            ->where(function ($q) {
+                $q->where(function ($subQ) {
+                    $subQ->whereHas('asignaturaEstudiante.asignaturaDocente', function ($q) {
+                            $q->where('mostrarTercerParcial', 1);
+                        })
+                        ->whereRaw('(primerparcial + segundoparcial + tercerparcial) / 3 >= 70.0');
+                })
+                ->orWhere(function ($subQ) {
+                    $subQ->whereHas('asignaturaEstudiante.asignaturaDocente', function ($q) {
+                            $q->where('mostrarTercerParcial', 0);
+                        })
+                        ->whereRaw('(primerparcial + segundoparcial) / 2 >= 70.0');
+                })
+                ->orWhere('recuperacion', '>=', 70.0);
+            });
+    }
     public function store()
     {
         $this->validate([
@@ -89,7 +107,7 @@ class AsignaturaEstudiantes extends Component
             return;
         }
 
-        // Verificar requisitos previos
+
         if ($asignaturaDocente->asignatura->requisitos->isNotEmpty()) {
             foreach ($asignaturaDocente->asignatura->requisitos as $requisito) {
                 $requisitoAprobado = AsignaturaEstudiante::where('estudiantes_id', $this->matricula_id)
@@ -97,15 +115,9 @@ class AsignaturaEstudiantes extends Component
                         $query->where('id', $requisito->id);
                     })
                     ->whereHas('notas', function ($query) {
-                        $query->where('estado', 1)
-                            ->where(function ($q) {
-
-                                $q->whereRaw('(primerparcial + segundoparcial + tercerparcial) / 3 >= 70.0')
-                                    ->orWhere('recuperacion', '>=', 70.0);
-                            });
+                        $query->aprobada();
                     })
                     ->exists();
-
                 if (!$requisitoAprobado) {
                     $this->error = "El estudiante no ha aprobado el requisito previo: {$requisito->nombre}";
                     return;

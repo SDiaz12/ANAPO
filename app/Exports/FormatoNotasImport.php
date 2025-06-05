@@ -4,38 +4,70 @@ namespace App\Exports;
 
 use App\Models\AsignaturaEstudiante;
 use App\Models\Nota;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
-class FormatoNotasImport implements ToModel, WithHeadingRow
+class FormatoNotasImport implements ToCollection, WithStartRow
 {
-    public function model(array $row)
+    public function startRow(): int
     {
-        $asignaturaEstudianteId = $row['no'];
+        return 14; 
+    }
 
-        $asignaturaEstudiante = AsignaturaEstudiante::find($asignaturaEstudianteId);
-
-        if ($asignaturaEstudiante) {
-            $exists = Nota::where('asignatura_estudiante_id', $asignaturaEstudianteId)
-                ->exists();
-
-            if ($exists) {
-                Log::warning('Ya existe una nota registrada para esta combinación de asignatura, estudiante y periodo.');
-                return null;
+  public function collection(Collection $filas)
+    {
+        foreach ($filas as $fila) {
+            $asignaturaEstudianteId = $fila[12] ?? null;
+            if (!$asignaturaEstudianteId) {
+                Log::error("No hay ID de asignatura_estudiante en la fila.");
+                continue;
             }
 
-            return new Nota([
-                'asignatura_estudiante_id' => $asignaturaEstudianteId,
-                'primerparcial' => $row['primer_parcial'],
-                'segundoparcial' => $row['segundo_parcial'],
-                'tercerparcial' => $row['tercer_parcial'],
-                'asistencia' => $row['asistencia'],
-                'recuperacion' => $row['recuperacion'],
-                'observacion' => $row['observacion'],
-            ]);
-        }
+            $asignaturaEstudiante = AsignaturaEstudiante::with('asignaturadocente')->find($asignaturaEstudianteId);
+            if (!$asignaturaEstudiante) {
+                Log::error("AsignaturaEstudiante no encontrada para ID: {$asignaturaEstudianteId}");
+                continue;
+            }
 
-        return null;
+            $mostrarTercerParcial = $asignaturaEstudiante->asignaturadocente
+                ? $asignaturaEstudiante->asignaturadocente->mostrarTercerParcial
+                : 0;
+
+            $nota = Nota::firstOrNew([
+                'asignatura_estudiante_id' => $asignaturaEstudiante->id,
+            ]);
+
+            if (!isset($fila[4]) || $fila[4] === '' || !is_numeric($fila[4])) {
+                Log::error("Primer parcial obligatorio y no válido en fila para asignatura_estudiante_id: {$asignaturaEstudiante->id}");
+                continue;
+            }
+
+            $nota->primerparcial = max(0, min(100, $fila[4]));
+            $nota->segundoparcial = (isset($fila[5]) && $fila[5] !== '' && is_numeric($fila[5])) ? max(0, min(100, $fila[5])) : null;
+
+            if ($mostrarTercerParcial == 1) {
+                $nota->tercerparcial = (isset($fila[6]) && $fila[6] !== '' && is_numeric($fila[6])) ? max(0, min(100, $fila[6])) : null;
+                $nota->recuperacion = (isset($fila[8]) && $fila[8] !== '' && is_numeric($fila[8])) ? max(0, min(100, $fila[8])) : null;
+                $nota->asistencia = (isset($fila[9]) && is_numeric($fila[9])) ? $fila[9] : null;
+                $nota->observacion = $fila[11] ?? null;
+            } else {
+                $nota->tercerparcial = null;
+                $nota->recuperacion = (isset($fila[7]) && $fila[7] !== '' && is_numeric($fila[7])) ? max(0, min(100, $fila[7])) : null;
+                $nota->asistencia = (isset($fila[9]) && is_numeric($fila[9])) ? $fila[9] : null;
+                $nota->observacion = $fila[10] ?? null;
+            }
+
+            try {
+                $nota->save();
+            } catch (\Exception $e) {
+                Log::error("Error guardando nota: " . $e->getMessage());
+                continue;
+            }
+        }
     }
+
+
 }
+

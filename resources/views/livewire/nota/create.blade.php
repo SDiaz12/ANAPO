@@ -1,4 +1,5 @@
 <div>
+
     @if ($isOpen)
         <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-5xl">
@@ -20,11 +21,12 @@
                         >
                             📤 Importar Notas
                         </button>
+                        
                     </form>
                 </div>
 
-
                 <form wire:submit.prevent="store">
+                    
                     <div class="overflow-x-auto">
                         <div class="max-h-[500px] overflow-y-auto border border-gray-300 rounded-lg">
                             <table class="w-full border-collapse border border-gray-300 text-sm">
@@ -38,7 +40,9 @@
                                         <th class="border border-gray-300 px-4 py-3">Código de Asignatura Asignada</th>
                                         <th class="border border-gray-300 px-4 py-3">Primer Parcial</th>
                                         <th class="border border-gray-300 px-4 py-3">Segundo Parcial</th>
-                                        <th class="border border-gray-300 px-4 py-3">Tercer Parcial</th>
+                                        @if($mostrarTercerParcial)
+                                            <th class="border border-gray-300 px-4 py-3">Tercer Parcial</th>
+                                        @endif
                                         <th class="border border-gray-300 px-4 py-3">Asistencia</th>
                                         <th class="border border-gray-300 px-4 py-3">Recuperación</th>
                                         <th class="border border-gray-300 px-4 py-3">Observación</th>
@@ -74,14 +78,14 @@
                                                         <span class="text-red-500">{{ $message }}</span> 
                                                     @enderror
                                                 </td>
-
-                                                <td class="border border-gray-300 px-4 py-2">
-                                                    <input type="number" wire:model="notas.{{ $estudiante['id'] }}.tercerparcial" class="w-[100px] border-gray-300 rounded-md py-2 px-3 text-sm">
-                                                    @error('notas.{{ $estudiante["id"] }}.tercerparcial') 
-                                                        <span class="text-red-500">{{ $message }}</span> 
-                                                    @enderror
-                                                </td>
-
+                                                @if($mostrarTercerParcial)
+                                                    <td class="border border-gray-300 px-4 py-2">
+                                                        <input type="number" wire:model="notas.{{ $estudiante['id'] }}.tercerparcial" class="w-[100px] border-gray-300 rounded-md py-2 px-3 text-sm">
+                                                        @error('notas.{{ $estudiante["id"] }}.tercerparcial') 
+                                                            <span class="text-red-500"></span> 
+                                                        @enderror
+                                                    </td>
+                                                @endif
                                                 <td class="border border-gray-300 px-4 py-2">
                                                     <input type="text" wire:model="notas.{{ $estudiante['id'] }}.asistencia" class="w-[120px] border-gray-300 rounded-md py-2 px-3 text-sm">
                                                     @error('notas.{{ $estudiante["id"] }}.asistencia') 

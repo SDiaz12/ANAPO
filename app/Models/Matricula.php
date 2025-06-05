@@ -22,13 +22,7 @@ class Matricula extends BaseModel
         'motivo_estado',
         'observacion_estado',
     ];
-
-    public function estudiante()
-    {
-        return $this->belongsTo(Estudiante::class, 'estudiante_id');
-    }
-
-    public function programaFormacion()
+     public function programaFormacion()
     {
         return $this->belongsTo(ProgramaFormacion::class, 'programaformacion_id');
     }
@@ -43,10 +37,7 @@ class Matricula extends BaseModel
         return $this->hasMany(Promocion::class, 'matricula_id');
     }
 
-    public function asignaturasEstudiantes()
-    {
-        return $this->hasMany(Nota::class, 'matricula_id');
-    }
+    
 
     public function institutos()
     {
@@ -56,5 +47,20 @@ class Matricula extends BaseModel
     {
         return $this->belongsTo(Instituto::class, 'instituto_id');
     }
+    public function asignaturasEstudiante()
+    {
+        return $this->hasMany(AsignaturaEstudiante::class, 'estudiante_id');
+    }
+     public function asignaturasEstudiantes()
+    {
+        return $this->hasMany(AsignaturaEstudiante::class, 'estudiantes_id');
+    }
+
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiante::class, 'estudiante_id');
+    }
+
+    
 
 }

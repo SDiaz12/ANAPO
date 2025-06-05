@@ -17,9 +17,9 @@ return new class extends Migration
             $table->float('primerparcial');
             $table->float('segundoparcial')->nullable();
             $table->float('tercerparcial')->nullable();
-            $table->string('asistencia');
+            $table->string('asistencia')->nullable();
             $table->float('recuperacion')->nullable();
-            $table->string('observacion');
+            $table->string('observacion')->nullable();
             $table->integer('estado')->default(1);
 
             $table->timestamps();

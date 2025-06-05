@@ -13,7 +13,7 @@ class Secciones extends Component
     use WithPagination;
 
     public $confirmingDelete = false;
-    public $showDuplicateError = false; // Nueva propiedad para controlar la modal de error
+    public $showDuplicateError = false; 
     public $IdAEliminar, $nombreAEliminar;
     public $search, $seccion_id, $nombre, $estado = 1;
     public $isOpen = false;

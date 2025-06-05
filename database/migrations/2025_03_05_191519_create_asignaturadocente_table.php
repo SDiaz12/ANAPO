@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('periodo_id');
             $table->unsignedBigInteger('seccion_id');
             $table->integer('estado');
+            $table->integer('mostrarTercerParcial');
            $table->unique(
                             ['asignatura_id', 'docente_id', 'periodo_id', 'seccion_id'],
                             'asig_doc_per_sec_unique'

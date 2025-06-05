@@ -29,59 +29,58 @@
 </head>
 <body>
 <div class="encabezado" style="text-align: center; margin-bottom: 15px;">
-        <img src="{{ public_path('Logo/LOGO.png') }}" alt="Logo" style="height: 70px; display: block; margin: 0 auto 5px auto;">
-        <h2 style="margin: 0; font-size: 22px; letter-spacing: 1px;">ACADEMIA NACIONAL DE POLICÍA</h2>
-        <span style="font-size: 13px;">Cuadro de Notas Consolidado</span>
-    </div>
+    <img src="{{ public_path('Logo/LOGO.png') }}" alt="Logo" style="height: 70px; display: block; margin: 0 auto 5px auto;">
+    <h2 style="margin: 0; font-size: 22px; letter-spacing: 1px;">ACADEMIA NACIONAL DE POLICÍA</h2>
+    <span style="font-size: 13px;">Cuadro de Notas Consolidado</span>
+</div>
 
-    @php
-        $docente = $datos->first()?->asignaturadocente->docente->nombre ?? '';
-        $asignatura = $datos->first()?->asignaturadocente->asignatura->nombre ?? '';
-        $seccion = $datos->first()?->asignaturadocente->seccion->nombre ?? '';
-        $periodo = $datos->first()?->asignaturadocente->periodo->nombre ?? '';
-    @endphp
+@php
+    $docente = $datos->first()?->asignaturadocente->docente->nombre ?? '';
+    $asignatura = $datos->first()?->asignaturadocente->asignatura->nombre ?? '';
+    $seccion = $datos->first()?->asignaturadocente->seccion->nombre ?? '';
+    $periodo = $datos->first()?->asignaturadocente->periodo->nombre ?? '';
+@endphp
 
-    <p><strong>Asignatura:</strong> {{ $asignatura }}</p>
-    <p><strong>Docente:</strong> {{ $docente }}</p>
-    <p><strong>Sección:</strong> {{ $seccion }}</p>
-    <p><strong>Período:</strong> {{ $periodo }}</p>
+<p><strong>Asignatura:</strong> {{ $asignatura }}</p>
+<p><strong>Docente:</strong> {{ $docente }}</p>
+<p><strong>Sección:</strong> {{ $seccion }}</p>
+<p><strong>Período:</strong> {{ $periodo }}</p>
 
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Estudiante</th>
+            <th>I Parcial</th>
+            <th>II Parcial</th>
+            @if($mostrarTercerParcial)
+            <th>III Parcial</th>
+            @endif
+            <th>Recuperación</th>
+            <th>Promedio</th>
+            <th>Observación</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($datos as $i => $registro)
+            @php
+                $nota = $registro->notas;
+                $promedio = $nota->promedio_calculado ?? '-';
+            @endphp
             <tr>
-                <th>#</th>
-                <th>Estudiante</th>
-                <th>I Parcial</th>
-                <th>II Parcial</th>
-                <th>III Parcial</th>
-                <th>Asistencia</th>
-                <th>Recuperación</th>
-                <th>Promedio</th>
-                <th>Observación</th>
+                <td>{{ $i + 1 }}</td>
+                <td>{{ $registro->matricula->estudiante->nombre }} {{ $registro->matricula->estudiante->apellido }}</td>
+                <td>{{ $nota->primerparcial ?? '-' }}</td>
+                <td>{{ $nota->segundoparcial ?? '-' }}</td>
+                @if($mostrarTercerParcial)
+                <td>{{ $nota->tercerparcial ?? '-' }}</td>
+                @endif
+                <td>{{ $nota->recuperacion > 0 ? $nota->recuperacion : '-' }}</td>
+                <td>{{ $promedio }}</td>
+                <td>{{ $nota->observacion ?? '-' }}</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($datos as $i => $registro)
-                @php
-                    $nota = $registro->notas;
-                    $promedio = $nota
-                        ? round(($nota->primerparcial + $nota->segundoparcial + $nota->tercerparcial) / 3, 2)
-                        : null;
-                @endphp
-                <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $registro->matricula->estudiante->nombre }} {{ $registro->matricula->estudiante->apellido }}</td>
-                    <td>{{ $nota->primerparcial ?? '-' }}</td>
-                    <td>{{ $nota->segundoparcial ?? '-' }}</td>
-                    <td>{{ $nota->tercerparcial ?? '-' }}</td>
-                    <td>{{ $nota->asistencia ?? '-' }}</td>
-                    <td>{{ $nota->recuperacion ?? '-' }}</td>
-                    <td>{{ $promedio ?? '-' }}</td>
-                    <td>{{ $nota->observacion ?? '-' }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
+        @endforeach
+    </tbody>
+</table>
 </body>
 </html>

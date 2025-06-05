@@ -12,6 +12,9 @@
 
         .boleta {
             page-break-after: always;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         table {
@@ -22,50 +25,60 @@
 
         th, td {
             border: 1px solid black;
-            padding: 6px;
+            padding: 8px;
             text-align: center;
         }
 
         th {
             background-color: #f2f2f2;
+            font-weight: bold;
         }
 
-        .info-table {
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+
+        .header p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .info-alumno {
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .info-alumno p {
+            margin: 5px 0;
+        }
+
+        .firmas {
+            margin-top: 40px;
             width: 100%;
-            border: none;
         }
 
-        .info-table td {
-            border: none;
-            vertical-align: top;
-            padding: 4px;
-        }
-
-       
-        .foto {
-            width: 90px;
-            height: 110px;
-            object-fit: cover;
-        }
-
-     
-        .firmas-table {
-            width: 100%;
+        .firma {
+            display: inline-block;
+            width: 45%;
+            text-align: center;
             margin-top: 50px;
-            border: none;
         }
 
-        .firmas-table td {
-            border: none;
-            text-align: center;
-            padding-top: 30px;
-        }
-
-        .firma-linea {
+        .linea-firma {
             border-top: 1px solid #000;
-            width: 100%;
-            margin-top: 30px;
-            text-align: center;
+            width: 80%;
+            margin: 0 auto;
             padding-top: 5px;
         }
     </style>
@@ -77,89 +90,75 @@
     @php
         $nota = $registro->notas;
         $estudiante = $registro->matricula->estudiante;
-
         $seccion = $registro->asignaturadocente->seccion->nombre ?? '';
         $periodo = $registro->asignaturadocente->periodo->nombre ?? '';
-        $promedio = round(($nota->primerparcial + $nota->segundoparcial + $nota->tercerparcial) / 3, 2);
-        $totalAsistencias = $nota->asistencia;
+        $promedio = $nota->promedio_calculado ?? 0;
     @endphp
 
     <div class="boleta">
-        <div class="encabezado" style="text-align: center; margin-bottom: 15px;">
-        <img src="{{ public_path('Logo/LOGO.png') }}" alt="Logo" style="height: 100px; display: block; margin: 0 auto 5px auto;">
-        <h2 style="margin: 0; font-size: 22px; letter-spacing: 1px;">ACADEMIA NACIONAL DE POLICÍA</h2>
-        <span style="font-size: 13px;">Boleta de Calificaciones de {{ $registro->asignaturadocente->asignatura->nombre ?? 'Materia' }}</span>
-    </div>
+        <div class="header">
+            <img src="{{ public_path('Logo/LOGO.png') }}" alt="Logo">
+            <h1>ACADEMIA NACIONAL DE POLICÍA</h1>
+            <p>Boleta de Calificaciones</p>
+            <p><strong>Asignatura:</strong> {{ $asignatura }}</p>
+        </div>
 
-       
-        <table class="info-table">
-            <tr>
-                <td style="text-align: left; width: 70%;">
-                    <strong>Periodo:</strong> {{ $periodo }}<br>
-                    <strong>Sección:</strong> {{ $seccion }}
-                </td>
-                
-            </tr>
-        </table>
-        <table class="w-full border border-gray-200 dark:border-gray-700">
+        <div class="info-alumno">
+            <p><strong>Periodo:</strong> {{ $periodo }}</p>
+            <p><strong>Sección:</strong> {{ $seccion }}</p>
+            <p><strong>Docente:</strong> {{ $docente }}</p>
+            <p><strong>Nombre del Alumno:</strong> {{ $estudiante->nombre }} {{ $estudiante->apellido }}</p>
+            <p><strong>DNI:</strong> {{ $estudiante->dni }}</p>
+        </div>
+
+        <table>
             <thead>
                 <tr>
-                    <th class="px-4 py-2 border">Parcial</th>
-                    <th class="px-4 py-2 border">Nota</th>
-                    <th class="px-4 py-2 border">Asistencia</th>
+                    <th>Evaluación</th>
+                    <th>Nota</th>
                 </tr>
             </thead>
             <tbody>
-              
                 <tr>
-                    <td class="px-4 py-2 border">I Parcial</td>
-                    <td class="px-4 py-2 border">{{ $nota->primerparcial ?? 'N/A' }}</td>
-                    <td class="px-4 py-2 border" rowspan="4">
-                        {{ $nota->asistencia ?? 'N/A' }}%
-                        @if($nota && $nota->asistencia)
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1 dark:bg-gray-700">
-                                <div class="bg-blue-600 h-2.5 rounded-full" 
-                                    style="width: {{ $nota->asistencia }}%"></div>
-                            </div>
-                        @endif
-                    </td>
+                    <td>I Parcial</td>
+                    <td>{{ $nota->primerparcial ?? 'N/A' }}</td>
                 </tr>
                 
-             
                 <tr>
-                    <td class="px-4 py-2 border">II Parcial</td>
-                    <td class="px-4 py-2 border">{{ $nota->segundoparcial ?? 'N/A' }}</td>
+                    <td>II Parcial</td>
+                    <td>{{ $nota->segundoparcial ?? 'N/A' }}</td>
                 </tr>
                 
-
+                @if($mostrarTercerParcial)
                 <tr>
-                    <td class="px-4 py-2 border">III Parcial</td>
-                    <td class="px-4 py-2 border">{{ $nota->tercerparcial ?? 'N/A' }}</td>
+                    <td>III Parcial</td>
+                    <td>{{ $nota->tercerparcial ?? 'N/A' }}</td>
                 </tr>
+                @endif
                 
-             
+                @if($nota->tiene_recuperacion)
                 <tr>
-                    <td class="px-4 py-2 border">Promedio</td>
-                    <td class="px-4 py-2 border">{{ $promedio ?? 'N/A' }}%</td>
+                    <td>Recuperación</td>
+                    <td>{{ $nota->recuperacion }}</td>
                 </tr>
+                @endif
                 
+                <tr style="font-weight: bold;">
+                    <td>Promedio Final</td>
+                    <td>{{ number_format($promedio, 2) }} %</td>
+                </tr>
             </tbody>
         </table>
 
-        <p><strong>Nombre del Alumno:</strong> {{ $estudiante->nombre }} {{ $estudiante->apellido }}</p>
-        <p><strong>DNI:</strong> {{ $estudiante->dni }}</p>
-
-     
-        <table class="firmas-table">
-            <tr>
-                <td>
-                    <div class="firma-linea">Firma del Docente</div>
-                </td>
-                <td>
-                    <div class="firma-linea">Firma del Director</div>
-                </td>
-            </tr>
-        </table>
+        <div class="firmas">
+            <div class="firma" style="float: left;">
+                <div class="linea-firma">Firma del Docente</div>
+            </div>
+            <div class="firma" style="float: right;">
+                <div class="linea-firma">Firma del Director</div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
     </div>
     @endif
 @endforeach

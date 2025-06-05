@@ -46,7 +46,7 @@
 
                 @for ($i = 0; $i < $cantidad_materias; $i++)
                     <div class="mb-5">
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-4 gap-4 items-end">
                             <div>
                                 <label for="asignatura_{{ $i }}" class="block text-base font-medium text-gray-900 dark:text-gray-300">Asignatura {{ $i + 1 }}</label>
                                 <select wire:model.live="selectedAsignaturas.{{ $i }}" id="asignatura_{{ $i }}"
@@ -73,13 +73,20 @@
                                     class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 py-3 px-4 text-gray-900 dark:text-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="">Seleccione sección</option>
                                     @foreach($secciones as $seccion)
-                                        <option value="{{ $seccion->id }}">{{ $seccion->nombre }} </option>
+                                        <option value="{{ $seccion->id }}">{{ $seccion->nombre }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="flex items-center h-full pt-6">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" wire:model.live="mostrarTercerParcial.{{ $i }}" class="form-checkbox h-5 w-5 text-indigo-600">
+                                    <span class="ml-2 text-gray-700 dark:text-gray-300 text-sm">3 parciales</span>
+                                </label>
                             </div>
                         </div>
                     </div>
                 @endfor
+
 
                 <div class="mt-4 flex justify-end space-x-4">
    

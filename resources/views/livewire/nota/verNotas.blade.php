@@ -1,87 +1,5 @@
 <div>
-     <style>
-        /* Estilo para navegadores modernos */
-        .barra::-webkit-scrollbar {
-            width: 8px;
-            /* Ancho de la barra de desplazamiento */
-        }
 
-        .barra::-webkit-scrollbar-thumb {
-            background-color: #d4d3d3;
-            /* Color rojo */
-            border-radius: 10px;
-            /* Bordes redondeados */
-        }
-
-        .barra::-webkit-scrollbar-thumb:hover {
-            background-color: #c5c3c3;
-            /* Color gris más oscuro al pasar el mouse */
-        }
-
-        .barra::-webkit-scrollbar-track {
-            background-color: #ffffff;
-            /* Color del fondo de la barra */
-            border-radius: 10px;
-        }
-
-        /* Para navegadores que soportan scrollbar-color */
-        .barra {
-            scrollbar-color: #d4d3d3 #ffffff;
-            /* Color del pulgar y del fondo */
-            scrollbar-width: thin;
-            /* Barra más delgada */
-        }
-
-        .dark\:barra:is(.dark *) {
-            scrollbar-color: #707070 #1f2937;
-        }
-        
-        /* Estilo para el toggle switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 24px;
-        }
-        
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .toggle-slider {
-            background-color: #2196F3;
-        }
-        
-        input:checked + .toggle-slider:before {
-            transform: translateX(24px);
-        }
-    </style>
     @if ($showVerNotasModal)
         <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
             <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-5xl mx-2 sm:mx-0">
@@ -107,14 +25,7 @@
                 </div>
 
                 <form wire:submit.prevent="storeEditar">
-                    <!-- Toggle switch para tercer parcial -->
-                    <div class="flex items-center justify-end mb-4">
-                        <span class="mr-2 text-sm text-gray-700 dark:text-gray-300">Calificar tres parciales:</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" wire:model.live="mostrarTercerParcial" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
+                    
                     
                     <div class="overflow-x-auto">
                         <div class="max-h-[400px] barra overflow-y-auto border border-gray-300 rounded-lg">

@@ -16,6 +16,7 @@ class AsignaturaDocente extends BaseModel
         'periodo_id',
         'seccion_id',
         'estado', 
+        'mostrarTercerParcial',
         'created_by', 
         'deleted_by', 
         'updated_by'];

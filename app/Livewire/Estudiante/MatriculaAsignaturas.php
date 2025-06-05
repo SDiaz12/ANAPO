@@ -71,6 +71,7 @@ class MatriculaAsignaturas extends Component
             $this->confirmingMatricula = false;
             return;
         }
+
         $yaMatriculadoMismoDocente = AsignaturaEstudiante::where('estudiantes_id', $matricula->id)
             ->whereHas('asignaturaDocente', function($query) {
                 $query->where('docente_id', $this->asignaturaSeleccionada->docente_id)
@@ -111,8 +112,12 @@ class MatriculaAsignaturas extends Component
                     $query->where('codigo', $requisito->requisito->codigo);
                 })
                 ->whereHas('notas', function ($query) {
-                    $query->where('observacion', 'Aprobado')
-                        ->where('estado', 1);
+                    $query->where(function($q) {
+                        $q->where('observacion', 'Aprobado')
+                        ->orWhere('observacion', 'Excelente')
+                        ->orWhere('observacion', 'Muy Bueno')
+                        ->orWhere('observacion', 'Bueno');
+                    })->where('estado', 1);
                 })
                 ->exists();
 
@@ -123,7 +128,6 @@ class MatriculaAsignaturas extends Component
             }
         }
 
-        
         AsignaturaEstudiante::create([
             'asignatura_id' => $this->asignaturaSeleccionada->id,
             'estudiantes_id' => $matricula->id,
@@ -135,44 +139,43 @@ class MatriculaAsignaturas extends Component
         $this->confirmingMatricula = false;
         
         $this->cargarMatriculadas();
-        $this->resetPage(); 
-        $this->cargarMatriculadas();
+        $this->resetPage();
     }
     public function cargarMatriculadas()
-{
-    $estudiante = Auth::user()->estudiante;
-    if (!$estudiante) {
-        $this->matriculadas = collect();
-        return;
+    {
+        $estudiante = Auth::user()->estudiante;
+        if (!$estudiante) {
+            $this->matriculadas = collect();
+            return;
+        }
+
+        $matricula = Matricula::where('estudiante_id', $estudiante->id)
+            ->where('estado', 1)
+            ->first();
+
+        if (!$matricula) {
+            $this->matriculadas = collect();
+            return;
+        }
+
+        $periodoActivo = Periodo::where('estado', 1)->first();
+
+        $this->matriculadas = $periodoActivo 
+            ? AsignaturaEstudiante::with([
+                'asignaturaDocente.asignatura',
+                'asignaturaDocente.docente',
+                'asignaturaDocente.periodo',
+                'asignaturaDocente.seccion',
+                'notas'
+            ])
+            ->where('estudiantes_id', $matricula->id)
+            ->whereHas('asignaturaDocente', function($query) use ($periodoActivo) {
+                $query->where('periodo_id', $periodoActivo->id);
+            })
+            ->orderBy('id', 'DESC')
+            ->get()
+            : collect();
     }
-
-    $matricula = Matricula::where('estudiante_id', $estudiante->id)
-        ->where('estado', 1)
-        ->first();
-
-    if (!$matricula) {
-        $this->matriculadas = collect();
-        return;
-    }
-
-    $periodoActivo = Periodo::where('estado', 1)->first();
-
-    $this->matriculadas = $periodoActivo 
-        ? AsignaturaEstudiante::with([
-            'asignaturaDocente.asignatura',
-            'asignaturaDocente.docente',
-            'asignaturaDocente.periodo',
-            'asignaturaDocente.seccion',
-            'notas'
-        ])
-        ->where('estudiantes_id', $matricula->id)
-        ->whereHas('asignaturaDocente', function($query) use ($periodoActivo) {
-            $query->where('periodo_id', $periodoActivo->id);
-        })
-        ->orderBy('id', 'DESC')
-        ->get()
-        : collect();
-}
     public function quitarAsignatura($id)
     {
         $this->resetMessages();

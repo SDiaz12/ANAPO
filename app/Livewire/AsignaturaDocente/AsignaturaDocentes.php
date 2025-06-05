@@ -52,7 +52,12 @@ class AsignaturaDocentes extends Component
         $asignatura->estado = !$asignatura->estado;
         $asignatura->save();
     }
-
+    public function toggleParcial($id)
+    {
+        $asignatura = AsignaturaDocente::findOrFail($id);
+        $asignatura->mostrarTercerParcial = !$asignatura->mostrarTercerParcial;
+        $asignatura->save();
+    }
     public $codigoDocente, $nombreCompleto, $error;
     public $selectedAsignaturas = [];
     
@@ -114,6 +119,7 @@ class AsignaturaDocentes extends Component
         $this->periodo_id = '';
         $this->seccion_id = '';
         $this->estado = '';
+        $this->mostrarTercerParcial = '';
     }
 
  
@@ -135,23 +141,25 @@ class AsignaturaDocentes extends Component
     }
 
     public $cantidad_materias; 
-    public function updatedCantidadMaterias()
+   public function updatedCantidadMaterias()
     {
         $cantidad = intval($this->cantidad_materias);
-    
+
         if ($cantidad > 0) {
             $this->selectedAsignaturas = array_fill(0, $cantidad, null);
             $this->selectedPeriodos = array_fill(0, $cantidad, null);
             $this->selectedSecciones = array_fill(0, $cantidad, null);
+            $this->mostrarTercerParcial = array_fill(0, $cantidad, false);
         } else {
-            
             $this->selectedAsignaturas = [];
             $this->selectedPeriodos = [];
             $this->selectedSecciones = [];
+            $this->mostrarTercerParcial = [];
         }
     }
-    
 
+    
+    public $mostrarTercerParcial = [];
   public function store()
     {
         $this->validate([
@@ -214,6 +222,7 @@ class AsignaturaDocentes extends Component
                 'periodo_id' => $this->selectedPeriodos[$key],
                 'seccion_id' => $this->selectedSecciones[$key],
                 'estado' => 1,
+               'mostrarTercerParcial' => !empty($this->mostrarTercerParcial[$key]) ? 1 : 0,
             ]);
         }
 
