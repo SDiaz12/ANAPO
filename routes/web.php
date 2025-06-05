@@ -44,9 +44,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/cuadro/pdf/{codigo_asignatura}/{codigo_docente}/{seccion_id}', [ReporteNotasController::class, 'cuadro'])->name('cuadro.pdf');
+    Route::get('/cuadro/pdf/{codigo_asignatura}/{codigo_docente}/{seccion_id}/{periodo_id}', [ReporteNotasController::class, 'cuadro'])->name('cuadro.pdf');
     
-    Route::get('/boletas/pdf/{codigo_asignatura}/{codigo_docente}/{seccion_id}', [ReporteNotasController::class, 'boletas'])->name('boletas.pdf');
+    Route::get('/boletas/pdf/{codigo_asignatura}/{codigo_docente}/{seccion_id}/{periodo_id}', [ReporteNotasController::class, 'boletas'])->name('boletas.pdf');
 
     Route::get('/dashboard', function () {return view('dashboard');})
     ->name('dashboard')

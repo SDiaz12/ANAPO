@@ -118,12 +118,12 @@
                                     {{ $asignatura->estudiantes_count }}
                                 </td>
                                 <td class="px-3 py-4 sm:px-6 sm:py-4">
-                                    <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-                                        <button wire:click="verNotas('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
+                                   <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
+                                        <button wire:click="verNotas('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}', '{{ $asignatura->periodo_id }}')" 
                                             class="bg-green-600 text-white px-2 py-1 sm:px-3 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-green-700 shadow-md transition-all duration-200 ease-in-out">
                                             📖 Ver Notas
                                         </button>
-                                        <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
+                                        <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}', '{{ $asignatura->periodo_id }}')" 
                                             class="bg-purple-600 text-white px-2 py-1 sm:px-3 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out">
                                             📊 Generar Cuadros
                                         </button>
@@ -158,7 +158,7 @@
                                     class="bg-green-600 text-white px-2 py-1 sm:px-3 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-green-700 shadow-md transition-all duration-200 ease-in-out">
                                     📖 Ver Notas
                                 </button>
-                                <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
+                                <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}', '{{ $asignatura->periodo_id }}')" 
                                     class="bg-purple-600 text-white px-2 py-1 sm:px-3 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out">
                                     📊 Generar Cuadros
                                 </button>

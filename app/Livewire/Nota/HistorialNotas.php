@@ -38,11 +38,12 @@ class HistorialNotas extends Component
         $this->perPage = $suma;
     }
 
-    public function abrirModalGenerarCuadros($codigo_asignatura, $codigo_docente, $seccion_id)
+    public function abrirModalGenerarCuadros($codigo_asignatura, $codigo_docente, $seccion_id, $periodo_id)
     {
         $this->asignatura_id = $codigo_asignatura;
         $this->docente_id = $codigo_docente;
         $this->seccion_id = $seccion_id;
+        $this->periodo_id = $periodo_id;
         $this->showGenerarCuadrosModal = true;
     }
 
@@ -52,29 +53,34 @@ class HistorialNotas extends Component
             return redirect()->route('cuadro.pdf', [
                 'codigo_asignatura' => $this->asignatura_id,
                 'codigo_docente' => $this->docente_id,
-                'seccion_id' => $this->seccion_id
+                'seccion_id' => $this->seccion_id,
+                'periodo_id' => $this->periodo_id
             ]);
         } elseif ($this->cuadroSeleccionado === 'boletas') {
             return redirect()->route('boletas.pdf', [
                 'codigo_asignatura' => $this->asignatura_id,
                 'codigo_docente' => $this->docente_id,
-                'seccion_id' => $this->seccion_id
+                'seccion_id' => $this->seccion_id,
+                'periodo_id' => $this->periodo_id
             ]);
         }
     }
 
-    public function verNotas($codigo_asignatura, $codigo_docente, $seccion_id)
+    public function verNotas($codigo_asignatura, $codigo_docente, $seccion_id, $periodo_id)
     {
         $this->seccion_id = $seccion_id;
         
-        $notas = Nota::whereHas('asignaturaEstudiante.asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente, $seccion_id) {
+        $notas = Nota::whereHas('asignaturaEstudiante.asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente, $seccion_id, $periodo_id) {
             $query->whereHas('asignatura', function ($q) use ($codigo_asignatura) {
                 $q->where('codigo', $codigo_asignatura);
             })
             ->whereHas('docente', function ($q) use ($codigo_docente) {
                 $q->where('codigo', $codigo_docente);
             })
-            ->where('seccion_id', $seccion_id);
+            ->where('seccion_id', $seccion_id)
+            ->whereHas('periodo', function($q) use ($periodo_id) {
+                $q->where('id', $periodo_id);
+            });
         })
         ->with([
             'asignaturaEstudiante.matricula.estudiante',
@@ -114,8 +120,8 @@ class HistorialNotas extends Component
         $this->showGenerarCuadrosModal = false;
     }
 
-   public function render()
-   {
+    public function render()
+    {
         $user = auth()->user();
         
         $query = AsignaturaEstudiante::query()
@@ -134,8 +140,7 @@ class HistorialNotas extends Component
 
         if ($this->periodo_id) {
             $query->whereHas('asignaturadocente.periodo', function($q) {
-                $q->where('id', $this->periodo_id)
-                ->where('estado', '0'); 
+                $q->where('id', $this->periodo_id);
             });
         }
 
@@ -180,7 +185,6 @@ class HistorialNotas extends Component
             ->orderBy('periodos.id', 'DESC')
             ->paginate($this->perPage);
 
-    
         $periodoActivo = Periodo::where('estado', '1')->exists();
 
         return view('livewire.nota.historial-notas', [
@@ -188,6 +192,7 @@ class HistorialNotas extends Component
             'periodoActivo' => $periodoActivo
         ])->layout('layouts.app');
     }
+
     public function redirectToNotas()
     {
         return redirect()->route('notas');

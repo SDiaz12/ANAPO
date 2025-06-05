@@ -216,9 +216,9 @@
                                         class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                         Descargar Notas
                                     </button>
-                                    <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
-                                        class="bg-purple-600 text-white px-3 py-2 rounded-md text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                        Generar Cuadros
+                                    <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}', '{{ $asignatura->periodo_id }}')" 
+                                        class="bg-purple-600 text-white px-2 py-1 sm:px-3 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out">
+                                        📊 Generar Cuadros
                                     </button>
                                 @endif
                             </td>
@@ -260,10 +260,10 @@
                                 class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-600 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
                                 Descargar Notas
                             </button>
-                            <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}')" 
-                                class="bg-purple-600 text-white px-3 py-2 rounded-md text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out transform hover:scale-110">
-                                Generar Cuadros
-                            </button>
+                            <button wire:click="abrirModalGenerarCuadros('{{ $asignatura->asignatura_codigo }}', '{{ $asignatura->docente_codigo }}', '{{ $asignatura->seccion_id }}', '{{ $asignatura->periodo_id }}')" 
+                                        class="bg-purple-600 text-white px-2 py-1 sm:px-3 sm:py-2 rounded-md text-xs sm:text-sm hover:bg-purple-700 shadow-md transition-all duration-200 ease-in-out">
+                                        📊 Generar Cuadros
+                                    </button>
                         @endif                      
                     </div>
                 </div>

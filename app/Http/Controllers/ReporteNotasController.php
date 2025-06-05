@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Nota;
 use App\Models\AsignaturaEstudiante;
+use App\Models\Periodo;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReporteNotasController extends Controller
 {
-
-    public function cuadro($codigo_asignatura, $codigo_docente, $seccion_id)
+    public function cuadro($codigo_asignatura, $codigo_docente, $seccion_id, $periodo_id)
     {
         $datos = AsignaturaEstudiante::with(['matricula.estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente', 'asignaturadocente.seccion'])
             ->whereHas('asignaturadocente.asignatura', function ($q) use ($codigo_asignatura) {
@@ -19,7 +19,10 @@ class ReporteNotasController extends Controller
                 $q->where('codigo', $codigo_docente);
             })
             ->whereHas('asignaturadocente.seccion', function ($q) use ($seccion_id) {
-                $q->where('seccion_id', $seccion_id);
+                $q->where('id', $seccion_id);
+            })
+            ->whereHas('asignaturadocente.periodo', function ($q) use ($periodo_id) {
+                $q->where('id', $periodo_id);
             })
             ->get()
             ->map(function ($item) {
@@ -55,7 +58,7 @@ class ReporteNotasController extends Controller
         return $pdf->stream('cuadro_consolidado.pdf');
     }
     
-    public function boletas($codigo_asignatura, $codigo_docente, $seccion_id)
+    public function boletas($codigo_asignatura, $codigo_docente, $seccion_id, $periodo_id)
     {
         $datos = AsignaturaEstudiante::with(['matricula.estudiante', 'notas', 'asignaturadocente.asignatura', 'asignaturadocente.docente', 'asignaturadocente.seccion'])
             ->whereHas('asignaturadocente.asignatura', function ($q) use ($codigo_asignatura) {
@@ -65,7 +68,10 @@ class ReporteNotasController extends Controller
                 $q->where('codigo', $codigo_docente);
             })
             ->whereHas('asignaturadocente.seccion', function ($q) use ($seccion_id) {
-                $q->where('seccion_id', $seccion_id);
+                $q->where('id', $seccion_id);
+            })
+            ->whereHas('asignaturadocente.periodo', function ($q) use ($periodo_id) {
+                $q->where('id', $periodo_id);
             })
             ->get()
             ->map(function ($item) {

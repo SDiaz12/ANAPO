@@ -67,31 +67,46 @@ class Notas extends Component
         return Excel::download(new FormatoNotasExport($codigo_asignatura, $codigo_docente, $seccion_id), $nombreArchivo);
     }
 
-    public function abrirModalGenerarCuadros($codigo_asignatura, $codigo_docente, $seccion_id)
+    public function abrirModalGenerarCuadros($codigo_asignatura, $codigo_docente, $seccion_id, $periodo_id = null)
     {
+        if (empty($periodo_id)) {
+            $periodo_id = Periodo::where('estado', 1)->value('id') ?? abort(404, 'No hay período activo');
+        }
+
         $this->asignatura_id = $codigo_asignatura;
         $this->docente_id = $codigo_docente;
         $this->seccion_id = $seccion_id;
+        $this->periodo_id = $periodo_id;
         $this->showGenerarCuadrosModal = true;
     }
-
+    public $periodo_id;
     public function generarCuadro()
     {
-        if ($this->cuadroSeleccionado === 'cuadro_final') {
-            return redirect()->route('cuadro.pdf', [
+        try {
+            if (empty($this->periodo_id)) {
+                throw new \Exception('Periodo académico no especificado');
+            }
+
+            $params = [
                 'codigo_asignatura' => $this->asignatura_id,
                 'codigo_docente' => $this->docente_id,
-                'seccion_id' => $this->seccion_id
+                'seccion_id' => $this->seccion_id,
+                'periodo_id' => $this->periodo_id
+            ];
+
+            return redirect()->route(
+                $this->cuadroSeleccionado === 'cuadro_final' ? 'cuadro.pdf' : 'boletas.pdf',
+                $params
+            );
+
+        } catch (\Exception $e) {
+            $this->dispatch('toast', [
+                'type' => 'error',
+                'message' => $e->getMessage()
             ]);
-        } elseif ($this->cuadroSeleccionado === 'boletas') {
-            return redirect()->route('boletas.pdf', [
-                'codigo_asignatura' => $this->asignatura_id,
-                'codigo_docente' => $this->docente_id,
-                'seccion_id' => $this->seccion_id
-            ]);
+            return;
         }
     }
-
     public function create($codigo_asignatura, $codigo_docente, $seccion_id)
     {
         $this->resetInputFields();
