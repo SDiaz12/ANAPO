@@ -216,13 +216,13 @@ class InicioAdmin extends Component
         $programasCount = ProgramaFormacion::count();
         $matriculasCount = Matricula::where('estado', 1)->count();
 
-        // Obtener las 10 últimas matrículas 
+      
         $recentMatriculas = Matricula::with(['programaFormacion', 'estudiante'])
             ->where(function ($query) {
                 $query->whereHas('estudiante', function ($q) {
                     $q->where('nombre', 'like', '%' . $this->search . '%')
                         ->orWhere('apellido', 'like', '%' . $this->search . '%')
-                        ->orWhere('codigo', 'like', '%' . $this->search . '%');// Búsqueda por código del estudiante
+                        ->orWhere('codigo', 'like', '%' . $this->search . '%');
                 })
                     ->orWhereHas('programaFormacion', function ($q) {
                         $q->where('nombre', 'like', '%' . $this->search . '%');

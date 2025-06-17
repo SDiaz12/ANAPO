@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Log;
-//#[Lazy()]
+
 class Roles extends Component
 {
     use WithPagination;
@@ -22,6 +22,7 @@ class Roles extends Component
     public $confirmingDelete = false;
     public $IdAEliminar;
     public $nombreAEliminar;
+
     protected $rules = [
         'name' => 'required|unique:roles,name',
         'selectedPermissions' => 'required|array',
@@ -31,9 +32,9 @@ class Roles extends Component
     {
         return view('livewire.Placeholder.loader')->layout('layouts.app');
     }
-    
 
     protected $listeners = ['roleStored' => '$refresh'];
+
     public function mount()
     {
         $this->permissions = Permission::all();
@@ -41,8 +42,7 @@ class Roles extends Component
 
     public function render()
     {
-        $roles = Role::where('name', 'like', '%' . $this->search . '%')->orderBy('id', 'DESC')->paginate(5);
-
+        $roles = Role::where('name', 'like', '%' . $this->search . '%')->orderBy('id', 'DESC')->paginate(6);
         return view('livewire.rol.roles', ['roles' => $roles])->layout('layouts.app');
     }
 
@@ -102,13 +102,7 @@ class Roles extends Component
 
         try {
             $role = Role::findOrFail($this->role->id);
-
-            Log::info('Selected Permissions IDs:', $validatedData['selectedPermissions']);
-
-            $role->update([
-                'name' => $this->name,
-            ]);
-
+            $role->update(['name' => $this->name]);
             $permissionIds = Permission::whereIn('id', $validatedData['selectedPermissions'])->pluck('id')->toArray();
             $role->syncPermissions($permissionIds);
 
@@ -116,25 +110,24 @@ class Roles extends Component
             $this->permissions = Permission::all();
             $this->reset();
             $this->closeModal();
-       
-
         } catch (\Exception $e) {
             session()->flash('message', 'Error al actualizar rol: ' . $e->getMessage());
             Log::error('Error updating role: ' . $e->getMessage());
         }
     }
+
     public function delete()
     {
         if ($this->confirmingDelete) {
-            $role  = Role::find($this->IdAEliminar);
+            $role = Role::find($this->IdAEliminar);
 
-            if (!$role ) {
+            if (!$role) {
                 session()->flash('error', 'Rol no encontrada.');
                 $this->confirmingDelete = false;
                 return;
             }
 
-            $role ->forceDelete();
+            $role->forceDelete();
             session()->flash('message', 'Rol eliminado correctamente!');
             $this->confirmingDelete = false;
         }
@@ -142,15 +135,15 @@ class Roles extends Component
 
     public function confirmDelete($id)
     {
-        $role  = Role::find($id);
+        $role = Role::find($id);
 
-        if (! $role ) {
+        if (!$role) {
             session()->flash('error', 'rol no encontrado.');
             return;
         }
 
         if ($role->users()->exists()) {
-            session()->flash('error', 'No se puede eliminar el  rol: '. $role->name .', porque está enlazado a uno o más usuarios');
+            session()->flash('error', 'No se puede eliminar el rol: '. $role->name .', porque está enlazado a uno o más usuarios');
             return;
         }
 
@@ -159,11 +152,11 @@ class Roles extends Component
         $this->confirmingDelete = true;
     }
 
-       
     public function closeModal()
     {
         $this->isOpen = false;
     }
+
     private function resetInputFields()
     {
         $this->name = '';

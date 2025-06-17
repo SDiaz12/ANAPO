@@ -3,15 +3,12 @@
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
             <li class="inline-flex items-center">
                 <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 dark:text-gray-400">
-                <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                    viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M17 10v1.126c.367.095.714.24 1.032.428l.796-.797 1.415 1.415-.797.796c.188.318.333.665.428 1.032H21v2h-1.126c-.095.367-.24.714-.428 1.032l.797.796-1.415 1.415-.796-.797a3.979 3.979 0 0 1-1.032.428V20h-2v-1.126a3.977 3.977 0 0 1-1.032-.428l-.796.797-1.415-1.415.797-.796A3.975 3.975 0 0 1 12.126 16H11v-2h1.126c.095-.367.24-.714.428-1.032l-.797-.796 1.415-1.415.796.797A3.977 3.977 0 0 1 15 11.126V10h2Zm.406 3.578.016.016c.354.358.574.85.578 1.392v.028a2 2 0 0 1-3.409 1.406l-.01-.012a2 2 0 0 1 2.826-2.83ZM5 8a4 4 0 1 1 7.938.703 7.029 7.029 0 0 0-3.235 3.235A4 4 0 0 1 5 8Zm4.29 5H7a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h6.101A6.979 6.979 0 0 1 9 15c0-.695.101-1.366.29-2Z"
-                        clip-rule="evenodd" />
-                </svg>
-                  Roles
+                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M17 10v1.126c.367.095.714.24 1.032.428l.796-.797 1.415 1.415-.797.796c.188.318.333.665.428 1.032H21v2h-1.126c-.095.367-.24.714-.428 1.032l.797.796-1.415 1.415-.796-.797a3.979 3.979 0 0 1-1.032.428V20h-2v-1.126a3.977 3.977 0 0 1-1.032-.428l-.796.797-1.415-1.415.797-.796A3.975 3.975 0 0 1 12.126 16H11v-2h1.126c.095-.367.24-.714.428-1.032l-.797-.796 1.415-1.415.796.797A3.977 3.977 0 0 1 15 11.126V10h2Zm.406 3.578.016.016c.354.358.574.85.578 1.392v.028a2 2 0 0 1-3.409 1.406l-.01-.012a2 2 0 0 1 2.826-2.83ZM5 8a4 4 0 1 1 7.938.703 7.029 7.029 0 0 0-3.235 3.235A4 4 0 0 1 5 8Zm4.29 5H7a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h6.101A6.979 6.979 0 0 1 9 15c0-.695.101-1.366.29-2Z" clip-rule="evenodd"/>
+                    </svg>
+                    Roles
                 </a>
-              </li>
+            </li>
         </ol>
     </nav>
 
@@ -21,9 +18,7 @@
                 @if (session()->has('message'))
                     <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
                         <div class="flex">
-                            <div>
-                                <p class="text-sm">{{ session('message') }}</p>
-                            </div>
+                            <p class="text-sm">{{ session('message') }}</p>
                         </div>
                     </div>
                 @endif
@@ -35,120 +30,120 @@
                 <div class="relative overflow-x-auto sm:rounded-lg dark:bg-gray-800">
                     <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
                         <div>
-                            <button wire:click="create()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded my-3">Nuevo</button>
+                            <button wire:click="create()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded my-3 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Nuevo Rol
+                            </button>
                         </div>
-                        <label for="table-search" class="sr-only">Search</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input wire:model.live="search" type="text" id="table-search-users" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-700 dark:text-white" placeholder="Buscar...">
+                            <input wire:model.live="search" type="text" class="block pt-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white" placeholder="Buscar roles...">
                         </div>
                     </div>
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-white">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    No.
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Roles
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Accesos
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Acciones
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($roles as $rol)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-600 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $rol->id }}</th>
-                                <td class="px-6 py-4  text-gray-600 dark:text-gray-400">{{ $rol->name }}</td>
-                                <td class="px-6 py-4">
-                                    <div class="divide-y divide-gray-300 dark:divide-gray-600">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @foreach($roles as $rol)
+                        <div class="bg-white rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300">
+                            <div class="p-5">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ $rol->name }}</h3>
+                                        
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button wire:click="edit({{ $rol->id }})" class="p-2 text-white bg-red-600 rounded-lg hover:bg-red-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                            </svg>
+                                        </button>
+                                        <button wire:click="confirmDelete({{ $rol->id }})" class="p-2 text-white bg-gray-800 rounded-lg hover:bg-gray-900">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Permisos:</h4>
+                                    <div class="space-y-2 max-h-40 overflow-y-auto">
                                         @foreach ($rol->permissions as $permission)
-                                            <div class="py-1 text-gray-600 dark:text-gray-400">{{ $permission->name }}</div>
+                                        <div class="flex items-center">
+                                            <span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                                            <span class="text-sm text-gray-600 dark:text-gray-400">{{ $permission->name }}</span>
+                                        </div>
                                         @endforeach
                                     </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                <button wire:click="edit({{ $rol->id }})"
-                                            class="mb-1 px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 rounded-lg text-center dark:focus:ring-yellow-800">
-                                            <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                                viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
-                                            </svg>
-                                            Editar
-                                        </button>
-                                        <button wire:click="confirmDelete({{ $rol->id }})"
-                                            class="px-3 py-2 text-sm font-medium text-white inline-flex items-center bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg text-center dark:focus:ring-red-800">
-                                            <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                                viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                            </svg>
-                                            Borrar
-                                        </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <br>
-                    {{ $roles->links() }}
-                    <br>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-4">
+                        {{ $roles->links() }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
     @if (session()->has('error'))
-                    <div class="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto ease-out duration-400">
-                        <div class="fixed inset-0 transition-opacity">
-                            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-                        </div>
-
-                        <div class="bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold mb-4">Error</h3>
-                                <p>{{ session('error') }}</p>
-                                <div class="mt-4 flex justify-end">
-                                    <button wire:click="$set('confirmingDelete', false)" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2">
-                                        Aceptar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+    <div class="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto ease-out duration-400">
+        <div class="fixed inset-0 transition-opacity">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <div class="bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true">
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+                        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
                     </div>
-                @elseif ($confirmingDelete)
-                    <div class="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto ease-out duration-400">
-                        <div class="fixed inset-0 transition-opacity">
-                            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-                        </div>
-
-                        <div class="bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold mb-4">Confirmación de Eliminación</h3>
-                                <p>¿Estás seguro de que deseas eliminar el Rol : "<strong>{{ $nombreAEliminar }}</strong>"? Esta acción no se puede deshacer.</p>
-                                <div class="mt-4 flex justify-end">
-                                    <button wire:click="$set('confirmingDelete', false)" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2">
-                                        Cancelar
-                                    </button>
-                                    <button wire:click="delete" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-                                        Eliminar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <h3 class="ml-3 text-lg font-semibold text-gray-900">Error</h3>
+                </div>
+                <p class="text-gray-700 mb-6">{{ session('error') }}</p>
+                <div class="flex justify-end">
+                    <button wire:click="$set('confirmingDelete', false)" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @elseif ($confirmingDelete)
+    <div class="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto ease-out duration-400">
+        <div class="fixed inset-0 transition-opacity">
+            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <div class="bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true">
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+                        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
                     </div>
-                @endif
+                    <h3 class="ml-3 text-lg font-semibold text-gray-900">Confirmar eliminación</h3>
+                </div>
+                <p class="text-gray-700 mb-6">¿Estás seguro de eliminar el rol <strong class="font-semibold">{{ $nombreAEliminar }}</strong>? Esta acción no se puede deshacer.</p>
+                <div class="flex justify-end space-x-3">
+                    <button wire:click="$set('confirmingDelete', false)" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                        Cancelar
+                    </button>
+                    <button wire:click="delete" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
