@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-
+use App\Models\Periodo;
 class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles, WithEvents
 {
   protected $codigo_asignatura;
@@ -19,11 +19,20 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
     protected $seccion_id;
     protected $mostrarTercerParcial;
 
+    protected $periodoActivo;
     public function __construct($codigo_asignatura, $codigo_docente, $seccion_id)
     {
         $this->codigo_asignatura = $codigo_asignatura;
         $this->codigo_docente = $codigo_docente;
         $this->seccion_id = $seccion_id;
+        
+        $periodoActivo = Periodo::where('estado', 1)->first();
+        
+        if (!$periodoActivo) {
+            $this->mostrarTercerParcial = false;
+            return;
+        }
+
         
         $asignaturaDocente = AsignaturaDocente::whereHas('asignatura', function($query) use ($codigo_asignatura) {
                 $query->where('codigo', $codigo_asignatura);
@@ -34,43 +43,41 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
             ->whereHas('seccion', function($query) use ($seccion_id) {
                 $query->where('id', $seccion_id);
             })
+            ->where('periodo_id', $periodoActivo->id) 
             ->first();
             
         $this->mostrarTercerParcial = $asignaturaDocente ? $asignaturaDocente->mostrarTercerParcial : false;
+        $this->periodoActivo = $periodoActivo; 
     }
-
     public function headings(): array
     {
+        $baseHeadings = [
+            'numero' => 'Nº',
+            'codigo_estudiante' => 'Nº Cuenta',
+            'nombre_estudiante' => 'Nombres y Apellidos',
+            'primer_parcial' => '1era. Prueba parcial 100%',
+            'segundo_parcial' => '2da. Prueba parcial 100%',
+            'nota_promedio' => 'Nota promedio 100%',
+            'recuperacion' => 'Prueba de Recuperación 100%',
+            'nota_promedio_recuperacion' => 'Nota promedio 100%',
+            'nota_final' => 'Nota final',
+            'calificacion' => 'Calificación',
+            'asignatura_estudiante_id' => 'ID Asignatura'
+        ];
+
         if ($this->mostrarTercerParcial) {
-            return [
-                'numero' => 'Nº',
-                'codigo_estudiante' => 'Nº Cuenta',
-                'nombre_estudiante' => 'Nombres y Apellidos',
-                'primer_parcial' => '1era. Prueba parcial 100%',
-                'segundo_parcial' => '2da. Prueba parcial 100%',
-                'tercer_parcial' => '3era. Prueba parcial 100%',
-                'nota_promedio' => 'Nota promedio 100%',
-                'recuperacion' => 'Prueba de Recuperación 100%',
-                'nota_promedio_recuperacion' => 'Nota promedio 100%',
-                'nota_final' => 'Nota final',
-                'calificacion' => 'Calificación',
-                'asignatura_estudiante_id' => 'ID Asignatura'
-            ];
-        } else {
-            return [
-                'numero' => 'Nº',
-                'codigo_estudiante' => 'Nº Cuenta',
-                'nombre_estudiante' => 'Nombres y Apellidos',
-                'primer_parcial' => '1era. Prueba parcial 100%',
-                'segundo_parcial' => '2da. Prueba parcial 100%',
-                'nota_promedio' => 'Nota promedio 100%',
-                'recuperacion' => 'Prueba de Recuperación 100%',
-                'nota_promedio_recuperacion' => 'Nota promedio 100%',
-                'nota_final' => 'Nota final',
-                'calificacion' => 'Calificación',
-                'asignatura_estudiante_id' => 'ID Asignatura'
-            ];
+           
+            $headings = [];
+            foreach ($baseHeadings as $key => $value) {
+                $headings[$key] = $value;
+                if ($key === 'segundo_parcial') {
+                    $headings['tercer_parcial'] = '3era. Prueba parcial 100%';
+                }
+            }
+            return $headings;
         }
+
+        return $baseHeadings;
     }
 
     private function determinarCalificacion($notaFinal)
@@ -90,6 +97,10 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
 
     public function collection()
     {
+        if (!isset($this->periodoActivo)) {
+            return collect([]);
+        }
+
         return AsignaturaEstudiante::whereHas('asignaturadocente', function ($query) {
             $query->whereHas('asignatura', function ($query) {
                 $query->where('codigo', $this->codigo_asignatura);
@@ -99,10 +110,16 @@ class ActualizarNotasExport implements FromCollection, WithHeadings, WithStyles,
             })
             ->whereHas('seccion', function ($query) {
                 $query->where('id', $this->seccion_id);
-            });
+            })
+            ->where('periodo_id', $this->periodoActivo->id); 
         })
         ->where('estado', 1) 
-        ->with(['matricula.estudiante', 'asignaturadocente.asignatura', 'notas'])
+        ->with([
+            'matricula.estudiante', 
+            'asignaturadocente.asignatura', 
+            'asignaturadocente.periodo',
+            'notas'
+        ])
         ->get()
         ->map(function ($item, $index) {
             $nota = $item->notas;

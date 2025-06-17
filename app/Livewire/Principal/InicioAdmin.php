@@ -82,39 +82,57 @@ class InicioAdmin extends Component
             $this->user_email = '';
         }
     }
-    protected function calcularIndices($matriculaId)
+    public $user_email;
+   protected function calcularIndices($matriculaId)
     {
-
-        $asignaturas = AsignaturaEstudiante::with(['notas', 'asignaturaDocente.asignatura', 'periodo'])
-            ->where('estudiantes_id', $matriculaId)
-            ->orderBy('periodo_id', 'desc')
-            ->get();
+        $asignaturas = AsignaturaEstudiante::with([
+            'notas', 
+            'asignaturaDocente.asignatura',
+            'periodo'
+        ])
+        ->whereHas('periodo', function($query) {
+            $query->where('estado', 0); 
+        })
+        ->where('estudiantes_id', $matriculaId)
+        ->orderBy('periodo_id', 'desc')
+        ->get();
 
         $sumaGlobal = ['ponderada' => 0, 'creditos' => 0];
 
-
         foreach ($asignaturas as $asignatura) {
-            if (!$asignatura->notas || !$asignatura->asignaturaDocente->asignatura)
+            if (!$asignatura->notas || !$asignatura->asignaturaDocente || !$asignatura->asignaturaDocente->asignatura) {
                 continue;
+            }
 
             $creditos = $asignatura->asignaturaDocente->asignatura->creditos;
-            $notaFinal = ($asignatura->notas->primerparcial +
-                $asignatura->notas->segundoparcial +
-                $asignatura->notas->tercerparcial) / 3;
-            $ponderacion = $notaFinal * $creditos;
+            $mostrarTercerParcial = $asignatura->asignaturaDocente->mostrarTercerParcial ?? false;
+            
+            $p1 = (float)($asignatura->notas->primerparcial ?? 0);
+            $p2 = (float)($asignatura->notas->segundoparcial ?? 0);
+            $rec = (float)($asignatura->notas->recuperacion ?? 0);
+            $p3 = $mostrarTercerParcial ? (float)($asignatura->notas->tercerparcial ?? 0) : 0;
 
+            if ($mostrarTercerParcial) {
+                $promedio = ($p1 + $p2 + $p3) / 3;
+                if ($rec > 0) {
+                    $minParcial = min($p1, $p2, $p3);
+                    $promedio = ($p1 + $p2 + $p3 - $minParcial + $rec) / 3;
+                }
+            } else {
+                $promedio = ($p1 + $p2) / 2;
+                if ($rec > 0) {
+                    $promedio = max($promedio, $rec);
+                }
+            }
 
-            $sumaGlobal['ponderada'] += $ponderacion;
+            $sumaGlobal['ponderada'] += $promedio * $creditos;
             $sumaGlobal['creditos'] += $creditos;
-
-
-
         }
 
         return [
-            'global' => $sumaGlobal['creditos'] > 0 ?
-                round($sumaGlobal['ponderada'] / $sumaGlobal['creditos'], 2) : 0,
-
+            'global' => $sumaGlobal['creditos'] > 0 
+                ? min(round($sumaGlobal['ponderada'] / $sumaGlobal['creditos'], 2), 100)
+                : 0,
         ];
     }
     public function estudiantesDestacados($limite = 10)
@@ -137,21 +155,21 @@ class InicioAdmin extends Component
             ];
         }
 
-        // Ordenar de mayor a menor índice
+ 
         usort($lista, function ($a, $b) {
             return $b['indice'] <=> $a['indice'];
         });
 
-        // Limitar la cantidad de resultados
+ 
         return array_slice($lista, 0, $limite);
     }
 
     public function DestacadosMayor84()
     {
-        // Suponiendo que ya tienes el método para obtener los destacados
+        
         $todos = $this->estudiantesDestacados(10); 
 
-        // Filtrar solo los que tengan índice mayor a 85
+   
         return collect($todos)->filter(function ($item) {
             return $item['indice'] > 84;
         })->values();
@@ -164,7 +182,7 @@ class InicioAdmin extends Component
 
     public function getUsuariosActivos()
     {
-        $minutos = 5; // Considera activo si tuvo actividad en los últimos 5 minutos
+        $minutos = 5;
         $limite = Carbon::now()->subMinutes($minutos)->timestamp;
 
         return DB::table('sessions')

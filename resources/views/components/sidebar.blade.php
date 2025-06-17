@@ -17,7 +17,7 @@
                <a href="/dashboard" class="flex ms-2 md:me-24">
                   <img src="{{ asset('Logo/LOGO.png') }}" alt="Logo" height="50px" width="50px" />
                   <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Academia
-                     Nacional</span>
+                     Nacional de Policía</span>
                </a>
 
             </div>

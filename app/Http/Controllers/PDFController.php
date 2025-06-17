@@ -12,7 +12,7 @@ class PDFController extends Controller
     {
         $matricula = Matricula::with(['estudiante', 'programaFormacion', 'instituto'])->findOrFail($matriculaId);
         
-        // Modificado para solo incluir periodos finalizados (estado 0)
+       
         $historial = AsignaturaEstudiante::with([
             'asignaturaDocente.asignatura', 
             'periodo', 
@@ -21,13 +21,13 @@ class PDFController extends Controller
             'asignaturaDocente.docente'
         ])
         ->whereHas('periodo', function($query) {
-            $query->where('estado', 0); // Solo periodos finalizados
+            $query->where('estado', 0);
         })
         ->where('estudiantes_id', $matriculaId)
         ->orderBy('periodo_id', 'desc')
         ->get();
 
-        // Solo calcular índices si hay registros
+      
         $tieneRegistros = $historial->isNotEmpty();
         $globalIndice = $tieneRegistros ? $this->calcularIndices($matriculaId)['global'] : 0;
 
@@ -36,7 +36,7 @@ class PDFController extends Controller
             'historial' => $historial,
             'estudiante' => $matricula->estudiante,
             'globalIndice' => $globalIndice,
-            'tieneRegistros' => $tieneRegistros // Pasar esta información a la vista
+            'tieneRegistros' => $tieneRegistros 
         ]);
 
         return $pdf->download('historial-academico-'.$matricula->estudiante->codigo.'.pdf');
@@ -44,7 +44,6 @@ class PDFController extends Controller
 
     protected function calcularIndices($matriculaId)
     {
-        // Asegurarse de que solo se consideren periodos finalizados
         $asignaturas = AsignaturaEstudiante::with([
             'notas', 
             'asignaturaDocente.asignatura',
@@ -52,7 +51,7 @@ class PDFController extends Controller
             'periodo'
         ])
         ->whereHas('periodo', function($query) {
-            $query->where('estado', 0); // Solo periodos finalizados
+            $query->where('estado', 0); 
         })
         ->where('estudiantes_id', $matriculaId)
         ->orderBy('periodo_id', 'desc')

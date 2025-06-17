@@ -369,8 +369,7 @@
                         </svg>
                         <div class="ml-6">
                             <p class="text-base font-medium text-black/50">Llámanos</p>
-                            <p class="mt-4 text-xl font-medium text-gray-900">(504) 555-0116</p>
-                            <p class="mt-1 text-xl font-medium text-gray-900">(504) 555-0117</p>
+                            <p class="mt-4 text-xl font-medium text-gray-900">(504) 9211-9077</p>
                         </div>
                     </div>
         
@@ -380,8 +379,8 @@
                         </svg>
                         <div class="ml-6">
                             <p class="text-base font-medium text-black/50">Envíanos correo</p>
-                            <p class="mt-4 text-xl font-medium text-gray-900">contact@example.com</p>
-                            <p class="mt-1 text-xl font-medium text-gray-900">support@example.com</p>
+                            <p class="mt-4 text-xl font-medium text-gray-900">anapo@policianacional.gob.hn</p>
+                           
                         </div>
                     </div>
         
@@ -392,7 +391,7 @@
                         </svg>
                         <div class="ml-6">
                             <p class="text-base font-medium text-black/50">Ubicación</p>
-                            <p class="mt-4 text-xl font-medium leading-relaxed text-gray-900">Estamos ubicados en La Paz, Honduras, y es el centro oficial de formación de la Policía Nacional.</p>
+                            <p class="mt-4 text-xl font-medium leading-relaxed text-gray-900">Estamos ubicados en La Paz, La Paz, Honduras, y es el centro oficial de formación de la Policía Nacional.</p>
                         </div>
                     </div>
                 </div>
