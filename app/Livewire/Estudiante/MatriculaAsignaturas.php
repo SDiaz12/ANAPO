@@ -206,7 +206,7 @@ class MatriculaAsignaturas extends Component
             return;
         }
 
-        $matriculada->delete();
+        $matriculada->Forcedelete();
         $this->successMessage = 'La asignatura ha sido quitada exitosamente.';
         $this->cargarMatriculadas();
         $this->resetPage(); 

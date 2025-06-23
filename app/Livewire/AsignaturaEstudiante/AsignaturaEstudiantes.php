@@ -235,7 +235,7 @@ class AsignaturaEstudiantes extends Component
                 return;
             }
 
-            $asignaturaEstudiante->delete();
+            $asignaturaEstudiante->forceDelete();
             session()->flash('message', 'Matrícula de asignatura eliminada correctamente!');
             $this->confirmingDelete = false;
         }

@@ -112,27 +112,41 @@ class Notas extends Component
         $this->resetInputFields();
         $this->seccion_id = $seccion_id;
 
+        $asignaturaDocente = AsignaturaDocente::whereHas('asignatura', function ($query) use ($codigo_asignatura) {
+            $query->where('codigo', $codigo_asignatura)->where('estado', 1);
+        })
+        ->whereHas('docente', function ($query) use ($codigo_docente) {
+            $query->where('codigo', $codigo_docente);
+        })
+        ->whereHas('periodo', function ($query) {
+            $query->where('estado', 1);
+        })
+        ->where('seccion_id', $seccion_id)
+        ->where('estado', 1)
+        ->first();
+
+        $this->mostrarTercerParcial = $asignaturaDocente ? (bool)$asignaturaDocente->mostrarTercerParcial : false;
+
         $asignaturaEstudiantes = AsignaturaEstudiante::whereHas('asignaturadocente', function ($query) use ($codigo_asignatura, $codigo_docente, $seccion_id) {
             $query->whereHas('asignatura', function ($query) use ($codigo_asignatura) {
-                $query->where('codigo', $codigo_asignatura)
-                    ->where('estado', 1);
+                $query->where('codigo', $codigo_asignatura)->where('estado', 1);
             })
-                ->whereHas('docente', function ($query) use ($codigo_docente) {
-                    $query->where('codigo', $codigo_docente);
-                })
-                ->whereHas('periodo', function ($query) {
-                    $query->where('estado', 1);
-                })
-                ->where('seccion_id', $seccion_id)
-                ->where('estado', 1);
+            ->whereHas('docente', function ($query) use ($codigo_docente) {
+                $query->where('codigo', $codigo_docente);
+            })
+            ->whereHas('periodo', function ($query) {
+                $query->where('estado', 1);
+            })
+            ->where('seccion_id', $seccion_id)
+            ->where('estado', 1);
         })
-            ->with([
-                'matricula.estudiante',
-                'asignaturadocente.asignatura',
-                'asignaturadocente.docente',
-                'asignaturadocente.seccion'
-            ])
-            ->get();
+        ->with([
+            'matricula.estudiante',
+            'asignaturadocente.asignatura',
+            'asignaturadocente.docente',
+            'asignaturadocente.seccion'
+        ])
+        ->get();
 
         if ($asignaturaEstudiantes->isEmpty()) {
             session()->flash('error', 'No hay estudiantes matriculados en esta asignatura para la sección seleccionada.');
@@ -144,7 +158,7 @@ class Notas extends Component
                 'asignatura_estudiante_id' => $asignaturaEstudiante->id,
                 'primerparcial' => null,
                 'segundoparcial' => null,
-                'tercerparcial' => null,
+                'tercerparcial' => $this->mostrarTercerParcial ? null : null,
                 'asistencia' => '',
                 'recuperacion' => null,
                 'observacion' => '',
@@ -163,7 +177,6 @@ class Notas extends Component
 
         $this->openModal();
     }
-
     public function store()
     {
         $this->validate([
