@@ -143,28 +143,28 @@
                 @foreach($programas as $programa)
                 <tr
                     class=" overflow-x-auto cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td wire:click="mostrarDatos({{ $programa->id }})" class="px-6 py-4">
+                    <td  class="px-6 py-4">
                         {{ $programa->codigo }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $programa->id }})" class="px-6 py-4">
+                    <td  class="px-6 py-4">
                         {{ $programa->nombre }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $programa->id }})" class="px-6 py-4">
+                    <td  class="px-6 py-4">
                         {{ $programa->fecha_aprobacion }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $programa->id }})" class="px-6 py-4">
+                    <td class="px-6 py-4">
                         {{ $programa->fecha_final }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $programa->id }})" class="px-6 py-4">
+                    <td  class="px-6 py-4">
                         {{ $programa->hora_finalizacion }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $programa->id }})" class="px-6 py-4">
+                    <td  class="px-6 py-4">
                         {{ $programa->instituto }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $programa->id }})" class="px-6 py-4">
+                    <td  class="px-6 py-4">
                         {{ $programa->tipo_programa }}
                     </td>
-                    <td wire:click="mostrarDatos({{ $programa->id }})" class="px-6 py-4">
+                    <td class="px-6 py-4">
                         {{ $programa->procentaje_aprobacion }}
                     </td>
                     <td class="px-6 py-4">

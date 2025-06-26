@@ -133,16 +133,34 @@ class Estudiants extends Component
         $this->showPasswordFields = false;
     }
 
+   
     public function toggleEstado($id)
     {
-        $estudiante = Estudiante::findOrFail($id);
-        $estudiante->estado = !$estudiante->estado;
-        $estudiante->save();
-        
-        if ($estudiante->user) {
-            $estudiante->user->active = $estudiante->estado;
-            $estudiante->user->save();
-        }
+        DB::transaction(function () use ($id) {
+            $estudiante = Estudiante::findOrFail($id);
+            $estudiante->estado = !$estudiante->estado;
+            
+            if (!$estudiante->estado && $estudiante->user) {
+               
+                $user_id = $estudiante->user_id;
+                $estudiante->user_id = null;
+                $estudiante->save();
+                
+              
+                User::where('id', $user_id)->delete();
+            } elseif ($estudiante->estado) {
+             
+                $user = User::create([
+                    'name' => $estudiante->nombre . ' ' . $estudiante->apellido,
+                    'email' => $estudiante->correo,
+                    'password' => Hash::make('12345678'),
+                ]);
+                $user->assignRole('Estudiante');
+                $estudiante->user_id = $user->id;
+            }
+            
+            $estudiante->save();
+        });
     }
 
     public function store()
