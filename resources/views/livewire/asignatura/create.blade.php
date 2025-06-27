@@ -85,7 +85,6 @@
                         placeholder="Buscar programa de formación...">
                     @error('programa_formacion_id') <span class="text-red-500">{{ $message }}</span> @enderror
 
-                    <!-- Desplegable de resultados de búsqueda -->
                     @if(!empty($searchProgramasFormacion))
                         <ul class="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800">
                             @foreach($searchProgramasFormacion as $programa)
@@ -102,6 +101,11 @@
                     <label for="tiene_requisitos" class="flex items-center mb-3 text-base font-medium text-gray-700 dark:text-gray-300">
                         <input type="checkbox" id="tiene_requisitos" wire:model.live="tiene_requisitos" class="mr-2"> 
                         Requisitos
+                        @if($tiene_requisitos && $cantidad_requisitos > 0)
+                            <button wire:click="clearAllRequisitos" type="button" class="ml-2 text-red-600 text-sm">
+                                (Eliminar todos)
+                            </button>
+                        @endif
                     </label>
 
                     @if($tiene_requisitos)
@@ -120,8 +124,8 @@
 
                         @if($cantidad_requisitos <= 3)
                             @for($i = 0; $i < $cantidad_requisitos; $i++)
-                                <div class="grid grid-cols-2 gap-4 mt-4">
-                                    <div class="mb-4">
+                                <div class="grid grid-cols-3 gap-4 mt-4">
+                                    <div class="col-span-2">
                                         <label for="RequisitoSelect_{{$i}}" class="block text-gray-700 text-sm font-bold mb-2 dark:text-white">
                                             Requisito #{{$i + 1}}:
                                         </label>
@@ -130,17 +134,29 @@
                                             wire:model.live="requisitos.{{$i}}">
                                             <option value="">Seleccione Requisito</option>
                                             @foreach($asignaturas as $asignatura)
-                                                <option value="{{ $asignatura->id }}">{{ $asignatura->nombre }}</option>
+                                                @if($asignatura->id != $asignatura_id) {{-- Excluir la asignatura actual --}}
+                                                    <option value="{{ $asignatura->id }}" 
+                                                        @if(isset($requisitos[$i]) && $requisitos[$i] == $asignatura->id) selected @endif>
+                                                        {{ $asignatura->nombre }}
+                                                    </option>
+                                                @endif
                                             @endforeach
                                         </select>
                                         @error('requisitos.{{$i}}') 
                                             <span class="text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
+                                    <div class="flex items-end">
+                                        @if(isset($requisitos[$i]) && $requisitos[$i])
+                                            <button wire:click="removeRequisito({{ $i }})" type="button" 
+                                                class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                                                Eliminar
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
                             @endfor
                         @endif
-
                     @endif
                 </div>
                 <div>

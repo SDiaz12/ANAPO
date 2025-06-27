@@ -72,7 +72,28 @@ class Asignaturas extends Component
     }
     public $inputSearchRequisito = ''; 
     public $searchRequisitos = [];      
-    public $requisitos = [];          
+    public $requisitos = [];    
+  
+
+    public function removeRequisito($index)
+    {
+        if (isset($this->requisitos[$index])) {
+           
+            unset($this->requisitos[$index]);
+            $this->requisitos = array_values($this->requisitos);
+            $this->cantidad_requisitos = count($this->requisitos);
+            if ($this->cantidad_requisitos === 0) {
+                $this->tiene_requisitos = false;
+            }
+        }
+    }
+
+    public function clearAllRequisitos()
+    {
+        $this->requisitos = [];
+        $this->cantidad_requisitos = 0;
+        $this->tiene_requisitos = false;
+    }      
 
   public function updatedInputSearchRequisito()
     {
@@ -175,7 +196,7 @@ class Asignaturas extends Component
         if (!empty($this->requisitos)) {
             $asignatura->requisitos()->sync($this->requisitos);
         }
-
+        $asignatura->requisitos()->sync($this->tiene_requisitos ? $this->requisitos : []);
         session()->flash(
             'message',
             $this->asignatura_id ? 'Asignatura actualizada correctamente!' : 'Asignatura creada correctamente!'
@@ -186,7 +207,7 @@ class Asignaturas extends Component
     }
 
    
-   public function edit($id)
+    public function edit($id)
     {
         $asignatura = Asignatura::with(['requisitos', 'programaFormacion'])->findOrFail($id); 
         $this->asignatura_id = $id;
@@ -196,20 +217,13 @@ class Asignaturas extends Component
         $this->creditos = $asignatura->creditos;
         $this->horas = $asignatura->horas;
         $this->programa_formacion_id = $asignatura->programa_formacion_id;
-        $this->inputSearchProgramaFormacion = $asignatura->programaFormacion->nombre; 
+        $this->inputSearchProgramaFormacion = $asignatura->programaFormacion->nombre ?? ''; 
         $this->estado = $asignatura->estado;
-        
-     
-        $this->requisitos = array_filter($asignatura->requisitos->pluck('id')->toArray(), 
-            fn($reqId) => $reqId != $id);
-        
+
+        $this->requisitos = $asignatura->requisitos->pluck('id')->toArray();
         $this->cantidad_requisitos = count($this->requisitos);
         $this->tiene_requisitos = $this->cantidad_requisitos > 0;
         
-        if ($this->cantidad_requisitos > 0) {
-            $this->searchRequisitos = Asignatura::whereIn('id', $this->requisitos)->get();
-        }
-
         $this->openModal();
     }
     public function delete()

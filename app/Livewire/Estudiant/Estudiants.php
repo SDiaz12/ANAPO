@@ -133,36 +133,66 @@ class Estudiants extends Component
         $this->showPasswordFields = false;
     }
 
-   
     public function toggleEstado($id)
     {
-        DB::transaction(function () use ($id) {
-            $estudiante = Estudiante::findOrFail($id);
-            $estudiante->estado = !$estudiante->estado;
-            
-            if (!$estudiante->estado && $estudiante->user) {
-               
-                $user_id = $estudiante->user_id;
-                $estudiante->user_id = null;
-                $estudiante->save();
+        $estudiante = Estudiante::findOrFail($id);
+        
+        if (!$estudiante->estado) {
+            DB::transaction(function () use ($estudiante) {
+                $user = User::where('email', $estudiante->correo)->first();
                 
-              
-                User::where('id', $user_id)->delete();
-            } elseif ($estudiante->estado) {
-             
-                $user = User::create([
-                    'name' => $estudiante->nombre . ' ' . $estudiante->apellido,
-                    'email' => $estudiante->correo,
-                    'password' => Hash::make('12345678'),
-                ]);
+                if (!$user) {
+                    $user = User::create([
+                        'name' => $estudiante->nombre . ' ' . $estudiante->apellido,
+                        'email' => $estudiante->correo,
+                        'password' => Hash::make('12345678'),
+                    ]);
+                }
                 $user->assignRole('Estudiante');
                 $estudiante->user_id = $user->id;
-            }
-            
-            $estudiante->save();
-        });
+                $estudiante->estado = true;
+                $estudiante->save();
+            });
+        } else {
+            $this->confirmDeactivation($id);
+        }
     }
 
+    public $confirmingDeactivation = false;
+    public $idADesactivar, $nombreADesactivar;
+
+    public function confirmDeactivation($id)
+    {
+        $estudiante = Estudiante::find($id);
+        
+        if (!$estudiante) {
+            session()->flash('error', 'Estudiante no encontrado.');
+            return;
+        }
+
+        $this->idADesactivar = $id;
+        $this->nombreADesactivar = $estudiante->nombre . ' ' . $estudiante->apellido;
+        $this->confirmingDeactivation = true;
+    }
+
+    public function deactivate()
+    {
+        if ($this->confirmingDeactivation) {
+            DB::transaction(function () {
+                $estudiante = Estudiante::findOrFail($this->idADesactivar);
+                $estudiante->estado = false;
+                
+                if ($estudiante->user) {
+                    $estudiante->user->removeRole('Estudiante');
+                }
+                
+                $estudiante->save();
+            });
+
+            session()->flash('message', 'Estudiante desactivado correctamente!');
+            $this->confirmingDeactivation = false;
+        }
+    }
     public function store()
     {
         $rules = [
